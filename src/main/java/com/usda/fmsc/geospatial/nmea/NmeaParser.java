@@ -1,6 +1,7 @@
 package com.usda.fmsc.geospatial.nmea;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -12,7 +13,7 @@ import com.usda.fmsc.geospatial.nmea.sentences.base.NmeaSentence;
 
 public class NmeaParser {
     private List<Listener> listeners;
-    private TalkerID usedTalkedID;
+    private List<TalkerID> usedTalkedIDs;
 
     private NmeaBurst burst;
 
@@ -23,7 +24,13 @@ public class NmeaParser {
 
     public NmeaParser(TalkerID talkerID) {
         listeners = new ArrayList<>();
-        usedTalkedID = talkerID;
+        usedTalkedIDs = new ArrayList<>();
+        usedTalkedIDs.add(talkerID);
+    }
+
+    public NmeaParser(Collection<TalkerID> talkerIDs) {
+        listeners = new ArrayList<>();
+        usedTalkedIDs = new ArrayList<>(talkerIDs);
     }
 
 
@@ -35,7 +42,7 @@ public class NmeaParser {
         }
 
         try {
-            if (usedTalkedID == TalkerID.parse(nmea)) {
+            if (usedTalkedIDs.contains(TalkerID.parse(nmea))) {
                 NmeaSentence sentence = burst.addNmeaSentence(nmea);
 
                 if (sentence != null) {
@@ -90,6 +97,17 @@ public class NmeaParser {
             listeners.remove(listener);
         }
     }
+
+
+    public void addTalkerID(TalkerID talkerID) {
+        if (!usedTalkedIDs.contains(talkerID))
+            usedTalkedIDs.add(talkerID);
+    }
+
+    public void removeTalkerID(TalkerID talkerID) {
+        usedTalkedIDs.remove(talkerID);
+    }
+
 
     public static NmeaSentence getNmeaSentence(String sentence) {
         if (sentence == null) {

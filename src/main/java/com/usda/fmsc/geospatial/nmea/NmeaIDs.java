@@ -77,6 +77,24 @@ public class NmeaIDs {
                 default: return "Unknown";
             }
         }
+
+        public String toStringCode() {
+            switch(this) {
+                case GP: return "$GP";
+                case LC: return "$LC";
+                case II: return "$II";
+                case IN: return "$IN";
+                case EC: return "$EC";
+                case CD: return "$CD";
+                case GA: return "$GA";
+                case GL: return "$GL";
+                case GN: return "$GN";
+                case GB: return "$GB";
+                case BD: return "$BD";
+                case QZ: return "$QZ";
+                default: return "$??";
+            }
+        }
     }
 
     public enum SentenceID {

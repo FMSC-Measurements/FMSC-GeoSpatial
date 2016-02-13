@@ -34,8 +34,7 @@ public class NmeaBurst implements INmeaBurst, Serializable {
     private GSVSentence gsv;
 
 
-    public NmeaBurst() {
-    }
+    public NmeaBurst() { }
 
     public NmeaBurst(NmeaBurst burst) {
         gga = burst.gga;
@@ -49,7 +48,7 @@ public class NmeaBurst implements INmeaBurst, Serializable {
             throw new NullPointerException();
         }
 
-        if(!isFull() && NmeaSentence.validateChecksum(sentence)) {
+        if (!isFull() && NmeaSentence.validateChecksum(sentence)) {
             switch (SentenceID.parse(sentence)) {
                 case GGA: {
                     if(gga == null || !gga.isValid()) {
