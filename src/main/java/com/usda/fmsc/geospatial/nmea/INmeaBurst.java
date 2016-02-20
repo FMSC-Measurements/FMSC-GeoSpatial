@@ -47,7 +47,7 @@ public interface INmeaBurst {
 
     int getTrackedSatellitesCount();
 
-    List<Satellite> getSatellitesInView();
+    //List<Satellite> getSatellitesInView();
 
     int getSatellitesInViewCount();
 

@@ -58,7 +58,7 @@ public class NmeaParser {
                 usedNmea = true;
             }
         } catch (ExcessiveStringException e) {
-            //burst = new NmeaBurst();
+            burst = new NmeaBurst();
         }
 
         if (burst.isFull()) {

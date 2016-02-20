@@ -12,7 +12,7 @@ public class GSASentence extends NmeaSentence  implements Serializable {
     private Mode mode;
     private Fix fix;
     private List<Integer> satsUsed;
-    double pdop, hdop, vdop;
+    Double pdop, hdop, vdop;
 
 
     public GSASentence() {
@@ -33,9 +33,11 @@ public class GSASentence extends NmeaSentence  implements Serializable {
 
             if (tokens.length > 17) {
                 try {
-                    mode = Mode.parse(tokens[1]);
+                    if (mode == null)
+                        mode = Mode.parse(tokens[1]);
 
-                    fix = Fix.parse(tokens[2]);
+                    if (fix == null)
+                        fix = Fix.parse(tokens[2]);
 
                     String token;
                     for (int i = 3; i < 15; i++) {
@@ -44,9 +46,14 @@ public class GSASentence extends NmeaSentence  implements Serializable {
                             satsUsed.add(Integer.parseInt(token));
                     }
 
-                    pdop = Double.parseDouble(tokens[15]);
-                    hdop = Double.parseDouble(tokens[16]);
-                    vdop = Double.parseDouble(tokens[17]);
+                    if (pdop == null)
+                        pdop = Double.parseDouble(tokens[15]);
+
+                    if (hdop == null)
+                        hdop = Double.parseDouble(tokens[16]);
+
+                    if (vdop == null)
+                        vdop = Double.parseDouble(tokens[17]);
 
                     valid = true;
                 } catch (Exception ex) {
@@ -94,7 +101,7 @@ public class GSASentence extends NmeaSentence  implements Serializable {
 
         private final int value;
 
-        private Mode(int value) {
+        Mode(int value) {
             this.value = value;
         }
 
@@ -138,7 +145,7 @@ public class GSASentence extends NmeaSentence  implements Serializable {
 
         private final int value;
 
-        private Fix(int value) {
+        Fix(int value) {
             this.value = value;
         }
 

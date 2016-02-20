@@ -62,9 +62,10 @@ public class NmeaBurst implements INmeaBurst, Serializable {
                     if(gsa == null) {
                         gsa = new GSASentence(sentence);
                         return gsa;
+                    } else {
+                        gsa.parse(sentence);
+                        return gsa;
                     }
-                    else
-                        throw new ExcessiveStringException(SentenceID.GSA);
                 }
                 case RMC: {
                     if(rmc == null) {
