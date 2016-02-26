@@ -321,7 +321,7 @@ public class NmeaBurst implements INmeaBurst, Serializable {
         if (checkValid(gsa)) {
             return gsa.getSatellitesUsed();
         } else {
-            throw new MissingNmeaDataException(SentenceID.GSV);
+            throw new MissingNmeaDataException(SentenceID.GSA);
         }
     }
 
@@ -329,7 +329,7 @@ public class NmeaBurst implements INmeaBurst, Serializable {
         if (checkValid(gsa)) {
             return gsa.getSatellitesUsedCount();
         } else {
-            throw new MissingNmeaDataException(SentenceID.GSV);
+            throw new MissingNmeaDataException(SentenceID.GSA);
         }
     }
 
@@ -338,7 +338,7 @@ public class NmeaBurst implements INmeaBurst, Serializable {
         if (checkValid(gsa)) {
             return gsa.getFix();
         } else {
-            throw new MissingNmeaDataException(SentenceID.GGA);
+            throw new MissingNmeaDataException(SentenceID.GSA);
         }
     }
 
@@ -346,7 +346,7 @@ public class NmeaBurst implements INmeaBurst, Serializable {
         if (checkValid(gsa)) {
             return gsa.getMode();
         } else {
-            throw new MissingNmeaDataException(SentenceID.GGA);
+            throw new MissingNmeaDataException(SentenceID.GSA);
         }
     }
 
@@ -354,7 +354,7 @@ public class NmeaBurst implements INmeaBurst, Serializable {
         if (checkValid(gsa)) {
             return gsa.getHDOP();
         } else {
-            throw new MissingNmeaDataException(SentenceID.GGA);
+            throw new MissingNmeaDataException(SentenceID.GSA);
         }
     }
 
@@ -362,7 +362,7 @@ public class NmeaBurst implements INmeaBurst, Serializable {
         if (checkValid(gsa)) {
             return gsa.getPDOP();
         } else {
-            throw new MissingNmeaDataException(SentenceID.GGA);
+            throw new MissingNmeaDataException(SentenceID.GSA);
         }
     }
 
@@ -370,7 +370,7 @@ public class NmeaBurst implements INmeaBurst, Serializable {
         if (checkValid(gsa)) {
             return gsa.getVDOP();
         } else {
-            throw new MissingNmeaDataException(SentenceID.GGA);
+            throw new MissingNmeaDataException(SentenceID.GSA);
         }
     }
 
