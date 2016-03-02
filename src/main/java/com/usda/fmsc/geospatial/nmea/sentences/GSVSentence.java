@@ -61,13 +61,13 @@ public class GSVSentence extends MultiSentence implements Serializable {
 
                             satellite = new Satellite(
                                     satID,
-                                    parseDouble(tokens[current + 1]),
-                                    parseDouble(tokens[current + 2]),
-                                    parseDouble(tokens[current + 3])
+                                    parseFloat(tokens[current + 1]),
+                                    parseFloat(tokens[current + 2]),
+                                    parseFloat(tokens[current + 3])
                             );
 
                             for (Satellite sat : satellites) {
-                                if(satID == sat.getID()) {
+                                if(satID == sat.getNmeaID()) {
                                     //throw new DuplicateSatelliteException(satID);
                                     add = false;
                                     break;
@@ -99,11 +99,11 @@ public class GSVSentence extends MultiSentence implements Serializable {
     }
 
 
-    private Double parseDouble(String input) {
-        Double value = null;
+    private Float parseFloat(String input) {
+        Float value = null;
 
         try {
-            value = Double.parseDouble(input);
+            value = Float.parseFloat(input);
         } catch (NumberFormatException e) {
             //
         }

@@ -12,7 +12,7 @@ public class GSASentence extends NmeaSentence  implements Serializable {
     private Mode mode;
     private Fix fix;
     private List<Integer> satsUsed;
-    Double pdop, hdop, vdop;
+    private Float pdop, hdop, vdop;
 
 
     public GSASentence() {
@@ -47,13 +47,13 @@ public class GSASentence extends NmeaSentence  implements Serializable {
                     }
 
                     if (pdop == null)
-                        pdop = Double.parseDouble(tokens[15]);
+                        pdop = Float.parseFloat(tokens[15]);
 
                     if (hdop == null)
-                        hdop = Double.parseDouble(tokens[16]);
+                        hdop = Float.parseFloat(tokens[16]);
 
                     if (vdop == null)
-                        vdop = Double.parseDouble(tokens[17]);
+                        vdop = Float.parseFloat(tokens[17]);
 
                     valid = true;
                 } catch (Exception ex) {
@@ -82,15 +82,15 @@ public class GSASentence extends NmeaSentence  implements Serializable {
         return satsUsed.size();
     }
 
-    public double getPDOP() {
+    public Float getPDOP() {
         return pdop;
     }
 
-    public double getHDOP() {
+    public Float getHDOP() {
         return hdop;
     }
 
-    public double getVDOP() {
+    public Float getVDOP() {
         return vdop;
     }
 
