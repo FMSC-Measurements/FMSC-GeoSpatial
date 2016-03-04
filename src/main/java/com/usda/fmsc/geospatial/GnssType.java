@@ -12,7 +12,8 @@ public enum GnssType {
     EGNOS(8),
     SDCM(9),
     GAGAN(10),
-    MSAS(11);
+    MSAS(11),
+    SNAS(12);
 
     private final int value;
 
@@ -49,6 +50,7 @@ public enum GnssType {
             case "SDCM": return SDCM;
             case "GAGAN": return GAGAN;
             case "MSAS": return MSAS;
+            case "SNAS": return SNAS;
             default: return Unknown;
         }
     }
@@ -95,6 +97,7 @@ public enum GnssType {
             case SDCM: return "SDCM";
             case GAGAN: return "GAGAN";
             case MSAS: return "MSAS";
+            case SNAS: return "SNAS";
             default: return "Unknown";
         }
     }
@@ -106,7 +109,8 @@ public enum GnssType {
             case EGNOS:
             case SDCM:
             case GAGAN:
-            case MSAS: return true;
+            case MSAS:
+            case SNAS: return true;
         }
 
         return false;
