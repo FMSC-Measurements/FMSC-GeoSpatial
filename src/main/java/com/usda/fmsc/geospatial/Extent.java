@@ -1,6 +1,8 @@
 package com.usda.fmsc.geospatial;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Extent implements Serializable {
     private Position northEast;
@@ -48,5 +50,41 @@ public class Extent implements Serializable {
 
     public Double getWest() {
         return southWest.getLongitudeSignedDecimal();
+    }
+
+
+    public static class Builder {
+        List<Position> positions = new ArrayList<>();
+
+        public void include(Position position) {
+            positions.add(position);
+        }
+
+        public Extent build() {
+            double north = -90, south = 90, east = -180, west = 180;
+            double lat, lon;
+
+            if (positions.size() < 1)
+                throw new RuntimeException("No positions");
+
+            for (Position pos : positions) {
+                lat = pos.getLatitudeSignedDecimal();
+                lon = pos.getLongitudeSignedDecimal();
+
+                if (lat > north)
+                    north = lat;
+
+                if (lat < south)
+                    south = lat;
+
+                if (lon > east)
+                    east = lon;
+
+                if (lon < west)
+                    west = lon;
+            }
+
+            return new Extent(north, east, south, west);
+        }
     }
 }
