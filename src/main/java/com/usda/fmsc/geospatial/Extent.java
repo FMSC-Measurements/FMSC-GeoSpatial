@@ -60,6 +60,11 @@ public class Extent implements Serializable {
             positions.add(position);
         }
 
+        public void include(Extent extent) {
+            positions.add(extent.getNorthEast());
+            positions.add(extent.getSouthWest());
+        }
+
         public Extent build() {
             double north = -90, south = 90, east = -180, west = 180;
             double lat, lon;

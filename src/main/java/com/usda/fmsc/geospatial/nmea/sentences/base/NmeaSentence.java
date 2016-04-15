@@ -18,6 +18,7 @@ public abstract class NmeaSentence implements Serializable {
 
     public NmeaSentence(SentenceID sentenceID, String nmea) {
         this.sentenceID = sentenceID;
+        this.talkerID = TalkerID.parse(nmea);
 
         if (isMultiString() && nmea.contains("\n")) {
             String[] strs = nmea.split("\\r?\\n");

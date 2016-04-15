@@ -117,6 +117,18 @@ public class NmeaBurst implements INmeaBurst, Serializable {
                 gga.isValid() && gsa.isValid() && rmc.isValid() && gsv.isValid());
     }
 
+    @Override
+    public boolean isValid(SentenceID id) {
+        switch (id) {
+            case GGA: return gga != null && gga.isValid();
+            case GSA: return gsa != null && gsa.isValid();
+            case GSV: return gsv != null && gsv.isValid();
+            case RMC: return rmc != null && rmc.isValid();
+        }
+
+        return false;
+    }
+
     public boolean isFull() {
         return (gga != null && gsa != null && rmc != null && gsv != null &&
                 gsv.hasAllMessages());

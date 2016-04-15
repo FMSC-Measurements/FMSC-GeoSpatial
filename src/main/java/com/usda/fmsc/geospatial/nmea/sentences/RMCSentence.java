@@ -14,6 +14,7 @@ import com.usda.fmsc.geospatial.nmea.sentences.base.PositionSentence;
 
 public class RMCSentence extends PositionSentence  implements Serializable {
     public static final DateTimeFormatter RMCTimeFormatter = DateTimeFormat.forPattern("HHmmss.SSS ddMMYY");
+    public static final DateTimeFormatter RMCTimeFormatterAlt = DateTimeFormat.forPattern("HHmmss ddMMYY");
 
     private DateTime fixTime;
     private Status status;
@@ -37,9 +38,15 @@ public class RMCSentence extends PositionSentence  implements Serializable {
             valid = false;
             String[] tokens = nmea.substring(0, nmea.indexOf("*")).split(",", -1);
 
-            if (tokens.length > 12) {
+            if (tokens.length > 12 && tokens[1].length() > 0) {
                 try {
-                    fixTime = DateTime.parse(String.format("%s %s", tokens[1], tokens[9]), RMCTimeFormatter);
+                    String timeString = String.format("%s %s", tokens[1], tokens[9]);
+
+                    try {
+                        fixTime = DateTime.parse(timeString, RMCTimeFormatter);
+                    } catch (Exception e) {
+                        fixTime = DateTime.parse(timeString, RMCTimeFormatterAlt);
+                    }
 
                     status = Status.parse(tokens[2]);
 
@@ -53,11 +60,15 @@ public class RMCSentence extends PositionSentence  implements Serializable {
                             EastWest.parse(tokens[6])
                     );
 
-                    groundSpeed = Double.parseDouble(tokens[7]);
+                    String token = tokens[7];
+                    if (token != null && token.length() > 0)
+                        groundSpeed = Double.parseDouble(token);
 
-                    trackAngle = Double.parseDouble(tokens[8]);
+                    token = tokens[8];
+                    if (token != null && token.length() > 0)
+                        trackAngle = Double.parseDouble(token);
 
-                    String token = tokens[10];
+                    token = tokens[10];
                     if (token != null && !token.equals("")) {
                         magVar = Double.parseDouble(token);
                         magVarDir = EastWest.parse(tokens[11]);

@@ -1,5 +1,6 @@
 package com.usda.fmsc.geospatial.nmea.sentences;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -14,6 +15,7 @@ import com.usda.fmsc.geospatial.nmea.sentences.base.PositionSentence;
 
 public class GGASentence extends PositionSentence  implements Serializable {
     public static final DateTimeFormatter GGATimeFormatter = DateTimeFormat.forPattern("HHmmss.SSS");
+    public static final DateTimeFormatter GGATimeFormatterAlt = DateTimeFormat.forPattern("HHmmss");
 
     private LocalTime fixTime;
     private GpsFixType fixQuality;
@@ -37,9 +39,13 @@ public class GGASentence extends PositionSentence  implements Serializable {
             valid = false;
             String[] tokens = nmea.substring(0, nmea.indexOf("*")).split(",", -1);
 
-            if (tokens.length > 14) {
+            if (tokens.length > 14 && tokens[1].length() > 0) {
                 try {
-                    fixTime = LocalTime.parse(tokens[1], GGATimeFormatter);
+                    try {
+                        fixTime = LocalTime.parse(tokens[1], GGATimeFormatter);
+                    } catch (Exception e) {
+                        fixTime = LocalTime.parse(tokens[1], GGATimeFormatterAlt);
+                    }
 
                     latitude = Latitude.fromDecimalDMS(
                             Double.parseDouble(tokens[2]),

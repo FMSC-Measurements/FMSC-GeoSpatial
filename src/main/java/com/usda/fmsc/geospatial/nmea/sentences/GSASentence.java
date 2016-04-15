@@ -42,7 +42,7 @@ public class GSASentence extends NmeaSentence  implements Serializable {
                     String token;
                     for (int i = 3; i < 15; i++) {
                         token = tokens[i];
-                        if(token != null && !token.equals(""))
+                        if (token != null && !token.equals(""))
                             satsUsed.add(Integer.parseInt(token));
                     }
 

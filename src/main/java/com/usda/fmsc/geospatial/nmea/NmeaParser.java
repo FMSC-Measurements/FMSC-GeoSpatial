@@ -11,18 +11,21 @@ import com.usda.fmsc.geospatial.nmea.sentences.*;
 import com.usda.fmsc.geospatial.nmea.sentences.base.MultiSentence;
 import com.usda.fmsc.geospatial.nmea.sentences.base.NmeaSentence;
 
-public class NmeaParser {
+public class NmeaParser<TNmeaBurst extends INmeaBurst> {
     private List<Listener> listeners;
     private List<TalkerID> usedTalkedIDs;
 
-    private NmeaBurst burst;
+    private INmeaBurst burst;
+    private Class<TNmeaBurst> clazz;
 
 
-    public NmeaParser() {
-        this(TalkerID.GP);
+    public NmeaParser(Class<TNmeaBurst> clazz) {
+        this(TalkerID.GP, clazz);
     }
 
-    public NmeaParser(TalkerID talkerID) {
+    public NmeaParser(TalkerID talkerID, Class<TNmeaBurst> clazz) {
+        this.clazz = clazz;
+
         listeners = new ArrayList<>();
         usedTalkedIDs = new ArrayList<>();
         usedTalkedIDs.add(talkerID);
@@ -34,11 +37,19 @@ public class NmeaParser {
     }
 
 
+    private TNmeaBurst newBurst() throws InstantiationException, IllegalAccessException {
+        return this.clazz.newInstance();
+    }
+
     public boolean parse(String nmea) {
         boolean usedNmea = false;
 
         if (burst == null) {
-            burst = new NmeaBurst();
+            try {
+                burst = newBurst();
+            } catch (Exception e) {
+
+            }
         }
 
         try {
@@ -58,10 +69,10 @@ public class NmeaParser {
                 usedNmea = true;
             }
         } catch (ExcessiveStringException e) {
-            burst = new NmeaBurst();
+            //burst = new NmeaBurst();
         }
 
-        if (burst.isFull()) {
+        if (burst != null && burst.isFull()) {
             postBurstReceived(burst);
             burst = null;
         }
@@ -73,7 +84,7 @@ public class NmeaParser {
         burst = null;
     }
 
-    private void postBurstReceived(NmeaBurst burst) {
+    private void postBurstReceived(INmeaBurst burst) {
         for (Listener listener : listeners) {
             listener.onBurstReceived(burst);
         }
@@ -127,7 +138,7 @@ public class NmeaParser {
     }
 
     public interface Listener {
-        void onBurstReceived(NmeaBurst burst);
+        void onBurstReceived(INmeaBurst burst);
 
         void onNmeaReceived(NmeaSentence sentence);
     }
