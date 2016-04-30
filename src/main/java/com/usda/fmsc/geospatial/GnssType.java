@@ -17,7 +17,7 @@ public enum GnssType {
 
     private final int value;
 
-    private GnssType(int value) {
+    GnssType(int value) {
         this.value = value;
     }
 

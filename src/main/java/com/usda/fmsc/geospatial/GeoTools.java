@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GeoTools {
-
-
     public static Position getGeoMidPoint(Position position1, Position position2) {
         ArrayList<Position> arr = new ArrayList<Position>();
 

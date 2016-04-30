@@ -3,7 +3,6 @@ package com.usda.fmsc.geospatial.utm;
 import java.io.Serializable;
 
 public class UTMCoords implements Serializable {
-
     private double x, y;
     private int zone;
 
@@ -37,11 +36,4 @@ public class UTMCoords implements Serializable {
     public void setZone(int zone) {
         this.zone = zone;
     }
-
-
-    /*
-    public void forceZone(int forcedZone) {
-
-    }
-    */
 }

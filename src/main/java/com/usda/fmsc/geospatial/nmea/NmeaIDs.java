@@ -19,7 +19,7 @@ public class NmeaIDs {
 
         private final int value;
 
-        private TalkerID(int value) {
+        TalkerID(int value) {
             this.value = value;
         }
 
@@ -122,7 +122,7 @@ public class NmeaIDs {
 
         private final int value;
 
-        private SentenceID(int value) {
+        SentenceID(int value) {
             this.value = value;
         }
 

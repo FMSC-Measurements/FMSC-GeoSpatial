@@ -6,7 +6,6 @@ import com.usda.fmsc.geospatial.Longitude;
 import com.usda.fmsc.geospatial.GeoPosition;
 
 public class UTMTools {
-
     public static UTMCoords convertLatLonToUTM(GeoPosition position) {
         return convertLatLonToUTM(position.getLatitude(), position.getLongitude());
     }
@@ -85,11 +84,11 @@ public class UTMTools {
                 + (15 * eccSquared * eccSquared / 256 + 45 * eccSquared * eccSquared * eccSquared / 1024) * Math.sin(4 * latitudeRad)
                 - (35 * eccSquared * eccSquared * eccSquared / 3072) * Math.sin(6 * latitudeRad));
 
-        double UTMEasting = (double)(k0 * N * (A + (1 - T + C) * A * A * A / 6
+        double UTMEasting = (k0 * N * (A + (1 - T + C) * A * A * A / 6
                 + (5 - 18 * T + T * T + 72 * C - 58 * eccPrimeSquared) * A * A * A * A * A / 120)
                 + 500000.0);
 
-        double UTMNorthing = (double)(k0 * (M + N * Math.tan(latitudeRad) * (A * A / 2 + (5 - T + 9 * C + 4 * C * C) * A * A * A * A / 24
+        double UTMNorthing = (k0 * (M + N * Math.tan(latitudeRad) * (A * A / 2 + (5 - T + 9 * C + 4 * C * C) * A * A * A * A / 24
                 + (61 - 58 * T + T * T + 600 * C - 330 * eccPrimeSquared) * A * A * A * A * A * A / 720)));
         if (latitude < 0)
             UTMNorthing += 10000000.0; //10000000 meter offset for southern hemisphere
@@ -141,5 +140,4 @@ public class UTMTools {
 
         return new GeoPosition(latitude, longitude);
     }
-
 }

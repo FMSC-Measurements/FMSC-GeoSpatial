@@ -1,13 +1,15 @@
-package com.usda.fmsc.geospatial.nmea.sentences;
+package com.usda.fmsc.geospatial.nmea;
 
 import com.usda.fmsc.geospatial.GeoPosition;
 import com.usda.fmsc.geospatial.Units;
-import com.usda.fmsc.geospatial.nmea.INmeaBurst;
 import com.usda.fmsc.geospatial.nmea.NmeaIDs.TalkerID;
 import com.usda.fmsc.geospatial.nmea.NmeaIDs.SentenceID;
-import com.usda.fmsc.geospatial.nmea.Satellite;
 import com.usda.fmsc.geospatial.nmea.exceptions.ExcessiveStringException;
 import com.usda.fmsc.geospatial.nmea.exceptions.MissingNmeaDataException;
+import com.usda.fmsc.geospatial.nmea.sentences.GGASentence;
+import com.usda.fmsc.geospatial.nmea.sentences.GSASentence;
+import com.usda.fmsc.geospatial.nmea.sentences.GSVSentence;
+import com.usda.fmsc.geospatial.nmea.sentences.RMCSentence;
 import com.usda.fmsc.geospatial.nmea.sentences.base.NmeaSentence;
 import com.usda.fmsc.geospatial.utm.UTMCoords;
 import com.usda.fmsc.geospatial.utm.UTMTools;

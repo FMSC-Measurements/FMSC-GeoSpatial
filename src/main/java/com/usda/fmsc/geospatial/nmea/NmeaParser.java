@@ -48,7 +48,7 @@ public class NmeaParser<TNmeaBurst extends INmeaBurst> {
             try {
                 burst = newBurst();
             } catch (Exception e) {
-
+                //
             }
         }
 

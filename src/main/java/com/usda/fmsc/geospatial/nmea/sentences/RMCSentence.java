@@ -1,5 +1,7 @@
 package com.usda.fmsc.geospatial.nmea.sentences;
 
+import android.text.TextUtils;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -69,9 +71,13 @@ public class RMCSentence extends PositionSentence  implements Serializable {
                         trackAngle = Double.parseDouble(token);
 
                     token = tokens[10];
-                    if (token != null && !token.equals("")) {
+                    if (!TextUtils.isEmpty(token)) {
                         magVar = Double.parseDouble(token);
-                        magVarDir = EastWest.parse(tokens[11]);
+                    }
+
+                    token = tokens[11];
+                    if (!TextUtils.isEmpty(token)) {
+                        magVarDir = EastWest.parse(token);
                     }
 
                     valid = true;
@@ -120,7 +126,7 @@ public class RMCSentence extends PositionSentence  implements Serializable {
 
         private final int value;
 
-        private Status(int value) {
+        Status(int value) {
             this.value = value;
         }
 

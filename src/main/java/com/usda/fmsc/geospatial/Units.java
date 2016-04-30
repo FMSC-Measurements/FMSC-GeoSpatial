@@ -7,7 +7,7 @@ public class Units {
 
         private final int value;
 
-        private NorthSouth(int value) {
+        NorthSouth(int value) {
             this.value = value;
         }
 
@@ -60,7 +60,7 @@ public class Units {
 
         private final int value;
 
-        private EastWest(int value) {
+        EastWest(int value) {
             this.value = value;
         }
 
@@ -115,7 +115,7 @@ public class Units {
 
         private final int value;
 
-        private UomElevation(int value) {
+        UomElevation(int value) {
             this.value = value;
         }
 

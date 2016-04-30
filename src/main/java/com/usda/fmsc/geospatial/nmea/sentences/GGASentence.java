@@ -1,6 +1,5 @@
 package com.usda.fmsc.geospatial.nmea.sentences;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -118,7 +117,7 @@ public class GGASentence extends PositionSentence  implements Serializable {
 
         private final int value;
 
-        private GpsFixType(int value) {
+        GpsFixType(int value) {
             this.value = value;
         }
 
