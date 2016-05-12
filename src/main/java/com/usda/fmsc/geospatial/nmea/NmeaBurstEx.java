@@ -1,7 +1,9 @@
 package com.usda.fmsc.geospatial.nmea;
 
+import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.GeoPosition;
-import com.usda.fmsc.geospatial.Units;
+import com.usda.fmsc.geospatial.NorthSouth;
+import com.usda.fmsc.geospatial.UomElevation;
 import com.usda.fmsc.geospatial.nmea.NmeaIDs.TalkerID;
 import com.usda.fmsc.geospatial.nmea.NmeaIDs.SentenceID;
 import com.usda.fmsc.geospatial.nmea.exceptions.ExcessiveStringException;
@@ -267,7 +269,7 @@ public class NmeaBurstEx implements INmeaBurst, Serializable {
         }
     }
 
-    public Units.EastWest getMagVarDir() {
+    public EastWest getMagVarDir() {
         if (isValid(SentenceID.RMC)) {
             return ((RMCSentence)getSentenceByPriority(SentenceID.RMC)).getMagVarDir();
         } else {
@@ -317,7 +319,7 @@ public class NmeaBurstEx implements INmeaBurst, Serializable {
         throw new MissingNmeaDataException("Missing RMC and GGA Sentences");
     }
 
-    public Units.NorthSouth getLatDir() {
+    public NorthSouth getLatDir() {
         if (isValid(SentenceID.GGA)) {
             return ((GGASentence)getSentenceByPriority(SentenceID.GGA)).getLatDir();
         } else if (isValid(SentenceID.RMC)) {
@@ -337,7 +339,7 @@ public class NmeaBurstEx implements INmeaBurst, Serializable {
         throw new MissingNmeaDataException("Missing RMC and GGA Sentences");
     }
 
-    public Units.EastWest getLonDir() {
+    public EastWest getLonDir() {
         if (isValid(SentenceID.GGA)) {
             return ((GGASentence)getSentenceByPriority(SentenceID.GGA)).getLonDir();
         } else if (isValid(SentenceID.RMC)) {
@@ -356,7 +358,7 @@ public class NmeaBurstEx implements INmeaBurst, Serializable {
         }
     }
 
-    public Units.UomElevation getUomElevation() {
+    public UomElevation getUomElevation() {
         if (isValid(SentenceID.GGA)) {
             return ((GGASentence)getSentenceByPriority(SentenceID.GGA)).getUomElevation();
         } else {
@@ -402,7 +404,7 @@ public class NmeaBurstEx implements INmeaBurst, Serializable {
         }
     }
 
-    public Units.UomElevation getGeoUom() {
+    public UomElevation getGeoUom() {
         if (isValid(SentenceID.GGA)) {
             return ((GGASentence)getSentenceByPriority(SentenceID.GGA)).getGeoUom();
         } else {

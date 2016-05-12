@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class GeoPosition extends Position implements Serializable {
     private Double elevation;
-    private Units.UomElevation uomElevation;
+    private UomElevation uomElevation;
 
 
     public GeoPosition() {
@@ -24,17 +24,17 @@ public class GeoPosition extends Position implements Serializable {
         super(latitude, longitude);
     }
 
-    public GeoPosition(double latitude, double longitude, double elevation, Units.UomElevation uomElevation) {
+    public GeoPosition(double latitude, double longitude, double elevation, UomElevation uomElevation) {
         super(latitude, longitude);
         this.elevation = elevation;
         this.uomElevation = uomElevation;
     }
 
-    public GeoPosition(double latitude, Units.NorthSouth latDir, double longitude, Units.EastWest lonDir) {
+    public GeoPosition(double latitude, NorthSouth latDir, double longitude, EastWest lonDir) {
         super(latitude, latDir, longitude, lonDir);
     }
 
-    public GeoPosition(double latitude, Units.NorthSouth latDir, double longitude, Units.EastWest lonDir, double elevation, Units.UomElevation uomElevation) {
+    public GeoPosition(double latitude, NorthSouth latDir, double longitude, EastWest lonDir, double elevation, UomElevation uomElevation) {
         super(latitude, latDir, longitude, lonDir);
         setElevation(elevation, uomElevation);
     }
@@ -43,7 +43,7 @@ public class GeoPosition extends Position implements Serializable {
         super(latitude, longitude);
     }
 
-    public GeoPosition(Latitude latitude, Longitude longitude, double elevation, Units.UomElevation uomElevation) {
+    public GeoPosition(Latitude latitude, Longitude longitude, double elevation, UomElevation uomElevation) {
         super(latitude, longitude);
         setElevation(elevation, uomElevation);
     }
@@ -57,16 +57,16 @@ public class GeoPosition extends Position implements Serializable {
         this.elevation = elevation;
     }
 
-    public void setElevation(Double elevation, Units.UomElevation uomElevation) {
+    public void setElevation(Double elevation, UomElevation uomElevation) {
         this.elevation = elevation;
         this.uomElevation = uomElevation;
     }
 
-    public Units.UomElevation getUomElevation() {
+    public UomElevation getUomElevation() {
         return uomElevation;
     }
 
-    public void setUomElevation(Units.UomElevation uomElevation) {
+    public void setUomElevation(UomElevation uomElevation) {
         this.uomElevation = uomElevation;
     }
 

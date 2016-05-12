@@ -1,11 +1,13 @@
 package com.usda.fmsc.geospatial.nmea;
 
+import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.GeoPosition;
+import com.usda.fmsc.geospatial.NorthSouth;
+import com.usda.fmsc.geospatial.UomElevation;
 import com.usda.fmsc.geospatial.nmea.sentences.GGASentence;
 import com.usda.fmsc.geospatial.nmea.sentences.GSASentence;
 import com.usda.fmsc.geospatial.nmea.sentences.base.NmeaSentence;
 import com.usda.fmsc.geospatial.utm.UTMCoords;
-import com.usda.fmsc.geospatial.Units;
 
 import org.joda.time.DateTime;
 
@@ -23,7 +25,7 @@ public interface INmeaBurst {
     DateTime getFixTime();
 
     double getMagVar();
-    Units.EastWest getMagVarDir();
+    EastWest getMagVarDir();
 
     double getTrackAngle();
 
@@ -34,13 +36,13 @@ public interface INmeaBurst {
     boolean hasPosition();
 
     double getLatitude();
-    Units.NorthSouth getLatDir();
+    NorthSouth getLatDir();
 
     double getLongitude();
-    Units.EastWest getLonDir();
+    EastWest getLonDir();
 
     double getElevation();
-    Units.UomElevation getUomElevation();
+    UomElevation getUomElevation();
 
     UTMCoords getTrueUTM();
     UTMCoords getUTM(int utmZone);
@@ -49,7 +51,7 @@ public interface INmeaBurst {
     double getHorizDilution();
     double getGeoidHeight();
 
-    Units.UomElevation getGeoUom();
+    UomElevation getGeoUom();
 
     GGASentence.GpsFixType getFixQuality();
 

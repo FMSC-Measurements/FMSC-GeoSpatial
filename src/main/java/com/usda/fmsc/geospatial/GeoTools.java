@@ -110,7 +110,7 @@ public class GeoTools {
         return new GeoPosition(lat * 180.0 / Math.PI, lon * 180.0 / Math.PI, z, positions.get(0).getUomElevation());
     }
 
-    public static GeoPosition getMidPioint(List<Double> lats, List<Double> lons, List<Double> elevations, Units.UomElevation uomElevation) {
+    public static GeoPosition getMidPioint(List<Double> lats, List<Double> lons, List<Double> elevations, UomElevation uomElevation) {
         if (lats == null || lats.size() < 1) {
             throw new RuntimeException("No positions to average.");
         }

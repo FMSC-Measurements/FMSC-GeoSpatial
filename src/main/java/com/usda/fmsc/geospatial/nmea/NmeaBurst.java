@@ -5,7 +5,10 @@ import org.joda.time.DateTime;
 import java.io.Serializable;
 import java.util.List;
 
+import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.GeoPosition;
+import com.usda.fmsc.geospatial.NorthSouth;
+import com.usda.fmsc.geospatial.UomElevation;
 import com.usda.fmsc.geospatial.nmea.exceptions.ExcessiveStringException;
 import com.usda.fmsc.geospatial.nmea.exceptions.MissingNmeaDataException;
 import com.usda.fmsc.geospatial.nmea.NmeaIDs.SentenceID;
@@ -16,9 +19,6 @@ import com.usda.fmsc.geospatial.nmea.sentences.GSVSentence;
 import com.usda.fmsc.geospatial.nmea.sentences.RMCSentence;
 import com.usda.fmsc.geospatial.utm.UTMCoords;
 import com.usda.fmsc.geospatial.utm.UTMTools;
-import com.usda.fmsc.geospatial.Units.EastWest;
-import com.usda.fmsc.geospatial.Units.NorthSouth;
-import com.usda.fmsc.geospatial.Units.UomElevation;
 
 public class NmeaBurst implements INmeaBurst, Serializable {
     //GGA Sentence

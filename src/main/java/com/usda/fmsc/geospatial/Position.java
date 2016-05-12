@@ -26,11 +26,11 @@ public class Position implements Serializable {
         setPosition(latitude, null, longitude, null);
     }
 
-    public Position(double latitude, Units.NorthSouth latDir, double longitude, Units.EastWest lonDir) {
+    public Position(double latitude, NorthSouth latDir, double longitude, EastWest lonDir) {
         setPosition(latitude, latDir, longitude, lonDir);
     }
 
-    protected void setPosition(Double latitude, Units.NorthSouth latDir, Double longitude, Units.EastWest lonDir) {
+    protected void setPosition(Double latitude, NorthSouth latDir, Double longitude, EastWest lonDir) {
         if (latDir != null) {
             this.latitude = new Latitude(latitude, latDir);
         } else {
@@ -72,29 +72,29 @@ public class Position implements Serializable {
 
 
 
-    public Units.NorthSouth getLatDir() {
+    public NorthSouth getLatDir() {
         return latitude.getHemisphere();
     }
 
-    public void setLatDir(Units.NorthSouth latDir) {
+    public void setLatDir(NorthSouth latDir) {
         this.latitude.setHemisphere(latDir);
     }
 
 
-    public Units.EastWest getLonDir() {
+    public EastWest getLonDir() {
         return longitude.getHemisphere();
     }
 
-    public void setLonDir(Units.EastWest lonDir) {
+    public void setLonDir(EastWest lonDir) {
         this.longitude.setHemisphere(lonDir);
     }
 
 
     public boolean isNorthernHemisphere() {
-        return latitude.getHemisphere() == Units.NorthSouth.North;
+        return latitude.getHemisphere() == NorthSouth.North;
     }
 
     public boolean isWesternHemisphere() {
-        return longitude.getHemisphere() == Units.EastWest.West;
+        return longitude.getHemisphere() == EastWest.West;
     }
 }
