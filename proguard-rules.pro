@@ -23,3 +23,5 @@
 
 -keep class org.joda.time.** { *; }
 -keep interface class org.joda.time.** { *; }
+
+-dontwarn org.joda.time.**
