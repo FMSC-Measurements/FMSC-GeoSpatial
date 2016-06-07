@@ -3,7 +3,7 @@ package com.usda.fmsc.geospatial.nmea;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.ArrayList;
 
 import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.GeoPosition;
@@ -313,7 +313,7 @@ public class NmeaBurst implements INmeaBurst, Serializable {
         }
     }
 
-    public List<Satellite> getSatellitesInView() {
+    public ArrayList<Satellite> getSatellitesInView() {
         if (checkValid(gsv)) {
             return gsv.getSatellites();
         } else {
@@ -329,7 +329,7 @@ public class NmeaBurst implements INmeaBurst, Serializable {
         }
     }
 
-    public List<Integer> getUsedSatelliteIDs() {
+    public ArrayList<Integer> getUsedSatelliteIDs() {
         if (checkValid(gsa)) {
             return gsa.getSatellitesUsed();
         } else {

@@ -11,7 +11,7 @@ public class GSASentence extends NmeaSentence  implements Serializable {
 
     private Mode mode;
     private Fix fix;
-    private List<Integer> satsUsed;
+    private ArrayList<Integer> satsUsed;
     private Float pdop, hdop, vdop;
 
 
@@ -74,7 +74,7 @@ public class GSASentence extends NmeaSentence  implements Serializable {
         return fix;
     }
 
-    public List<Integer> getSatellitesUsed() {
+    public ArrayList<Integer> getSatellitesUsed() {
         return satsUsed;
     }
 

@@ -434,9 +434,9 @@ public class NmeaBurstEx implements INmeaBurst, Serializable {
         }
     }
 
-    public List<Satellite> getSatellitesInView() {
+    public ArrayList<Satellite> getSatellitesInView() {
         if (isValid(SentenceID.GSV)) {
-            List<Satellite> sats = new ArrayList<>();
+            ArrayList<Satellite> sats = new ArrayList<>();
 
             for (GSVSentence sentence : gsv.values()) {
                 sats.addAll(sentence.getSatellites());
@@ -462,9 +462,9 @@ public class NmeaBurstEx implements INmeaBurst, Serializable {
         }
     }
 
-    public List<Integer> getUsedSatelliteIDs() {
+    public ArrayList<Integer> getUsedSatelliteIDs() {
         if (isValid(SentenceID.GSA)) {
-            List<Integer> ids = new ArrayList<>();
+            ArrayList<Integer> ids = new ArrayList<>();
 
             for (GSASentence sentence : gsa.values()) {
                 ids.addAll(sentence.getSatellitesUsed());

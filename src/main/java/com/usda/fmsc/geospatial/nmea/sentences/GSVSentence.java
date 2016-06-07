@@ -10,7 +10,7 @@ import com.usda.fmsc.geospatial.nmea.Satellite;
 
 public class GSVSentence extends MultiSentence implements Serializable {
     private int numberOfSatellitesInView;
-    private List<Satellite> satellites;
+    private ArrayList<Satellite> satellites;
 
 
     public GSVSentence() {
@@ -90,7 +90,7 @@ public class GSVSentence extends MultiSentence implements Serializable {
         return valid;
     }
 
-    public List<Satellite> getSatellites() {
+    public ArrayList<Satellite> getSatellites() {
         return satellites;
     }
 

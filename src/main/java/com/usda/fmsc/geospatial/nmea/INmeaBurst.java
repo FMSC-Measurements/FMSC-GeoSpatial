@@ -11,7 +11,7 @@ import com.usda.fmsc.geospatial.utm.UTMCoords;
 
 import org.joda.time.DateTime;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public interface INmeaBurst {
     NmeaSentence addNmeaSentence(String sentence);
@@ -57,11 +57,11 @@ public interface INmeaBurst {
 
     int getTrackedSatellitesCount();
 
-    List<Satellite> getSatellitesInView();
+    ArrayList<Satellite> getSatellitesInView();
 
     int getSatellitesInViewCount();
 
-    List<Integer> getUsedSatelliteIDs();
+    ArrayList<Integer> getUsedSatelliteIDs();
 
     int getUsedSatellitesCount();
 
