@@ -3,6 +3,7 @@ package com.usda.fmsc.geospatial.nmea.sentences;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import com.usda.fmsc.geospatial.nmea.NmeaIDs.*;
 import com.usda.fmsc.geospatial.nmea.sentences.base.NmeaSentence;
@@ -136,6 +137,14 @@ public class GSASentence extends NmeaSentence  implements Serializable {
                 default: throw new IllegalArgumentException();
             }
         }
+
+        public String toStringF() {
+            switch(this) {
+                case Auto: return " 0 (Auto)";
+                case Manual: return "1 (Manual)";
+                default: throw new IllegalArgumentException();
+            }
+        }
     }
 
     public enum Fix {
@@ -180,6 +189,15 @@ public class GSASentence extends NmeaSentence  implements Serializable {
                 case NoFix: return "No Fix";
                 case _2D: return "2D";
                 case _3D: return "3D";
+                default: throw new IllegalArgumentException();
+            }
+        }
+
+        public String toStringF() {
+            switch(this) {
+                case NoFix: return "0 (No Fix)";
+                case _2D: return "1 (2D)";
+                case _3D: return "2 (3D)";
                 default: throw new IllegalArgumentException();
             }
         }

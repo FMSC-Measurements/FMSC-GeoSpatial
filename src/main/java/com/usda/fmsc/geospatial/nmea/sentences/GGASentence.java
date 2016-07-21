@@ -193,5 +193,20 @@ public class GGASentence extends PositionSentence  implements Serializable {
                 default: throw new IllegalArgumentException();
             }
         }
+
+        public String toStringF() {
+            switch(this) {
+                case NoFix: return "0 (No Fix)";
+                case GPS: return "1 (GPS)";
+                case DGPS: return "2 (DGPS)";
+                case PPS: return "3 (PPS)";
+                case RTK: return "5 (RTK)";
+                case FloatRTK: return "4 (Float RTK)";
+                case Estimated: return "6 (Estimated)";
+                case Manual: return "7 (Manual)";
+                case Simulation: return "8 (Simulation)";
+                default: throw new IllegalArgumentException();
+            }
+        }
     }
 }
