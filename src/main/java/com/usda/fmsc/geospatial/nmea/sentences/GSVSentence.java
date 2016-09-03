@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.usda.fmsc.geospatial.nmea.NmeaIDs;
 import com.usda.fmsc.geospatial.nmea.NmeaIDs.SentenceID;
 import com.usda.fmsc.geospatial.nmea.sentences.base.MultiSentence;
 import com.usda.fmsc.geospatial.nmea.Satellite;
@@ -13,12 +14,10 @@ public class GSVSentence extends MultiSentence implements Serializable {
     private ArrayList<Satellite> satellites;
 
 
-    public GSVSentence() {
-        super(SentenceID.GSV);
-    }
+    public GSVSentence() { }
 
     public GSVSentence(String nmea) {
-        super(SentenceID.GSV, nmea);
+        super(nmea);
     }
 
     @Override
@@ -88,6 +87,11 @@ public class GSVSentence extends MultiSentence implements Serializable {
         }
 
         return valid;
+    }
+
+    @Override
+    public SentenceID getSentenceID() {
+        return SentenceID.GSV;
     }
 
     public ArrayList<Satellite> getSatellites() {

@@ -13,6 +13,7 @@ import com.usda.fmsc.geospatial.nmea.sentences.GSASentence;
 import com.usda.fmsc.geospatial.nmea.sentences.GSVSentence;
 import com.usda.fmsc.geospatial.nmea.sentences.RMCSentence;
 import com.usda.fmsc.geospatial.nmea.sentences.base.NmeaSentence;
+import com.usda.fmsc.geospatial.nmea.sentences.base.PositionSentence;
 import com.usda.fmsc.geospatial.utm.UTMCoords;
 import com.usda.fmsc.geospatial.utm.UTMTools;
 
@@ -155,6 +156,7 @@ public class NmeaBurstEx implements INmeaBurst, Serializable {
                         return gga.get(tid);
                     }
                 }
+                break;
             }
             case GSA: {
                 for (TalkerID tid : priorityIds) {
@@ -162,6 +164,7 @@ public class NmeaBurstEx implements INmeaBurst, Serializable {
                         return gsa.get(tid);
                     }
                 }
+                break;
             }
             case RMC: {
                 for (TalkerID tid : priorityIds) {
@@ -169,6 +172,7 @@ public class NmeaBurstEx implements INmeaBurst, Serializable {
                         return rmc.get(tid);
                     }
                 }
+                break;
             }
             case GSV: {
                 for (TalkerID tid : priorityIds) {
@@ -176,6 +180,7 @@ public class NmeaBurstEx implements INmeaBurst, Serializable {
                         return gsv.get(tid);
                     }
                 }
+                break;
             }
         }
 
@@ -245,7 +250,7 @@ public class NmeaBurstEx implements INmeaBurst, Serializable {
 
     private boolean gsvIsFull() {
         for (GSVSentence s : gsv.values()) {
-            if (s.getMessageCount() < s.getTotalMessageCount())
+            if (!s.hasAllMessages())
                 return false;
         }
 
@@ -369,9 +374,9 @@ public class NmeaBurstEx implements INmeaBurst, Serializable {
 
     public UTMCoords getTrueUTM() {
         if (isValid(SentenceID.GGA)) {
-            return UTMTools.convertLatLonToUTM(((GGASentence)getSentenceByPriority(SentenceID.GGA)).getPosition());
+            return UTMTools.convertLatLonToUTM(((PositionSentence)getSentenceByPriority(SentenceID.GGA)).getPosition());
         } else if (isValid(SentenceID.RMC)) {
-            return UTMTools.convertLatLonToUTM(((GGASentence)getSentenceByPriority(SentenceID.RMC)).getPosition());
+            return UTMTools.convertLatLonToUTM(((PositionSentence)getSentenceByPriority(SentenceID.RMC)).getPosition());
         }
 
         throw new MissingNmeaDataException("Missing RMC and GGA Sentences");

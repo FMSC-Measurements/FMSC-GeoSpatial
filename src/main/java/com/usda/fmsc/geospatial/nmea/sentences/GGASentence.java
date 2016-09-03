@@ -11,6 +11,7 @@ import com.usda.fmsc.geospatial.Latitude;
 import com.usda.fmsc.geospatial.Longitude;
 import com.usda.fmsc.geospatial.NorthSouth;
 import com.usda.fmsc.geospatial.UomElevation;
+import com.usda.fmsc.geospatial.nmea.NmeaIDs;
 import com.usda.fmsc.geospatial.nmea.NmeaIDs.*;
 import com.usda.fmsc.geospatial.nmea.sentences.base.PositionSentence;
 
@@ -26,12 +27,10 @@ public class GGASentence extends PositionSentence  implements Serializable {
     private UomElevation geoUom;
 
 
-    public GGASentence() {
-        super(SentenceID.GGA);
-    }
+    public GGASentence() { }
 
     public GGASentence(String nmea) {
-        super(SentenceID.GGA, nmea);
+        super(nmea);
     }
 
     @Override
@@ -78,6 +77,11 @@ public class GGASentence extends PositionSentence  implements Serializable {
         }
 
         return valid;
+    }
+
+    @Override
+    public SentenceID getSentenceID() {
+        return SentenceID.GGA;
     }
 
 

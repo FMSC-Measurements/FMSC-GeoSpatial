@@ -5,15 +5,13 @@ import java.io.Serializable;
 import com.usda.fmsc.geospatial.nmea.exceptions.NmeaException;
 import com.usda.fmsc.geospatial.nmea.NmeaIDs;
 
-public class MultiSentence extends NmeaSentence implements Serializable {
+public abstract class MultiSentence extends NmeaSentence implements Serializable {
     protected int totalMessageCount, messageCount;
 
-    public MultiSentence(NmeaIDs.SentenceID sentenceID) {
-        super(sentenceID);
-    }
+    public MultiSentence() { }
 
-    public MultiSentence(NmeaIDs.SentenceID sentenceID, String nmea) {
-        super(sentenceID, nmea);
+    public MultiSentence(String nmea) {
+        super(nmea);
     }
 
     @Override

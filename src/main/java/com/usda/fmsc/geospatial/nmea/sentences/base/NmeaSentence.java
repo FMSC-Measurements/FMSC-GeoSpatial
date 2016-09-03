@@ -7,17 +7,13 @@ import com.usda.fmsc.geospatial.nmea.NmeaIDs.TalkerID;
 
 public abstract class NmeaSentence implements Serializable {
     protected TalkerID talkerID;
-    protected SentenceID sentenceID;
     protected String rawNmea;
     protected boolean valid;
 
 
-    public NmeaSentence(SentenceID sentenceID) {
-        this.sentenceID = sentenceID;
-    }
+    public NmeaSentence() { }
 
-    public NmeaSentence(SentenceID sentenceID, String nmea) {
-        this.sentenceID = sentenceID;
+    public NmeaSentence(String nmea) {
         this.talkerID = TalkerID.parse(nmea);
 
         if (isMultiString() && nmea.contains("\n")) {
@@ -34,7 +30,7 @@ public abstract class NmeaSentence implements Serializable {
 
 
     protected boolean parse(String nmea) {
-        valid = isValidNmea(sentenceID, null, nmea);
+        valid = isValidNmea(getSentenceID(), null, nmea);
         return valid;
     }
 
@@ -51,9 +47,7 @@ public abstract class NmeaSentence implements Serializable {
         this.talkerID = talkerID;
     }
 
-    public SentenceID getSentenceID() {
-        return sentenceID;
-    }
+    public abstract SentenceID getSentenceID();
 
     public String getNmea() {
         return rawNmea;

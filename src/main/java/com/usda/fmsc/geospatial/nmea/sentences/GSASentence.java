@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import com.usda.fmsc.geospatial.nmea.NmeaIDs;
 import com.usda.fmsc.geospatial.nmea.NmeaIDs.*;
 import com.usda.fmsc.geospatial.nmea.sentences.base.NmeaSentence;
 
@@ -16,12 +17,10 @@ public class GSASentence extends NmeaSentence  implements Serializable {
     private Float pdop, hdop, vdop;
 
 
-    public GSASentence() {
-        super(SentenceID.GSA);
-    }
+    public GSASentence() { }
 
     public GSASentence(String nmea) {
-        super(SentenceID.GSA, nmea);
+        super(nmea);
     }
 
     @Override
@@ -34,11 +33,9 @@ public class GSASentence extends NmeaSentence  implements Serializable {
 
             if (tokens.length > 17) {
                 try {
-                    if (mode == null)
-                        mode = Mode.parse(tokens[1]);
+                    mode = Mode.parse(tokens[1]);
 
-                    if (fix == null)
-                        fix = Fix.parse(tokens[2]);
+                    fix = Fix.parse(tokens[2]);
 
                     String token;
                     for (int i = 3; i < 15; i++) {
@@ -47,14 +44,17 @@ public class GSASentence extends NmeaSentence  implements Serializable {
                             satsUsed.add(Integer.parseInt(token));
                     }
 
-                    if (pdop == null)
-                        pdop = Float.parseFloat(tokens[15]);
+                    token = tokens[15];
+                    if (token != null && !token.equals(""))
+                        pdop = Float.parseFloat(token);
 
-                    if (hdop == null)
-                        hdop = Float.parseFloat(tokens[16]);
+                    token = tokens[16];
+                    if (token != null && !token.equals(""))
+                        hdop = Float.parseFloat(token);
 
-                    if (vdop == null)
-                        vdop = Float.parseFloat(tokens[17]);
+                    token = tokens[17];
+                    if (token != null && !token.equals(""))
+                        vdop = Float.parseFloat(token);
 
                     valid = true;
                 } catch (Exception ex) {
@@ -64,6 +64,11 @@ public class GSASentence extends NmeaSentence  implements Serializable {
         }
 
         return valid;
+    }
+
+    @Override
+    public SentenceID getSentenceID() {
+        return SentenceID.GSA;
     }
 
 

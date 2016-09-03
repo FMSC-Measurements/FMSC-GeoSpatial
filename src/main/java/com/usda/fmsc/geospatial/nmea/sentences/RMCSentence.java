@@ -12,6 +12,7 @@ import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.Latitude;
 import com.usda.fmsc.geospatial.Longitude;
 import com.usda.fmsc.geospatial.NorthSouth;
+import com.usda.fmsc.geospatial.nmea.NmeaIDs;
 import com.usda.fmsc.geospatial.nmea.NmeaIDs.*;
 import com.usda.fmsc.geospatial.nmea.sentences.base.PositionSentence;
 
@@ -27,12 +28,10 @@ public class RMCSentence extends PositionSentence  implements Serializable {
     private EastWest magVarDir;
 
 
-    public RMCSentence() {
-        super(SentenceID.RMC);
-    }
+    public RMCSentence() { }
 
     public RMCSentence(String nmea) {
-        super(SentenceID.RMC, nmea);
+        super(nmea);
     }
 
     @Override
@@ -64,11 +63,11 @@ public class RMCSentence extends PositionSentence  implements Serializable {
                     );
 
                     String token = tokens[7];
-                    if (token != null && token.length() > 0)
+                    if (!TextUtils.isEmpty(token))
                         groundSpeed = Double.parseDouble(token);
 
                     token = tokens[8];
-                    if (token != null && token.length() > 0)
+                    if (!TextUtils.isEmpty(token))
                         trackAngle = Double.parseDouble(token);
 
                     token = tokens[10];
@@ -89,6 +88,11 @@ public class RMCSentence extends PositionSentence  implements Serializable {
         }
 
         return valid;
+    }
+
+    @Override
+    public SentenceID getSentenceID() {
+        return SentenceID.RMC;
     }
 
 

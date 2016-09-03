@@ -13,7 +13,7 @@ import com.usda.fmsc.geospatial.nmea.sentences.base.NmeaSentence;
 
 public class NmeaParser<TNmeaBurst extends INmeaBurst> {
     private List<Listener> listeners;
-    private List<TalkerID> usedTalkedIDs;
+    private List<TalkerID> usedTalkerIDs;
 
     private INmeaBurst burst;
     private Class<TNmeaBurst> clazz;
@@ -27,13 +27,13 @@ public class NmeaParser<TNmeaBurst extends INmeaBurst> {
         this.clazz = clazz;
 
         listeners = new ArrayList<>();
-        usedTalkedIDs = new ArrayList<>();
-        usedTalkedIDs.add(talkerID);
+        usedTalkerIDs = new ArrayList<>();
+        usedTalkerIDs.add(talkerID);
     }
 
     public NmeaParser(Collection<TalkerID> talkerIDs) {
         listeners = new ArrayList<>();
-        usedTalkedIDs = new ArrayList<>(talkerIDs);
+        usedTalkerIDs = new ArrayList<>(talkerIDs);
     }
 
 
@@ -53,17 +53,12 @@ public class NmeaParser<TNmeaBurst extends INmeaBurst> {
         }
 
         try {
-            if (usedTalkedIDs.contains(TalkerID.parse(nmea))) {
+            if (usedTalkerIDs.contains(TalkerID.parse(nmea))) {
                 NmeaSentence sentence = burst.addNmeaSentence(nmea);
 
-                if (sentence != null) {
-                    if (sentence instanceof MultiSentence) {
-                        if (((MultiSentence)sentence).hasAllMessages()) {
-                            postNmeaReceived(sentence);
-                        }
-                    } else {
+                if (sentence != null &&
+                        (!sentence.isMultiString() || ((MultiSentence)sentence).hasAllMessages())) {
                         postNmeaReceived(sentence);
-                    }
                 }
 
                 usedNmea = true;
@@ -111,12 +106,12 @@ public class NmeaParser<TNmeaBurst extends INmeaBurst> {
 
 
     public void addTalkerID(TalkerID talkerID) {
-        if (!usedTalkedIDs.contains(talkerID))
-            usedTalkedIDs.add(talkerID);
+        if (!usedTalkerIDs.contains(talkerID))
+            usedTalkerIDs.add(talkerID);
     }
 
     public void removeTalkerID(TalkerID talkerID) {
-        usedTalkedIDs.remove(talkerID);
+        usedTalkerIDs.remove(talkerID);
     }
 
 

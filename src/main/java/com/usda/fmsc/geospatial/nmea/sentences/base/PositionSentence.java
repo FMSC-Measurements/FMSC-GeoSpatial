@@ -11,19 +11,19 @@ import com.usda.fmsc.geospatial.NorthSouth;
 import com.usda.fmsc.geospatial.UomElevation;
 import com.usda.fmsc.geospatial.nmea.NmeaIDs.*;
 
-public class PositionSentence extends NmeaSentence implements Serializable {
+public abstract class PositionSentence extends NmeaSentence implements Serializable {
     protected Latitude latitude;
     protected Longitude longitude;
     protected Double elevation;
     protected UomElevation uomElevation;
 
 
-    public PositionSentence(SentenceID sentenceID) {
-        super(sentenceID);
+    public PositionSentence() {
+        super();
     }
 
-    public PositionSentence(SentenceID sentenceID, String nmea) {
-        super(sentenceID, nmea);
+    public PositionSentence(String nmea) {
+        super(nmea);
     }
 
 
