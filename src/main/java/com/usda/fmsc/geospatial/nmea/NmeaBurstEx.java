@@ -512,25 +512,28 @@ public class NmeaBurstEx implements INmeaBurst, Serializable {
         }
     }
 
-    public double getHDOP() {
+    public float getHDOP() {
         if (isValid(SentenceID.GSA)) {
-            return ((GSASentence)getSentenceByPriority(SentenceID.GSA)).getHDOP();
+            GSASentence gsa = ((GSASentence)getSentenceByPriority(SentenceID.GSA));
+            return gsa.getHDOP() != null ? gsa.getHDOP() : 0;
         } else {
             throw new MissingNmeaDataException(SentenceID.GSA);
         }
     }
 
-    public double getPDOP() {
+    public float getPDOP() {
         if (isValid(SentenceID.GSA)) {
-            return ((GSASentence)getSentenceByPriority(SentenceID.GSA)).getPDOP();
+            GSASentence gsa = ((GSASentence)getSentenceByPriority(SentenceID.GSA));
+            return gsa.getPDOP() != null ? gsa.getPDOP() : 0;
         } else {
             throw new MissingNmeaDataException(SentenceID.GSA);
         }
     }
 
-    public double getVDOP() {
+    public float getVDOP() {
         if (isValid(SentenceID.GSA)) {
-            return ((GSASentence)getSentenceByPriority(SentenceID.GSA)).getVDOP();
+            GSASentence gsa = ((GSASentence)getSentenceByPriority(SentenceID.GSA));
+            return gsa.getVDOP() != null ? gsa.getVDOP() : 0;
         } else {
             throw new MissingNmeaDataException(SentenceID.GSA);
         }
