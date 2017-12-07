@@ -145,7 +145,7 @@ public class GSASentence extends NmeaSentence  implements Serializable {
 
         public String toStringF() {
             switch(this) {
-                case Auto: return " 0 (Auto)";
+                case Auto: return "0 (Auto)";
                 case Manual: return "1 (Manual)";
                 default: throw new IllegalArgumentException();
             }
