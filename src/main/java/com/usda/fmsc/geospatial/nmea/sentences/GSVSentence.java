@@ -52,30 +52,33 @@ public class GSVSentence extends MultiSentence implements Serializable {
                     Satellite satellite;
                     boolean add;
                     for (int current = 4; current < 16 && current + 3 < tokens.length; current += 4) {
-                        add = true;
+                        try {
+                            if (tokens[current] != null) {
+                                add = true;
 
-                        if (tokens[current] != null) {
+                                int satID = Integer.parseInt(tokens[current]);
 
-                            int satID = Integer.parseInt(tokens[current]);
+                                satellite = new Satellite(
+                                        satID,
+                                        parseFloat(tokens[current + 1]),
+                                        parseFloat(tokens[current + 2]),
+                                        parseFloat(tokens[current + 3])
+                                );
 
-                            satellite = new Satellite(
-                                    satID,
-                                    parseFloat(tokens[current + 1]),
-                                    parseFloat(tokens[current + 2]),
-                                    parseFloat(tokens[current + 3])
-                            );
+                                for (Satellite sat : satellites) {
+                                    if(satID == sat.getNmeaID()) {
+                                        //throw new DuplicateSatelliteException(satID);
+                                        add = false;
+                                        break;
+                                    }
+                                }
 
-                            for (Satellite sat : satellites) {
-                                if(satID == sat.getNmeaID()) {
-                                    //throw new DuplicateSatelliteException(satID);
-                                    add = false;
-                                    break;
+                                if (add) {
+                                    satellites.add(satellite);
                                 }
                             }
-
-                            if (add) {
-                                satellites.add(satellite);
-                            }
+                        } catch (NumberFormatException e) {
+                            //
                         }
                     }
 
