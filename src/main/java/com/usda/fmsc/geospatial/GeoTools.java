@@ -90,12 +90,7 @@ public class GeoTools {
             x += Math.cos(lat) * Math.cos(lon);
             y += Math.cos(lat) * Math.sin(lon);
             q += Math.sin(lat);
-
-            if (p.hasElevation()) {
-                z += p.getElevation();
-            } else {
-                z += 0;
-            }
+            z += p.hasElevation() ? p.getElevation() : 0;
         }
 
         x /= size;

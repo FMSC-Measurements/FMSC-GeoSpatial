@@ -24,7 +24,7 @@ public class GeoPosition extends Position implements Serializable {
         super(latitude, longitude);
     }
 
-    public GeoPosition(double latitude, double longitude, double elevation, UomElevation uomElevation) {
+    public GeoPosition(double latitude, double longitude, Double elevation, UomElevation uomElevation) {
         super(latitude, longitude);
         this.elevation = elevation;
         this.uomElevation = uomElevation;
@@ -34,7 +34,7 @@ public class GeoPosition extends Position implements Serializable {
         super(latitude, latDir, longitude, lonDir);
     }
 
-    public GeoPosition(double latitude, NorthSouth latDir, double longitude, EastWest lonDir, double elevation, UomElevation uomElevation) {
+    public GeoPosition(double latitude, NorthSouth latDir, double longitude, EastWest lonDir, Double elevation, UomElevation uomElevation) {
         super(latitude, latDir, longitude, lonDir);
         setElevation(elevation, uomElevation);
     }
@@ -43,7 +43,7 @@ public class GeoPosition extends Position implements Serializable {
         super(latitude, longitude);
     }
 
-    public GeoPosition(Latitude latitude, Longitude longitude, double elevation, UomElevation uomElevation) {
+    public GeoPosition(Latitude latitude, Longitude longitude, Double elevation, UomElevation uomElevation) {
         super(latitude, longitude);
         setElevation(elevation, uomElevation);
     }
