@@ -2,6 +2,7 @@ package com.usda.fmsc.geospatial.nmea.exceptions;
 
 import com.usda.fmsc.geospatial.nmea.NmeaIDs.SentenceID;
 
+@SuppressWarnings("unused")
 public class MissingNmeaDataException extends NmeaException {
     public MissingNmeaDataException() {
         super("Missing Nmea sentence data.");

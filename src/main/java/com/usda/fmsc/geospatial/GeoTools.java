@@ -3,9 +3,10 @@ package com.usda.fmsc.geospatial;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class GeoTools {
     public static Position getGeoMidPoint(Position position1, Position position2) {
-        ArrayList<Position> arr = new ArrayList<Position>();
+        ArrayList<Position> arr = new ArrayList<>();
 
         arr.add(position1);
         arr.add(position2);

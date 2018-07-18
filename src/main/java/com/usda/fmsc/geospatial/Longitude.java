@@ -2,6 +2,7 @@ package com.usda.fmsc.geospatial;
 
 import java.io.Serializable;
 
+@SuppressWarnings("unused")
 public class Longitude extends DMS implements Serializable {
     private EastWest hemisphere;
 

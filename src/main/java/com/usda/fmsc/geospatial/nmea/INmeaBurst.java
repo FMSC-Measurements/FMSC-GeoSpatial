@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("unused")
 public interface INmeaBurst {
     NmeaSentence addNmeaSentence(String sentence);
 
@@ -42,6 +43,7 @@ public interface INmeaBurst {
     EastWest getLonDir();
 
     double getElevation();
+    boolean hasElevation();
     UomElevation getUomElevation();
 
     UTMCoords getTrueUTM();

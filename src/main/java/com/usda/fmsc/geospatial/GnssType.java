@@ -63,7 +63,7 @@ public enum GnssType {
                 return EGNOS;
             } else if (prn == 35 || prn == 51 || (prn > 45 && prn < 49)) {
                 return WAAS;
-            } else if (prn == 38 || (prn > 52 && prn < 55)) {
+            } else if (prn == 38 || prn > 52) {
                 return SDCM;
             } else if (prn == 40 || prn == 41 ) {
                 return GAGAN;

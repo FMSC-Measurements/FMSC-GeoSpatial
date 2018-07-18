@@ -1,7 +1,11 @@
 package com.usda.fmsc.geospatial;
 
+import android.annotation.SuppressLint;
+
 import java.io.Serializable;
 
+@SuppressLint("DefaultLocale")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class DMS implements Serializable {
     protected final String DEGREE_SYMBOL  = "\u00b0";
 

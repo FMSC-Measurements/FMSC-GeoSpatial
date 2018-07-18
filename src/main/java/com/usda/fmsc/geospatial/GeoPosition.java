@@ -2,6 +2,7 @@ package com.usda.fmsc.geospatial;
 
 import java.io.Serializable;
 
+@SuppressWarnings("unused")
 public class GeoPosition extends Position implements Serializable {
     private Double elevation;
     private UomElevation uomElevation;

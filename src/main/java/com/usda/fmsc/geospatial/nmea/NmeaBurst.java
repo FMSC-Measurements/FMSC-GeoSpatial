@@ -1,5 +1,7 @@
 package com.usda.fmsc.geospatial.nmea;
 
+import android.annotation.SuppressLint;
+
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -20,6 +22,8 @@ import com.usda.fmsc.geospatial.nmea.sentences.RMCSentence;
 import com.usda.fmsc.geospatial.utm.UTMCoords;
 import com.usda.fmsc.geospatial.utm.UTMTools;
 
+@SuppressLint("DefaultLocale")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class NmeaBurst implements INmeaBurst, Serializable {
     //GGA Sentence
     private GGASentence gga;
@@ -241,6 +245,10 @@ public class NmeaBurst implements INmeaBurst, Serializable {
         } else {
             throw new MissingNmeaDataException(SentenceID.GGA);
         }
+    }
+
+    public boolean hasElevation() {
+        return checkValid(gga);
     }
 
     public UomElevation getUomElevation() {

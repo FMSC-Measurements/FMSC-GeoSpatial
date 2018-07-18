@@ -2,6 +2,7 @@ package com.usda.fmsc.geospatial;
 
 import java.io.Serializable;
 
+@SuppressWarnings("WeakerAccess")
 public class Position implements Serializable {
     private Latitude latitude;
     private Longitude longitude;

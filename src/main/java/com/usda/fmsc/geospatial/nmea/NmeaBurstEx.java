@@ -1,5 +1,7 @@
 package com.usda.fmsc.geospatial.nmea;
 
+import android.annotation.SuppressLint;
+
 import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.GeoPosition;
 import com.usda.fmsc.geospatial.NorthSouth;
@@ -22,8 +24,9 @@ import org.joda.time.DateTime;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
+@SuppressLint("DefaultLocale")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class NmeaBurstEx implements INmeaBurst, Serializable {
     private static TalkerID[] priorityIds = new TalkerID[] {
             TalkerID.GP,
@@ -363,6 +366,10 @@ public class NmeaBurstEx implements INmeaBurst, Serializable {
         }
     }
 
+    public boolean hasElevation() {
+        return isValid(SentenceID.GGA) && ((GGASentence)getSentenceByPriority(SentenceID.GGA)).hasElevation();
+    }
+
     public UomElevation getUomElevation() {
         if (isValid(SentenceID.GGA)) {
             return ((GGASentence)getSentenceByPriority(SentenceID.GGA)).getUomElevation();
@@ -547,8 +554,8 @@ public class NmeaBurstEx implements INmeaBurst, Serializable {
         } else {
             return String.format("[%s] Valid: False |%s rmc: %b | gga: %b | gsa: %b | gsv: %b",
                     DateTime.now(),
-                    hasPosition() ? String.format(" (Lat: %f | Lon: %f | Elev: %f) |", getLatitude(), getLatitude(), getElevation()) :
-                            "No Position |",
+                    hasPosition() ? String.format(" (Lat: %f | Lon: %f |%s", getLatitude(), getLatitude(),
+                            hasElevation() ? String.format(" Elev: %f) |", getElevation()) : "") : "No Position |",
                     isValid(SentenceID.RMC), isValid(SentenceID.GGA), isValid(SentenceID.GSA), isValid(SentenceID.GSV));
         }
     }

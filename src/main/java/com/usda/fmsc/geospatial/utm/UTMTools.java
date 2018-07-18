@@ -5,6 +5,7 @@ import com.usda.fmsc.geospatial.Latitude;
 import com.usda.fmsc.geospatial.Longitude;
 import com.usda.fmsc.geospatial.GeoPosition;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class UTMTools {
     public static UTMCoords convertLatLonToUTM(GeoPosition position) {
         return convertLatLonToUTM(position.getLatitude(), position.getLongitude());
