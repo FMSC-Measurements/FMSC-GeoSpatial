@@ -95,11 +95,10 @@ public class DMS implements Serializable {
     public static DMS fromDecimalDMS(double dms) {
         DMS cood = new DMS();
 
-        dms /= 100.0;
-        dms = Math.abs(dms);
+        dms = Math.abs(dms / 100);
         cood.setDegrees((int)dms);
 
-        double decMin = ((dms - cood.getDegrees()) / 0.60) * 60d;
+        double decMin = (dms - cood.getDegrees()) * 100d;
 
         cood.setMinutes((int)decMin);
         cood.setSeconds((decMin - cood.getMinutes()) * 60d);
