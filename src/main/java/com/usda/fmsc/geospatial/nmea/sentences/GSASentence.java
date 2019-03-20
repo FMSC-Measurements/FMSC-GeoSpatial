@@ -2,10 +2,7 @@ package com.usda.fmsc.geospatial.nmea.sentences;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
 
-import com.usda.fmsc.geospatial.nmea.NmeaIDs;
 import com.usda.fmsc.geospatial.nmea.NmeaIDs.*;
 import com.usda.fmsc.geospatial.nmea.sentences.base.NmeaSentence;
 
