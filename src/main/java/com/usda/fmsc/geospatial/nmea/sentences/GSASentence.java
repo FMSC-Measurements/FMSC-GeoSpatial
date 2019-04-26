@@ -2,10 +2,7 @@ package com.usda.fmsc.geospatial.nmea.sentences;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
 
-import com.usda.fmsc.geospatial.nmea.NmeaIDs;
 import com.usda.fmsc.geospatial.nmea.NmeaIDs.*;
 import com.usda.fmsc.geospatial.nmea.sentences.base.NmeaSentence;
 
@@ -169,7 +166,7 @@ public class GSASentence extends NmeaSentence  implements Serializable {
 
         public static Fix parse(int id) {
             Fix[] types = values();
-            if(types.length > id - 1 && id > 0)
+            if(types.length + 1 > id && id > 0)
                 return types[id - 1];
             throw new IllegalArgumentException("Invalid Fix id: " + id);
         }
@@ -200,9 +197,9 @@ public class GSASentence extends NmeaSentence  implements Serializable {
 
         public String toStringF() {
             switch(this) {
-                case NoFix: return "0 (No Fix)";
-                case _2D: return "1 (2D)";
-                case _3D: return "2 (3D)";
+                case NoFix: return "1 (No Fix)";
+                case _2D: return "2 (2D)";
+                case _3D: return "3 (3D)";
                 default: throw new IllegalArgumentException();
             }
         }

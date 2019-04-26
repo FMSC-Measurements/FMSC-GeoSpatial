@@ -12,7 +12,6 @@ import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.Latitude;
 import com.usda.fmsc.geospatial.Longitude;
 import com.usda.fmsc.geospatial.NorthSouth;
-import com.usda.fmsc.geospatial.nmea.NmeaIDs;
 import com.usda.fmsc.geospatial.nmea.NmeaIDs.*;
 import com.usda.fmsc.geospatial.nmea.sentences.base.PositionSentence;
 

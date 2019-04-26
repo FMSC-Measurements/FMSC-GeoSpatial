@@ -53,7 +53,7 @@ public class NmeaParser<TNmeaBurst extends INmeaBurst> {
             }
         }
 
-        try {
+        //try {
             if (usedTalkerIDs.contains(TalkerID.parse(nmea))) {
                 NmeaSentence sentence = burst.addNmeaSentence(nmea);
 
@@ -64,9 +64,9 @@ public class NmeaParser<TNmeaBurst extends INmeaBurst> {
 
                 usedNmea = true;
             }
-        } catch (ExcessiveStringException e) {
+        //} catch (ExcessiveStringException e) {
             //burst = new NmeaBurst();
-        }
+        //}
 
         if (burst != null && burst.isFull()) {
             postBurstReceived(burst);

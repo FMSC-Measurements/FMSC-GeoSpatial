@@ -2,9 +2,7 @@ package com.usda.fmsc.geospatial.nmea.sentences;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
-import com.usda.fmsc.geospatial.nmea.NmeaIDs;
 import com.usda.fmsc.geospatial.nmea.NmeaIDs.SentenceID;
 import com.usda.fmsc.geospatial.nmea.sentences.base.MultiSentence;
 import com.usda.fmsc.geospatial.nmea.Satellite;
