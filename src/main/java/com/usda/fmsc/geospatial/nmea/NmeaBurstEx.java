@@ -252,12 +252,20 @@ public class NmeaBurstEx implements INmeaBurst, Serializable {
     }
 
     private boolean gsvIsFull() {
+        boolean isFull = true;
+        int msgCount = 0, firstTotalMsgCount = 0;
+
         for (GSVSentence s : gsv.values()) {
             if (!s.hasAllMessages())
-                return false;
+                isFull = false;
+
+            if (firstTotalMsgCount < 1)
+                firstTotalMsgCount = s.getTotalMessageCount();
+
+            msgCount += s.getMessageCount();
         }
 
-        return true;
+        return isFull || (msgCount > 0 && msgCount == firstTotalMsgCount);
     }
 
 

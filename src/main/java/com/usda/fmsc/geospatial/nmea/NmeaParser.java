@@ -57,8 +57,7 @@ public class NmeaParser<TNmeaBurst extends INmeaBurst> {
             if (usedTalkerIDs.contains(TalkerID.parse(nmea))) {
                 NmeaSentence sentence = burst.addNmeaSentence(nmea);
 
-                if (sentence != null &&
-                        (!sentence.isMultiString() || ((MultiSentence)sentence).hasAllMessages())) {
+                if (sentence != null && (!sentence.isMultiString() || ((MultiSentence)sentence).hasAllMessages())) {
                         postNmeaReceived(sentence);
                 }
 
