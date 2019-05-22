@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 
 
-import com.usda.fmsc.geospatial.nmea.exceptions.ExcessiveStringException;
 import com.usda.fmsc.geospatial.nmea.NmeaIDs.*;
 import com.usda.fmsc.geospatial.nmea.sentences.*;
 import com.usda.fmsc.geospatial.nmea.sentences.base.MultiSentence;
@@ -99,9 +98,7 @@ public class NmeaParser<TNmeaBurst extends INmeaBurst> {
     }
 
     public void removeListener(Listener listener) {
-        if (listeners.contains(listener)) {
-            listeners.remove(listener);
-        }
+        listeners.remove(listener);
     }
 
 
