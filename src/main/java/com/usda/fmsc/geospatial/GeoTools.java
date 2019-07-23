@@ -81,7 +81,7 @@ public class GeoTools {
         Double x, y, z, q;
         x = y = z = q = 0.0;
 
-        int size = positions.size();
+        int size = positions.size(), elevSize = 0;
 
         Double lat, lon;
         for (GeoPosition p : positions) {
@@ -91,12 +91,16 @@ public class GeoTools {
             x += Math.cos(lat) * Math.cos(lon);
             y += Math.cos(lat) * Math.sin(lon);
             q += Math.sin(lat);
-            z += p.hasElevation() ? p.getElevation() : 0;
+
+            if (p.hasElevation()) {
+                z += p.getElevation();
+                elevSize++;
+            }
         }
 
         x /= size;
         y /= size;
-        z /= size;
+        z /= elevSize;
         q /= size;
 
         lon = Math.atan2(y, x);
