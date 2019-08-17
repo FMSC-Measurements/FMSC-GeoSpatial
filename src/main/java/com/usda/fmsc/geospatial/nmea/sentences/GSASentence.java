@@ -150,6 +150,7 @@ public class GSASentence extends NmeaSentence  implements Serializable {
     }
 
     public enum Fix {
+        Unknown(0),
         NoFix(1),
         _2D(2),
         _3D(3);
@@ -166,13 +167,15 @@ public class GSASentence extends NmeaSentence  implements Serializable {
 
         public static Fix parse(int id) {
             Fix[] types = values();
-            if(types.length + 1 > id && id > 0)
-                return types[id - 1];
+            if(types.length > id && id > -1)
+                return types[id];
             throw new IllegalArgumentException("Invalid Fix id: " + id);
         }
 
         public static Fix parse(String str) {
             switch(str.toLowerCase()) {
+                case "0":
+                case "unknown": return Unknown;
                 case "1":
                 case "nofix":
                 case "no fix":
@@ -188,6 +191,7 @@ public class GSASentence extends NmeaSentence  implements Serializable {
         @Override
         public String toString() {
             switch(this) {
+                case Unknown: return "Unknown";
                 case NoFix: return "No Fix";
                 case _2D: return "2D";
                 case _3D: return "3D";
@@ -197,6 +201,7 @@ public class GSASentence extends NmeaSentence  implements Serializable {
 
         public String toStringF() {
             switch(this) {
+                case Unknown: return "0 (Unknown)";
                 case NoFix: return "1 (No Fix)";
                 case _2D: return "2 (2D)";
                 case _3D: return "3 (3D)";

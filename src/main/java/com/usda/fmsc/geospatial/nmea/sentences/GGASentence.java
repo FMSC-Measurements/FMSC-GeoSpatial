@@ -68,6 +68,9 @@ public class GGASentence extends PositionSentence  implements Serializable {
                     geoidHeight = Double.parseDouble(tokens[11]);
                     geoUom = UomElevation.parse(tokens[12]);
 
+                    //NMEA 4.1+, field 13 may be sat type if GN talker
+                    //1 = GPS, 2 = GLONASS, 3 = Galileo, 4 = BeiDou
+
                     valid = true;
                 } catch (Exception ex) {
                     //ex.printStackTrace();
