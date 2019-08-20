@@ -14,7 +14,7 @@ public abstract class NmeaSentence implements Serializable {
 
     public NmeaSentence(String nmea) {
         this.talkerID = TalkerID.parse(nmea);
-        this.valid = isValidNmea(getSentenceID(), null, nmea) && parse(nmea);
+        this.valid = isValidNmea(getSentenceID(), null, nmea) & parse(nmea);
     }
 
 

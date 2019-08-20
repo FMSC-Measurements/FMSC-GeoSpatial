@@ -56,7 +56,7 @@ public class GSVSentence extends NmeaSentence implements MultiSentence, Serializ
 
                 valid = true;
             } catch (Exception ex) {
-                ex.printStackTrace();
+                //ex.printStackTrace();
             }
         }
 

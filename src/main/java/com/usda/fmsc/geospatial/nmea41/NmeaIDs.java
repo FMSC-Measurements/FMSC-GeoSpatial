@@ -103,26 +103,15 @@ public class NmeaIDs {
 
     public enum SentenceID {
         Unknown(0),
-        BOD(1),
-        BWC(2),
-        GGA(3),
-        GLL(4),
-        GNS(5),
-        GSA(6),
-        GSV(7),
-        HDT(8),
-        R00(9),
-        RMA(10),
-        RMB(11),
-        RMC(12),
-        RTE(13),
-        TRF(14),
-        STN(15),
-        VBW(16),
-        VTG(17),
-        WPL(18),
-        XTE(19),
-        ZDA(20);
+        GGA(1),
+        RMC(2),
+        GSA(3),
+        GSV(4),
+        GLL(5),
+        GNS(6),
+        RTE(7),
+        VTG(8),
+        ZDA(9);
 
         private final int value;
 
@@ -150,25 +139,14 @@ public class NmeaIDs {
                 value = value.substring(3, 6);
 
             switch(value.toUpperCase()) {
-                case "BOD": return BOD;
-                case "BWC": return BWC;
                 case "GGA": return GGA;
                 case "GLL": return GLL;
                 case "GNS": return GNS;
                 case "GSA": return GSA;
                 case "GSV": return GSV;
-                case "HDT": return HDT;
-                case "R00": return R00;
-                case "RMA": return RMA;
-                case "RMB": return RMB;
                 case "RMC": return RMC;
                 case "RTE": return RTE;
-                case "TRF": return TRF;
-                case "STN": return STN;
-                case "VBW": return VBW;
                 case "VTG": return VTG;
-                case "WPL": return WPL;
-                case "XTE": return XTE;
                 case "ZDA": return ZDA;
                 default: return Unknown;
             }
@@ -177,25 +155,14 @@ public class NmeaIDs {
         @Override
         public String toString() {
             switch(this) {
-                case BOD: return "BOD";
-                case BWC: return "BWC";
                 case GGA: return "GGA";
                 case GLL: return "GLL";
                 case GNS: return "GNS";
                 case GSA: return "GSA";
                 case GSV: return "GSV";
-                case HDT: return "HDT";
-                case R00: return "R00";
-                case RMA: return "RMA";
-                case RMB: return "RMB";
                 case RMC: return "RMC";
                 case RTE: return "RTE";
-                case TRF: return "TRF";
-                case STN: return "STN";
-                case VBW: return "VBW";
                 case VTG: return "VTG";
-                case WPL: return "WPL";
-                case XTE: return "XTE";
                 case ZDA: return "ZDA";
                 default: return "Unknown";
             }
