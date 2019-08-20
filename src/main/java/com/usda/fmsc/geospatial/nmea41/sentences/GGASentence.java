@@ -1,29 +1,26 @@
-package com.usda.fmsc.geospatial.nmea.sentences;
+package com.usda.fmsc.geospatial.nmea41.sentences;
+
+import com.usda.fmsc.geospatial.EastWest;
+import com.usda.fmsc.geospatial.NorthSouth;
+import com.usda.fmsc.geospatial.Position2;
+import com.usda.fmsc.geospatial.UomElevation;
+import com.usda.fmsc.geospatial.nmea41.NmeaIDs.SentenceID;
+import com.usda.fmsc.geospatial.nmea41.SentenceFormats;
+import com.usda.fmsc.geospatial.nmea41.sentences.base.PositionSentence;
 
 import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.io.Serializable;
 
-import com.usda.fmsc.geospatial.EastWest;
-import com.usda.fmsc.geospatial.Latitude;
-import com.usda.fmsc.geospatial.Longitude;
-import com.usda.fmsc.geospatial.NorthSouth;
-import com.usda.fmsc.geospatial.UomElevation;
-import com.usda.fmsc.geospatial.nmea.NmeaIDs.*;
-import com.usda.fmsc.geospatial.nmea.sentences.base.PositionSentence;
-
-public class GGASentence extends PositionSentence  implements Serializable {
-    public static final DateTimeFormatter GGATimeFormatter = DateTimeFormat.forPattern("HHmmss.SSS");
-    public static final DateTimeFormatter GGATimeFormatterAlt = DateTimeFormat.forPattern("HHmmss");
-
+public class GGASentence extends PositionSentence implements Serializable {
     private LocalTime fixTime;
     private GpsFixType fixQuality;
     private int trackedSatellites;
     private double horizDilution;
     private double geoidHeight;
     private UomElevation geoUom;
+    private Double diffAge;
+    private Integer diffID;
 
 
     public GGASentence() { }
@@ -34,44 +31,42 @@ public class GGASentence extends PositionSentence  implements Serializable {
 
     @Override
     public boolean parse(String nmea) {
-        if (super.parse(nmea)) {
-            valid = false;
-            String[] tokens = nmea.substring(0, nmea.indexOf("*")).split(",", -1);
+        boolean valid = false;
+        String[] tokens = nmea.substring(0, nmea.indexOf("*")).split(",", -1);
 
-            if (tokens.length > 14 && tokens[1].length() > 0) {
+        if (tokens.length > 13 && tokens[1].length() > 0) {
+            try {
                 try {
-                    try {
-                        fixTime = LocalTime.parse(tokens[1], GGATimeFormatter);
-                    } catch (Exception e) {
-                        fixTime = LocalTime.parse(tokens[1], GGATimeFormatterAlt);
-                    }
-
-                    latitude = Latitude.fromDecimalDMS(
-                            Double.parseDouble(tokens[2]),
-                            NorthSouth.parse(tokens[3])
-                    );
-
-                    longitude = Longitude.fromDecimalDMS(
-                            Double.parseDouble(tokens[4]),
-                            EastWest.parse(tokens[5])
-                    );
-
-                    fixQuality = GpsFixType.parse(tokens[6]);
-
-                    trackedSatellites = Integer.parseInt(tokens[7]);
-
-                    horizDilution = Double.parseDouble(tokens[8]);
-
-                    elevation = Double.parseDouble(tokens[9]);
-                    uomElevation = UomElevation.parse(tokens[10]);
-
-                    geoidHeight = Double.parseDouble(tokens[11]);
-                    geoUom = UomElevation.parse(tokens[12]);
-
-                    valid = true;
-                } catch (Exception ex) {
-                    //ex.printStackTrace();
+                    fixTime = LocalTime.parse(tokens[1], SentenceFormats.GGATimeFormatter);
+                } catch (Exception e) {
+                    fixTime = LocalTime.parse(tokens[1], SentenceFormats.GGATimeFormatterAlt);
                 }
+
+                position = new Position2(
+                        Double.parseDouble(tokens[2]), NorthSouth.parse(tokens[3]),
+                        Double.parseDouble(tokens[4]), EastWest.parse(tokens[5]),
+                        Double.parseDouble(tokens[9]), UomElevation.parse(tokens[10]));
+
+                fixQuality = GpsFixType.parse(tokens[6]);
+
+                trackedSatellites = Integer.parseInt(tokens[7]);
+
+                horizDilution = Double.parseDouble(tokens[8]);
+
+                geoidHeight = Double.parseDouble(tokens[11]);
+                geoUom = UomElevation.parse(tokens[12]);
+
+                if (tokens.length > 14 && !tokens[13].isEmpty()) {
+                    diffAge = Double.parseDouble(tokens[13]);
+                }
+
+                if (tokens.length > 15 && !tokens[14].isEmpty()) {
+                    diffID = Integer.parseInt(tokens[14]);
+                }
+
+                valid = true;
+            } catch (Exception ex) {
+                //ex.printStackTrace();
             }
         }
 
@@ -81,6 +76,11 @@ public class GGASentence extends PositionSentence  implements Serializable {
     @Override
     public SentenceID getSentenceID() {
         return SentenceID.GGA;
+    }
+
+    @Override
+    public boolean isMultiSentence() {
+        return false;
     }
 
 
@@ -108,6 +108,13 @@ public class GGASentence extends PositionSentence  implements Serializable {
         return geoUom;
     }
 
+    public Double getSatDiffAge() {
+        return diffAge;
+    }
+
+    public Integer getSatDiffID() {
+        return diffID;
+    }
 
     public enum GpsFixType {
         NoFix(0),

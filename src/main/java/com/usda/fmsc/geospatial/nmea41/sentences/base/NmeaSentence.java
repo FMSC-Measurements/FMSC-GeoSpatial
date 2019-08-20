@@ -31,7 +31,7 @@ public abstract class NmeaSentence implements Serializable {
 
     public abstract SentenceID getSentenceID();
 
-    public abstract boolean isMultiString();
+    public abstract boolean isMultiSentence();
 
 
     public static boolean validateChecksum(String nmea) {

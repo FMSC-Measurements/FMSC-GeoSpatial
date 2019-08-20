@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.NorthSouth;
 import com.usda.fmsc.geospatial.Position2;
-import com.usda.fmsc.geospatial.nmea41.NmeaIDs;
+import com.usda.fmsc.geospatial.nmea41.NmeaIDs.SentenceID;
 import com.usda.fmsc.geospatial.nmea41.SentenceFormats;
 import com.usda.fmsc.geospatial.nmea41.sentences.base.PositionSentence;
 
@@ -16,8 +16,8 @@ import java.io.Serializable;
 public class RMCSentence extends PositionSentence implements Serializable {
     private DateTime fixTime;
     private Status status;
-    private double groundSpeed; //groud speed in knots
-    private double trackAngle;  //in degrees, true
+    private Double groundSpeed; //ground speed in knots
+    private Double trackAngle;  //in degrees, true
     private Double magVar;
     private EastWest magVarDir;
     private Status posMode;
@@ -47,15 +47,13 @@ public class RMCSentence extends PositionSentence implements Serializable {
 
                 status = Status.parse(tokens[2]);
 
-                double latitude = Double.parseDouble(tokens[3]);
-                NorthSouth latDir = NorthSouth.parse(tokens[4]);
-
-                double longitude = Double.parseDouble(tokens[5]);
-                EastWest lonDir = EastWest.parse(tokens[6]);
-
-                position = new Position2(latitude, latDir, longitude, lonDir);
+                position = new Position2(
+                        Double.parseDouble(tokens[3]), NorthSouth.parse(tokens[4]),
+                        Double.parseDouble(tokens[5]), EastWest.parse(tokens[6]));
 
                 String token = tokens[7];
+                if (!TextUtils.isEmpty(token))
+                    groundSpeed = Double.parseDouble(token);
 
                 token = tokens[8];
                 if (!TextUtils.isEmpty(token))
@@ -95,12 +93,12 @@ public class RMCSentence extends PositionSentence implements Serializable {
     }
 
     @Override
-    public NmeaIDs.SentenceID getSentenceID() {
-        return NmeaIDs.SentenceID.RMC;
+    public SentenceID getSentenceID() {
+        return SentenceID.RMC;
     }
 
     @Override
-    public boolean isMultiString() {
+    public boolean isMultiSentence() {
         return false;
     }
 
@@ -121,6 +119,7 @@ public class RMCSentence extends PositionSentence implements Serializable {
         return trackAngle;
     }
 
+
     public double getMagVar() {
         return magVar;
     }
@@ -133,6 +132,7 @@ public class RMCSentence extends PositionSentence implements Serializable {
         return magVarDir != null;
     }
 
+
     public boolean hasPosMode() {
         return posMode != null;
     }
@@ -140,6 +140,7 @@ public class RMCSentence extends PositionSentence implements Serializable {
     public Status getPosMode() {
         return posMode;
     }
+
 
     public boolean hasNavStatus() {
         return navStatus != null;
@@ -151,8 +152,8 @@ public class RMCSentence extends PositionSentence implements Serializable {
 
 
     public enum Status {
-        Active(0),
-        Void(1);
+        Valid(0), //Active - old
+        Warning(1); //Void - old
 
         private final int value;
 
@@ -174,9 +175,11 @@ public class RMCSentence extends PositionSentence implements Serializable {
         public static Status parse(String str) {
             switch(str.toLowerCase()) {
                 case "a":
-                case "active": return Active;
+                case "valid":
+                case "active": return Valid;
                 case "v":
-                case "void": return Void;
+                case"warning":
+                case "void": return Warning;
                 default: throw new IllegalArgumentException("Invalid Status Name: " + str);
             }
         }
@@ -184,8 +187,8 @@ public class RMCSentence extends PositionSentence implements Serializable {
         @Override
         public String toString() {
             switch(this) {
-                case Active: return "Active";
-                case Void: return "Void";
+                case Valid: return "Valid";
+                case Warning: return "Warning";
                 default: throw new IllegalArgumentException();
             }
         }
