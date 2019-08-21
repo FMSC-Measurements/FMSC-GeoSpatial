@@ -2,6 +2,7 @@ package com.usda.fmsc.geospatial.nmea41;
 
 import com.usda.fmsc.geospatial.GnssType;
 import com.usda.fmsc.geospatial.nmea41.NmeaIDs.GnssSignal;
+import com.usda.fmsc.geospatial.nmea41.NmeaIDs.TalkerID;
 
 import java.io.Serializable;
 import java.util.EnumSet;
@@ -12,14 +13,16 @@ public class Satellite  implements Serializable {
     private Float azimuth;
     private Float srn;
     private GnssType gnssType;
+    private TalkerID talkerID;
     private EnumSet<GnssSignal> signals;
 
-    public Satellite(int nmeaId, Float elevation, Float azimuth, Float srn) {
+    public Satellite(int nmeaId, Float elevation, Float azimuth, Float srn, TalkerID talkerID) {
         this.nmeaId = nmeaId;
         this.elevation = elevation;
         this.azimuth = azimuth;
         this.srn = srn;
-        signals = EnumSet.noneOf(GnssSignal.class);
+        this.talkerID = talkerID;
+        this.signals = EnumSet.noneOf(GnssSignal.class);
     }
 
     public int getNmeaID() {
@@ -43,6 +46,10 @@ public class Satellite  implements Serializable {
         if (gnssType == null)
             gnssType = GnssType.parseNmeaId(nmeaId);
         return gnssType;
+    }
+
+    public TalkerID getTalkerID() {
+        return talkerID;
     }
 
     public EnumSet<GnssSignal> getSignals() {

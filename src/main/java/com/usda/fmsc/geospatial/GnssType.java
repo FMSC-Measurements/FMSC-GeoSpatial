@@ -13,7 +13,8 @@ public enum GnssType {
     SDCM(9),
     GAGAN(10),
     MSAS(11),
-    SNAS(12);
+    SNAS(12),
+    IMES(13);
 
     private final int value;
 
@@ -74,9 +75,15 @@ public enum GnssType {
             }
         } else if (prn > 64 && prn < 97) {
             return GLONASS;
+        } else if (prn > 151 && prn < 159) {
+            return UnknownSBAS;
+        } else if (prn > 172 && prn < 183) {
+            return IMES;
         } else if (prn > 192 && prn < 201) {
             return QZSS;
-        } else if (prn >=200 && prn < 236) {
+        } else if (prn > 300 && prn < 337) {
+            return GALILEO;
+        } else if (prn > 200 && prn < 236 || prn > 400 && prn < 438) {
             return BEIDOU;
         } else {
             return Unknown;
