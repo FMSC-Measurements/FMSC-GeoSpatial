@@ -1,12 +1,10 @@
 package com.usda.fmsc.geospatial.nmea41;
 
-import android.text.TextUtils;
-
 import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.NorthSouth;
 import com.usda.fmsc.geospatial.Position2;
 import com.usda.fmsc.geospatial.UomElevation;
-import com.usda.fmsc.geospatial.nmea41.exceptions.InvalidChecksumException;
+import com.usda.fmsc.geospatial.nmea41.exceptions.NmeaException;
 import com.usda.fmsc.geospatial.nmea41.exceptions.UnsupportedSentenceException;
 import com.usda.fmsc.geospatial.nmea41.sentences.*;
 import com.usda.fmsc.geospatial.nmea41.sentences.base.NmeaSentence;
@@ -17,8 +15,10 @@ import static com.usda.fmsc.geospatial.nmea41.NmeaIDs.SentenceID;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
+@SuppressWarnings("unchecked")
 public class NmeaBurst {
     private static TalkerID[] priorityIds = new TalkerID[] {
             TalkerID.GP,
@@ -38,17 +38,21 @@ public class NmeaBurst {
 
     //RMC Sentence
     private HashMap<TalkerID, ArrayList<RMCSentence>> rmc = new HashMap<>();
+    private ArrayList<RMCSentence> cachedPriorityRMC;
 
     //GGA Sentence
     private HashMap<TalkerID, ArrayList<GGASentence>> gga = new HashMap<>();
+    private ArrayList<GGASentence> cachedPriorityGGA;
 
     //GSA Sentence
     private HashMap<TalkerID, ArrayList<GSASentence>> gsa = new HashMap<>();
+    private ArrayList<GSASentence> cachedPriorityGSA;
 
     //GSV Sentence
     private HashMap<TalkerID, ArrayList<GSVSentence>> gsv = new HashMap<>();
+    private ArrayList<GSVSentence> cachedPriorityGSV;
 
-    private ArrayList<NmeaSentence> allSenteneces = new ArrayList<>();
+    private ArrayList<NmeaSentence> allSentences = new ArrayList<>();
 
 
     public NmeaSentence addNmeaSentence(String sentence) {
@@ -57,6 +61,8 @@ public class NmeaBurst {
 
         TalkerID talkerID = TalkerID.parse(sentence);
         SentenceID sentenceID = SentenceID.parse(sentence);
+
+
 
         switch (sentenceID) {
             case GGA: {
@@ -68,7 +74,8 @@ public class NmeaBurst {
 
                 GGASentence ggaSentence = new GGASentence(sentence);
                 ggas.add(ggaSentence);
-                allSenteneces.add(ggaSentence);
+                allSentences.add(ggaSentence);
+                cachedPriorityGGA = null;
                 return ggaSentence;
             }
             case RMC: {
@@ -80,7 +87,8 @@ public class NmeaBurst {
 
                 RMCSentence rmcSentence = new RMCSentence(sentence);
                 rmcs.add(rmcSentence);
-                allSenteneces.add(rmcSentence);
+                allSentences.add(rmcSentence);
+                cachedPriorityRMC = null;
                 return rmcSentence;
             }
             case GSA: {
@@ -92,7 +100,8 @@ public class NmeaBurst {
 
                 GSASentence gsaSentence = new GSASentence(sentence);
                 gsas.add(gsaSentence);
-                allSenteneces.add(gsaSentence);
+                allSentences.add(gsaSentence);
+                cachedPriorityGSA = null;
                 return gsaSentence;
             }
             case GSV: {
@@ -104,7 +113,8 @@ public class NmeaBurst {
 
                 GSVSentence gsvSentence = new GSVSentence(sentence);
                 gsvs.add(gsvSentence);
-                allSenteneces.add(gsvSentence);
+                allSentences.add(gsvSentence);
+                cachedPriorityGSV = null;
                 return gsvSentence;
             }
             default: throw new UnsupportedSentenceException(sentenceID, sentence);
@@ -112,7 +122,7 @@ public class NmeaBurst {
     }
 
     public boolean isValid() {
-        for (NmeaSentence sentence : allSenteneces) {
+        for (NmeaSentence sentence : allSentences) {
             if (!sentence.isValid())
                 return false;
         }
@@ -120,14 +130,56 @@ public class NmeaBurst {
         return true;
     }
     public boolean isValid(SentenceID id) {
-        return false;
+        for (NmeaSentence sentence : getSentencesByID(id)) {
+            if (!sentence.isValid())
+                return false;
+        }
+
+        return true;
     }
     public boolean isComplete() {
-        return false;
+        return rmc.size() > 0 && gga.size() > 0 && gsa.size() > 0 && gsv.size() > 0;
+    }
+
+
+    private ArrayList<? extends NmeaSentence> getSentencesByPriority(HashMap<TalkerID, ? extends ArrayList<? extends NmeaSentence>> map) {
+        ArrayList<NmeaSentence> sentences = new ArrayList<>();
+        ArrayList<? extends NmeaSentence> temp;
+
+        for (TalkerID talkerID : priorityIds) {
+            if (map.containsKey(talkerID) && (temp = map.get(talkerID)) != null) {
+                sentences.addAll(temp);
+            }
+        }
+
+        return sentences;
+    }
+
+    public ArrayList<? extends NmeaSentence> getSentencesByID(SentenceID id) {
+        switch (id) {
+            case GGA: return (cachedPriorityGGA == null ? (cachedPriorityGGA = (ArrayList<GGASentence>) getSentencesByPriority(gga)) : cachedPriorityGGA);
+            case RMC: return (cachedPriorityRMC == null ? (cachedPriorityRMC = (ArrayList<RMCSentence>) getSentencesByPriority(rmc)) : cachedPriorityRMC);
+            case GSA: return (cachedPriorityGSA == null ? (cachedPriorityGSA = (ArrayList<GSASentence>) getSentencesByPriority(gsa)) : cachedPriorityGSA);
+            case GSV: return (cachedPriorityGSV == null ? (cachedPriorityGSV = (ArrayList<GSVSentence>) getSentencesByPriority(gsv)) : cachedPriorityGSV);
+        }
+
+        throw new RuntimeException("Sentences Not Available");
     }
 
     public DateTime getFixTime() {
-        return null;
+        for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
+            if (s.isValid()) {
+                return s.getFixTime();
+            }
+        }
+
+        for (GGASentence s : (ArrayList<GGASentence>) getSentencesByID(SentenceID.GGA)) {
+            if (s.isValid()) {
+                return s.getFixTime().toDateTimeToday();
+            }
+        }
+
+        throw new RuntimeException("No Fix Time containing sentence found");
     }
 
     public double getMagVar() {
