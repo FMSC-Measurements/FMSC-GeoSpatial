@@ -1,5 +1,7 @@
 package com.usda.fmsc.geospatial.nmea41;
 
+import com.usda.fmsc.geospatial.utm.UTMTools;
+
 public class NmeaIDs {
 
     public enum TalkerID {
@@ -165,6 +167,43 @@ public class NmeaIDs {
                 case VTG: return "VTG";
                 case ZDA: return "ZDA";
                 default: return "Unknown";
+            }
+        }
+    }
+
+    public enum GnssSignal {
+        Unknown(0),
+        GPS_L1(1),
+        GPS_L2(2),
+        GPS_L5(3),
+        GLONASS_G1(4),
+        GLONASS_G2(5),
+        GLONASS_G3(6),
+        Galileo_E1(7),
+        Galileo_E6(8),
+        Galileo_E5a(9),
+        Galileo_E5b(10);
+
+        private final int value;
+
+        GnssSignal(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static GnssSignal parse(int index) {
+            GnssSignal[] types = values();
+            if(types.length > index && index > -1)
+                return types[index];
+            throw new IllegalArgumentException("Invalid Prefix id: " + index);
+        }
+
+        public static GnssSignal parseSignalId(int sigId) {
+            switch (sigId) {
+                default: return Unknown;
             }
         }
     }

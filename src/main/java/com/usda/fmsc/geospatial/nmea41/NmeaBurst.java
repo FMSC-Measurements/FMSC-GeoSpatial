@@ -4,22 +4,23 @@ import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.NorthSouth;
 import com.usda.fmsc.geospatial.Position2;
 import com.usda.fmsc.geospatial.UomElevation;
-import com.usda.fmsc.geospatial.nmea41.exceptions.NmeaException;
+import com.usda.fmsc.geospatial.nmea41.exceptions.MissingNmeaDataException;
 import com.usda.fmsc.geospatial.nmea41.exceptions.UnsupportedSentenceException;
 import com.usda.fmsc.geospatial.nmea41.sentences.*;
 import com.usda.fmsc.geospatial.nmea41.sentences.base.NmeaSentence;
 import com.usda.fmsc.geospatial.utm.UTMCoords;
+import com.usda.fmsc.geospatial.utm.UTMTools;
+
 import static com.usda.fmsc.geospatial.nmea41.NmeaIDs.TalkerID;
 import static com.usda.fmsc.geospatial.nmea41.NmeaIDs.SentenceID;
 
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
 @SuppressWarnings("unchecked")
-public class NmeaBurst {
+public class NmeaBurst implements INmeaBurst {
     private static TalkerID[] priorityIds = new TalkerID[] {
             TalkerID.GP,
             TalkerID.GN,
@@ -51,6 +52,7 @@ public class NmeaBurst {
     //GSV Sentence
     private HashMap<TalkerID, ArrayList<GSVSentence>> gsv = new HashMap<>();
     private ArrayList<GSVSentence> cachedPriorityGSV;
+    private ArrayList<Satellite> cachedSatellites;
 
     private ArrayList<NmeaSentence> allSentences = new ArrayList<>();
 
@@ -115,6 +117,7 @@ public class NmeaBurst {
                 gsvs.add(gsvSentence);
                 allSentences.add(gsvSentence);
                 cachedPriorityGSV = null;
+                cachedSatellites = null;
                 return gsvSentence;
             }
             default: throw new UnsupportedSentenceException(sentenceID, sentence);
@@ -155,7 +158,7 @@ public class NmeaBurst {
         return sentences;
     }
 
-    public ArrayList<? extends NmeaSentence> getSentencesByID(SentenceID id) {
+    private ArrayList<? extends NmeaSentence> getSentencesByID(SentenceID id) {
         switch (id) {
             case GGA: return (cachedPriorityGGA == null ? (cachedPriorityGGA = (ArrayList<GGASentence>) getSentencesByPriority(gga)) : cachedPriorityGGA);
             case RMC: return (cachedPriorityRMC == null ? (cachedPriorityRMC = (ArrayList<RMCSentence>) getSentencesByPriority(rmc)) : cachedPriorityRMC);
@@ -163,7 +166,7 @@ public class NmeaBurst {
             case GSV: return (cachedPriorityGSV == null ? (cachedPriorityGSV = (ArrayList<GSVSentence>) getSentencesByPriority(gsv)) : cachedPriorityGSV);
         }
 
-        throw new RuntimeException("Sentences Not Available");
+        throw new MissingNmeaDataException(id);
     }
 
     public DateTime getFixTime() {
@@ -179,109 +182,262 @@ public class NmeaBurst {
             }
         }
 
-        throw new RuntimeException("No Fix Time containing sentence found");
+        throw new MissingNmeaDataException(SentenceID.RMC, SentenceID.GGA);
     }
 
     public double getMagVar() {
-        return 0;
+        for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
+            if (s.isValid()) {
+                return s.getMagVar();
+            }
+        }
+
+        throw new MissingNmeaDataException(SentenceID.RMC);
     }
     public EastWest getMagVarDir() {
-        return null;
+        for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
+            if (s.isValid()) {
+                return s.getMagVarDir();
+            }
+        }
+
+        throw new MissingNmeaDataException(SentenceID.RMC);
     }
 
 
     public double getTrackAngle() {
-        return 0;
+        for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
+            if (s.isValid()) {
+                return s.getTrackAngle();
+            }
+        }
+
+        throw new MissingNmeaDataException(SentenceID.RMC);
     }
     public double getGroundSpeed() {
-        return 0;
+        for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
+            if (s.isValid()) {
+                return s.getGroundSpeed();
+            }
+        }
+
+        throw new MissingNmeaDataException(SentenceID.RMC);
     }
 
 
     public Position2 getPosition() {
+        for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
+            if (s.isValid() && s.hasPosition()) {
+                return s.getPosition();
+            }
+        }
 
-        return null;
+        for (GGASentence s : (ArrayList<GGASentence>) getSentencesByID(SentenceID.GGA)) {
+            if (s.isValid() && s.hasPosition()) {
+                return s.getPosition();
+            }
+        }
+
+        throw new MissingNmeaDataException(SentenceID.RMC, SentenceID.GGA);
     }
     public boolean hasPosition() {
+        for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
+            if (s.isValid() && s.hasPosition()) {
+                return true;
+            }
+        }
+
+        for (GGASentence s : (ArrayList<GGASentence>) getSentencesByID(SentenceID.GGA)) {
+            if (s.isValid() && s.hasPosition()) {
+                return true;
+            }
+        }
+
         return false;
     }
 
     public double getLatitude() {
-        return 0;
+        return getPosition().getLatitude();
     }
     public NorthSouth getLatDir() {
-        return null;
+        return getPosition().getLatDir();
     }
 
     public double getLongitude() {
-        return 0;
+        return getPosition().getLongitude();
     }
     public EastWest getLonDir() {
-        return null;
+        return getPosition().getLonDir();
     }
 
     public double getElevation() {
-        return 0;
+        return getPosition().getElevation();
     }
     public boolean hasElevation() {
-        return false;
+        return getPosition().hasElevation();
     }
     public UomElevation getUomElevation() {
-        return null;
+        return getPosition().getUomElevation();
     }
 
     public UTMCoords getTrueUTM() {
-        return null;
+        Position2 pos = getPosition();
+        return UTMTools.convertLatLonSignedDecToUTM(pos.getLatitudeSigned(), pos.getLongitudeSigned(), null);
     }
     public UTMCoords getUTM(int utmZone) {
-        return null;
+        Position2 pos = getPosition();
+        return UTMTools.convertLatLonSignedDecToUTM(pos.getLatitudeSigned(), pos.getLongitudeSigned(), utmZone);
     }
 
     public double getHorizDilution() {
-        return 0;
+        for (GGASentence s : (ArrayList<GGASentence>) getSentencesByID(SentenceID.GGA)) {
+            if (s.isValid()) {
+                return s.getHorizDilution();
+            }
+        }
+
+        throw new MissingNmeaDataException(SentenceID.GGA);
     }
     public double getGeoidHeight() {
-        return 0;
+        for (GGASentence s : (ArrayList<GGASentence>) getSentencesByID(SentenceID.GGA)) {
+            if (s.isValid()) {
+                return s.getGeoidHeight();
+            }
+        }
+
+        throw new MissingNmeaDataException(SentenceID.GGA);
     }
 
     public UomElevation getGeoUom() {
-        return null;
+        for (GGASentence s : (ArrayList<GGASentence>) getSentencesByID(SentenceID.GGA)) {
+            if (s.isValid()) {
+                return s.getGeoUom();
+            }
+        }
+
+        throw new MissingNmeaDataException(SentenceID.GGA);
     }
 
     public GGASentence.GpsFixType getFixQuality() {
-        return null;
+        for (GGASentence s : (ArrayList<GGASentence>) getSentencesByID(SentenceID.GGA)) {
+            if (s.isValid()) {
+                return s.getFixQuality();
+            }
+        }
+
+        throw new MissingNmeaDataException(SentenceID.GGA);
     }
 
     public int getTrackedSatellitesCount() {
-        return 0;
+        int count = 0;
+        for (GGASentence s : (ArrayList<GGASentence>) getSentencesByID(SentenceID.GGA)) {
+            if (s.isValid()) {
+                count += s.getTrackedSatellitesCount();
+            }
+        }
+
+        return count;
     }
     public ArrayList<Satellite> getSatellitesInView() {
-        return null;
+        if (cachedSatellites == null) {
+            HashMap<Integer, Satellite> sats = new HashMap<>();
+
+            for (GSVSentence s : (ArrayList<GSVSentence>) getSentencesByID(SentenceID.GSV)) {
+                if (s.isValid()) {
+                    for (Satellite sat : s.getSatellites()) {
+                        if (!sats.containsKey(sat.getNmeaID())) {
+                            sats.put(sat.getNmeaID(), sat);
+                        } else {
+                            sats.get(sat.getNmeaID()).addSignals(sat.getSignals());
+                        }
+                    }
+                }
+            }
+
+            return (cachedSatellites = new ArrayList<>(sats.values()));
+        } else {
+            return cachedSatellites;
+        }
     }
     public int getSatellitesInViewCount() {
-        return 0;
+        int count = 0;
+        for (GSVSentence s : (ArrayList<GSVSentence>) getSentencesByID(SentenceID.GSV)) {
+            if (s.isValid() && s.getSentenceNumber() == 1) {
+                count += s.getSatellitesInViewCount();
+            }
+        }
+
+        return count;
     }
     public ArrayList<Integer> getUsedSatelliteIDs() {
-        return null;
+        ArrayList<Integer> ids = new ArrayList<>();
+        for (GSASentence s : (ArrayList<GSASentence>) getSentencesByID(SentenceID.GSA)) {
+            if (s.isValid()) {
+                for (Integer id : s.getSatellitesUsed()) {
+                    if (!ids.contains(id)) {
+                        ids.add(id);
+                    }
+                }
+            }
+        }
+
+        return ids;
     }
     public int getUsedSatellitesCount() {
-        return 0;
+        int count = 0;
+        for (GSASentence s : (ArrayList<GSASentence>) getSentencesByID(SentenceID.GSA)) {
+            if (s.isValid()) {
+                count += s.getSatellitesUsedCount();
+            }
+        }
+
+        return count;
     }
 
     public GSASentence.Fix getFix() {
-        return null;
+        for (GSASentence s : (ArrayList<GSASentence>) getSentencesByID(SentenceID.GSA)) {
+            if (s.isValid()) {
+                return s.getFix();
+            }
+        }
+
+        throw new MissingNmeaDataException(SentenceID.GSA);
     }
     public GSASentence.Mode getMode() {
-        return null;
+        for (GSASentence s : (ArrayList<GSASentence>) getSentencesByID(SentenceID.GSA)) {
+            if (s.isValid()) {
+                return s.getMode();
+            }
+        }
+
+        throw new MissingNmeaDataException(SentenceID.GSA);
     }
 
     public float getHDOP() {
-        return 0;
+        for (GSASentence s : (ArrayList<GSASentence>) getSentencesByID(SentenceID.GSA)) {
+            if (s.isValid()) {
+                return s.getHDOP();
+            }
+        }
+
+        throw new MissingNmeaDataException(SentenceID.GSA);
     }
     public float getPDOP() {
-        return 0;
+        for (GSASentence s : (ArrayList<GSASentence>) getSentencesByID(SentenceID.GSA)) {
+            if (s.isValid()) {
+                return s.getPDOP();
+            }
+        }
+
+        throw new MissingNmeaDataException(SentenceID.GSA);
     }
     public float getVDOP() {
-        return 0;
+        for (GSASentence s : (ArrayList<GSASentence>) getSentencesByID(SentenceID.GSA)) {
+            if (s.isValid()) {
+                return s.getVDOP();
+            }
+        }
+
+        throw new MissingNmeaDataException(SentenceID.GSA);
     }
 }

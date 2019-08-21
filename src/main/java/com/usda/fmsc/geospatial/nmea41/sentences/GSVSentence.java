@@ -3,6 +3,8 @@ package com.usda.fmsc.geospatial.nmea41.sentences;
 import android.text.TextUtils;
 
 import static com.usda.fmsc.geospatial.nmea41.NmeaIDs.SentenceID;
+
+import com.usda.fmsc.geospatial.nmea41.NmeaIDs;
 import com.usda.fmsc.geospatial.nmea41.Satellite;
 import com.usda.fmsc.geospatial.nmea41.sentences.base.MultiSentence;
 import com.usda.fmsc.geospatial.nmea41.sentences.base.NmeaSentence;
@@ -52,6 +54,10 @@ public class GSVSentence extends NmeaSentence implements MultiSentence, Serializ
                 int sigIdIndex = current - 2;
                 if (tokens.length > sigIdIndex & !TextUtils.isEmpty(tokens[sigIdIndex])) {
                     signalID = Integer.parseInt(tokens[sigIdIndex]);
+
+                    for (Satellite sat : satellites) {
+                        sat.addSignal(NmeaIDs.GnssSignal.parseSignalId(signalID));
+                    }
                 }
 
                 valid = true;

@@ -1,8 +1,8 @@
 package com.usda.fmsc.geospatial.nmea41;
 
 import com.usda.fmsc.geospatial.EastWest;
-import com.usda.fmsc.geospatial.GeoPosition;
 import com.usda.fmsc.geospatial.NorthSouth;
+import com.usda.fmsc.geospatial.Position2;
 import com.usda.fmsc.geospatial.UomElevation;
 import com.usda.fmsc.geospatial.utm.UTMCoords;
 
@@ -16,7 +16,6 @@ public interface INmeaBurst {
 
     boolean isValid();
     boolean isValid(NmeaIDs.SentenceID sentenceID);
-    boolean isValid(NmeaIDs.TalkerID talkerID, NmeaIDs.SentenceID sentenceID);
 
     boolean isComplete();
 
@@ -30,7 +29,7 @@ public interface INmeaBurst {
     double getGroundSpeed();
 
 
-    GeoPosition getPosition();
+    Position2 getPosition();
     boolean hasPosition();
 
     double getLatitude();

@@ -61,8 +61,12 @@ public class Position2 implements Serializable {
         return latitude;
     }
 
+    public double getLatitudeSigned() {
+        return latDir == NorthSouth.North ? latitude : latitude * -1;
+    }
+
     public DMS getLatitudeDMS() {
-        return new DMS(latDir == NorthSouth.North ? latitude : latitude * -1);
+        return new DMS(getLatitudeSigned());
     }
 
     public void setLatitude(double latitude) {
@@ -73,9 +77,12 @@ public class Position2 implements Serializable {
     public double getLongitude() {
         return longitude;
     }
+    public double getLongitudeSigned() {
+        return lonDir == EastWest.East ? longitude : longitude * -1;
+    }
 
     public DMS getLongitudeDMS() {
-        return new DMS(lonDir == EastWest.East ? longitude : longitude * -1);
+        return new DMS(getLongitudeSigned());
     }
 
     public void setLongitude(double longitude) {
