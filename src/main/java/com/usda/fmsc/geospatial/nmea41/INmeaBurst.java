@@ -2,7 +2,7 @@ package com.usda.fmsc.geospatial.nmea41;
 
 import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.NorthSouth;
-import com.usda.fmsc.geospatial.Position2;
+import com.usda.fmsc.geospatial.Position;
 import com.usda.fmsc.geospatial.UomElevation;
 import com.usda.fmsc.geospatial.utm.UTMCoords;
 
@@ -29,7 +29,7 @@ public interface INmeaBurst {
     double getGroundSpeed();
 
 
-    Position2 getPosition();
+    Position getPosition();
     boolean hasPosition();
 
     double getLatitude();

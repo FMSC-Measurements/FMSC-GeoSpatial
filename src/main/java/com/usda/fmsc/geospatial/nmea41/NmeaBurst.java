@@ -2,7 +2,7 @@ package com.usda.fmsc.geospatial.nmea41;
 
 import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.NorthSouth;
-import com.usda.fmsc.geospatial.Position2;
+import com.usda.fmsc.geospatial.Position;
 import com.usda.fmsc.geospatial.UomElevation;
 import com.usda.fmsc.geospatial.nmea41.exceptions.MissingNmeaDataException;
 import com.usda.fmsc.geospatial.nmea41.exceptions.UnsupportedSentenceException;
@@ -223,7 +223,7 @@ public class NmeaBurst implements INmeaBurst {
     }
 
 
-    public Position2 getPosition() {
+    public Position getPosition() {
         for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
             if (s.isValid() && s.hasPosition()) {
                 return s.getPosition();
@@ -279,12 +279,12 @@ public class NmeaBurst implements INmeaBurst {
     }
 
     public UTMCoords getTrueUTM() {
-        Position2 pos = getPosition();
-        return UTMTools.convertLatLonSignedDecToUTM(pos.getLatitudeSigned(), pos.getLongitudeSigned(), null);
+        Position pos = getPosition();
+        return UTMTools.convertLatLonSignedDecToUTM(pos.getLatitudeSignedDecimal(), pos.getLongitudeSignedDecimal(), null);
     }
     public UTMCoords getUTM(int utmZone) {
-        Position2 pos = getPosition();
-        return UTMTools.convertLatLonSignedDecToUTM(pos.getLatitudeSigned(), pos.getLongitudeSigned(), utmZone);
+        Position pos = getPosition();
+        return UTMTools.convertLatLonSignedDecToUTM(pos.getLatitudeSignedDecimal(), pos.getLongitudeSignedDecimal(), utmZone);
     }
 
     public double getHorizDilution() {

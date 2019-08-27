@@ -403,7 +403,7 @@ public class NmeaBurst implements INmeaBurst, Serializable {
             return String.format("[%s] Valid: False |%s rmc: %b | gga: %b | gsa: %b | gsv: %b",
                     DateTime.now(),
                     hasPosition() ? String.format(" (Lat: %f | Lon: %f | Elev: %f) |", getLatitude(), getLatitude(), getElevation()) :
-                            "No Position |",
+                            "No PositionLegacy |",
                     rmc.isValid(), gga.isValid(), gsa.isValid(), gsv.isValid());
         }
     }

@@ -2,7 +2,7 @@ package com.usda.fmsc.geospatial.nmea41.sentences;
 
 import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.NorthSouth;
-import com.usda.fmsc.geospatial.Position2;
+import com.usda.fmsc.geospatial.Position;
 import com.usda.fmsc.geospatial.UomElevation;
 import com.usda.fmsc.geospatial.nmea41.NmeaIDs.SentenceID;
 import com.usda.fmsc.geospatial.nmea41.SentenceFormats;
@@ -40,7 +40,7 @@ public class GGASentence extends PositionSentence implements Serializable {
                     fixTime = LocalTime.parse(tokens[1], SentenceFormats.GGATimeFormatterAlt);
                 }
 
-                position = new Position2(
+                position = Position.fromDecimalDms(
                         Double.parseDouble(tokens[2]), NorthSouth.parse(tokens[3]),
                         Double.parseDouble(tokens[4]), EastWest.parse(tokens[5]),
                         Double.parseDouble(tokens[9]), UomElevation.parse(tokens[10]));

@@ -5,30 +5,30 @@ import com.usda.fmsc.geospatial.nmea41.sentences.base.NmeaSentence;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
 
 
 public class NmeaParser {
     private List<Listener> listeners;
-    private List<TalkerID> usedTalkerIDs;
-
-    private NmeaBurst burst;
+    private EnumSet<TalkerID> usedTalkerIDs;
 
     private boolean synced, initialized, syncing;
-
     private long lastSentenceTime, longestPause, startInit;
+
+    private NmeaBurst burst;
 
 
     public NmeaParser(TalkerID talkerID) {
         listeners = new ArrayList<>();
-        usedTalkerIDs = new ArrayList<>();
-        usedTalkerIDs.add(talkerID);
+        usedTalkerIDs = EnumSet.of(talkerID);
     }
 
-    public NmeaParser(Collection<TalkerID> talkerIDs) {
+    public NmeaParser(EnumSet<TalkerID> talkerIDs) {
         listeners = new ArrayList<>();
-        usedTalkerIDs = new ArrayList<>(talkerIDs);
+        usedTalkerIDs = EnumSet.copyOf(talkerIDs);
     }
+
 
     public boolean parse(String nmea) {
         if (synced) {
@@ -94,6 +94,7 @@ public class NmeaParser {
         return synced;
     }
 
+
     public boolean isSynced() {
         return synced;
     }
@@ -102,14 +103,12 @@ public class NmeaParser {
         return syncing;
     }
 
+
     public void reset() {
+        initialized = syncing = synced = false;
         burst = null;
     }
 
-    public void reSync() {
-        initialized = syncing = synced = false;
-        reset();
-    }
 
     private void postBurstReceived(NmeaBurst burst) {
         for (Listener listener : listeners) {

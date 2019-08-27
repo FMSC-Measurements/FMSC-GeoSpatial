@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.NorthSouth;
-import com.usda.fmsc.geospatial.Position2;
+import com.usda.fmsc.geospatial.Position;
 import com.usda.fmsc.geospatial.nmea41.NmeaIDs.SentenceID;
 import com.usda.fmsc.geospatial.nmea41.SentenceFormats;
 import com.usda.fmsc.geospatial.nmea41.sentences.base.PositionSentence;
@@ -45,7 +45,7 @@ public class RMCSentence extends PositionSentence implements Serializable {
 
                 status = Status.parse(tokens[2]);
 
-                position = new Position2(
+                position = Position.fromDecimalDms(
                         Double.parseDouble(tokens[3]), NorthSouth.parse(tokens[4]),
                         Double.parseDouble(tokens[5]), EastWest.parse(tokens[6]));
 

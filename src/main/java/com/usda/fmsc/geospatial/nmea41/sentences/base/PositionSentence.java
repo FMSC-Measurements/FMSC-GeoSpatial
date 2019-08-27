@@ -3,13 +3,13 @@ package com.usda.fmsc.geospatial.nmea41.sentences.base;
 
 import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.NorthSouth;
-import com.usda.fmsc.geospatial.Position2;
+import com.usda.fmsc.geospatial.Position;
 import com.usda.fmsc.geospatial.UomElevation;
 
 import java.io.Serializable;
 
 public abstract class PositionSentence extends NmeaSentence implements Serializable {
-    protected Position2 position;
+    protected Position position;
 
 
     public PositionSentence() {
@@ -46,9 +46,9 @@ public abstract class PositionSentence extends NmeaSentence implements Serializa
     }
 
 
-    public Position2 getPosition() {
+    public Position getPosition() {
         if (hasPosition()) {
-            return new Position2(position);
+            return new Position(position);
         }
 
         return null;
