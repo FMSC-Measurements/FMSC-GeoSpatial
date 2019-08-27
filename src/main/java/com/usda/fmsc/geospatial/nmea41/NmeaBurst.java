@@ -438,4 +438,15 @@ public class NmeaBurst implements INmeaBurst {
 
         throw new MissingNmeaDataException(SentenceID.GSA);
     }
+
+
+    public static NmeaSentence parseNmea(String nmea) {
+        switch (SentenceID.parse(nmea)) {
+            case GGA: return new GGASentence(nmea);
+            case RMC: return new RMCSentence(nmea);
+            case GSA: return new GSASentence(nmea);
+            case GSV: return new GSVSentence(nmea);
+            default: return null;
+        }
+    }
 }

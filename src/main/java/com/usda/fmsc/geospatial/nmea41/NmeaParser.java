@@ -14,7 +14,9 @@ public class NmeaParser {
 
     private NmeaBurst burst;
 
-    private long lastSentenceTime;
+    private boolean synced, initialized, syncing;
+
+    private long lastSentenceTime, longestPause, startInit;
 
 
     public NmeaParser(TalkerID talkerID) {
@@ -28,36 +30,85 @@ public class NmeaParser {
         usedTalkerIDs = new ArrayList<>(talkerIDs);
     }
 
-
     public boolean parse(String nmea) {
-        boolean usedNmea = false;
+        if (synced) {
+            long now = System.currentTimeMillis();
 
-        if (burst == null) {
-            burst = new NmeaBurst();
-        }
+            if (now - lastSentenceTime > longestPause) {
+                if (burst != null) {
+                    postBurstReceived(burst);
+                }
 
-        if (usedTalkerIDs.contains(TalkerID.parse(nmea))) {
-            NmeaSentence sentence = burst.addNmeaSentence(nmea);
-
-            if (sentence != null) {
-                postNmeaReceived(sentence);
+                burst = new NmeaBurst();
             }
 
-            usedNmea = true;
+            if (usedTalkerIDs.contains(TalkerID.parse(nmea))) {
+                NmeaSentence sentence;
+                if (burst != null) {
+                    sentence = burst.addNmeaSentence(nmea);
+                } else {
+                    sentence = NmeaBurst.parseNmea(nmea);
+                }
+
+                if (sentence != null) {
+                    postNmeaReceived(sentence);
+                }
+            }
+
+            lastSentenceTime = now;
+
+            return true;
         }
 
-        if (burst != null && burst.isComplete()) {
-            postBurstReceived(burst);
-            burst = null;
+        return false;
+    }
+
+    public boolean sync(String nmea) {
+        long now = System.currentTimeMillis();
+
+        if (!synced) {
+            if (syncing) {
+                if (now - lastSentenceTime >= longestPause) {
+                    syncing = false;
+                    synced = true;
+                }
+            } else if (!initialized) {
+                initialized = true;
+                startInit = System.currentTimeMillis();
+            } else {
+                long pause = now - lastSentenceTime;
+
+                if (pause > longestPause) {
+                    longestPause = pause;
+                }
+
+                if (startInit - now >= 3000) {
+                    initialized = false;
+                    syncing = true;
+                    longestPause *= .8;
+                }
+            }
         }
 
-        lastSentenceTime = System.currentTimeMillis();
+        lastSentenceTime = now;
+        return synced;
+    }
 
-        return usedNmea;
+    public boolean isSynced() {
+        return synced;
+    }
+
+    public boolean isSyncing() {
+        return syncing;
     }
 
     public void reset() {
         burst = null;
+    }
+
+    public void reSync() {
+        initialized = syncing = synced = false;
+        reset();
     }
 
     private void postBurstReceived(NmeaBurst burst) {
