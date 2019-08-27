@@ -1,7 +1,5 @@
 package com.usda.fmsc.geospatial.nmea41;
 
-import com.usda.fmsc.geospatial.utm.UTMTools;
-
 public class NmeaIDs {
 
     public enum TalkerID {
@@ -181,8 +179,9 @@ public class NmeaIDs {
         GLONASS_G3(6),
         Galileo_E1(7),
         Galileo_E6(8),
-        Galileo_E5a(9),
-        Galileo_E5b(10);
+        Galileo_E5(9),
+        BeiDou_B1(10),
+        BeiDou_B2(11);
 
         private final int value;
 
@@ -201,8 +200,39 @@ public class NmeaIDs {
             throw new IllegalArgumentException("Invalid Prefix id: " + index);
         }
 
-        public static GnssSignal parseSignalId(int sigId) {
-            switch (sigId) {
+        public static GnssSignal parseSignalId(int sigId, TalkerID talkerID) {
+            switch (talkerID) {
+                case GP: {
+                    switch (sigId) {
+                        case 1: return GPS_L1;
+                        case 5:
+                        case 6: return GPS_L2;
+                        default: return Unknown;
+                    }
+                }
+                case GL: {
+                    switch (sigId) {
+                        case 1: return GLONASS_G1;
+                        case 3: return GLONASS_G2;
+                        default: return Unknown;
+                    }
+                }
+                case GA: {
+                    switch (sigId) {
+                        case 7: return Galileo_E1;
+                        case 2: return Galileo_E5;
+                        default: return Unknown;
+                    }
+                }
+                case BD:
+                case PQ:
+                case GB: {
+                    switch (sigId) {
+                        case 1: return BeiDou_B1;
+                        case 3: return BeiDou_B2;
+                        default: return Unknown;
+                    }
+                }
                 default: return Unknown;
             }
         }

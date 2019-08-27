@@ -23,8 +23,6 @@ public class GGASentence extends PositionSentence implements Serializable {
     private Integer diffID;
 
 
-    public GGASentence() { }
-
     public GGASentence(String nmea) {
         super(nmea);
     }

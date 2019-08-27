@@ -17,7 +17,6 @@ public class GSVSentence extends NmeaSentence implements MultiSentence, Serializ
     private int sentenceNumber, totalSentenceCount, numberOfSatellitesInView;
     private Integer signalID;
 
-    public GSVSentence() { }
 
     public GSVSentence(String nmea) {
         super(nmea);
@@ -37,26 +36,23 @@ public class GSVSentence extends NmeaSentence implements MultiSentence, Serializ
 
                 int current = 4;
                 for (; current < 16 && current + 3 < tokens.length; current += 4) {
-                    try {
-                        if (tokens[current] != null) {
-                            satellites.add(new Satellite(
-                                    Integer.parseInt(tokens[current]),
-                                    parseFloat(tokens[current + 1]),
-                                    parseFloat(tokens[current + 2]),
-                                    parseFloat(tokens[current + 3])
-                            ));
-                        }
-                    } catch (NumberFormatException e) {
-                        //
+                    if (tokens[current] != null) {
+                        satellites.add(new Satellite(
+                                Integer.parseInt(tokens[current]),
+                                parseFloat(tokens[current + 1]),
+                                parseFloat(tokens[current + 2]),
+                                parseFloat(tokens[current + 3]),
+                                getTalkerID()
+                        ));
                     }
                 }
 
                 int sigIdIndex = current - 2;
                 if (tokens.length > sigIdIndex & !TextUtils.isEmpty(tokens[sigIdIndex])) {
-                    signalID = Integer.parseInt(tokens[sigIdIndex]);
+                    NmeaIDs.GnssSignal signal = NmeaIDs.GnssSignal.parseSignalId(Integer.parseInt(tokens[sigIdIndex]), getTalkerID());
 
                     for (Satellite sat : satellites) {
-                        sat.addSignal(NmeaIDs.GnssSignal.parseSignalId(signalID));
+                        sat.addSignal(signal);
                     }
                 }
 

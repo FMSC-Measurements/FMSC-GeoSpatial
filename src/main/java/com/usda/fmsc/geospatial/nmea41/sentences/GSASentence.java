@@ -16,8 +16,6 @@ public class GSASentence extends NmeaSentence implements Serializable {
     private Integer sysID;
 
 
-    public GSASentence() { }
-
     public GSASentence(String nmea) {
         super(nmea);
     }

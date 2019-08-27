@@ -24,8 +24,6 @@ public class RMCSentence extends PositionSentence implements Serializable {
     private Status navStatus;
 
 
-    public RMCSentence() { }
-
     public RMCSentence(String nmea) {
         super(nmea);
     }
