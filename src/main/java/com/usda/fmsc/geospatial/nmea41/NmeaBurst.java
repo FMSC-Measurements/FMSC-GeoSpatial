@@ -64,8 +64,6 @@ public class NmeaBurst implements INmeaBurst {
         TalkerID talkerID = TalkerID.parse(sentence);
         SentenceID sentenceID = SentenceID.parse(sentence);
 
-
-
         switch (sentenceID) {
             case GGA: {
                 ArrayList<GGASentence> ggas;
