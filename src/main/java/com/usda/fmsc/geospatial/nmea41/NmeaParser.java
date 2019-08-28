@@ -1,6 +1,7 @@
 package com.usda.fmsc.geospatial.nmea41;
 
 import com.usda.fmsc.geospatial.nmea41.NmeaIDs.TalkerID;
+import com.usda.fmsc.geospatial.nmea41.exceptions.UnsupportedSentenceException;
 import com.usda.fmsc.geospatial.nmea41.sentences.base.NmeaSentence;
 
 import java.util.ArrayList;
@@ -34,25 +35,29 @@ public class NmeaParser {
         if (synced) {
             long now = System.currentTimeMillis();
 
-            if (now - lastSentenceTime > longestPause) {
-                if (burst != null) {
-                    postBurstReceived(burst);
+            try {
+                if (now - lastSentenceTime > longestPause) {
+                    if (burst != null) {
+                        postBurstReceived(burst);
+                    }
+
+                    burst = new NmeaBurst();
                 }
 
-                burst = new NmeaBurst();
-            }
+                if (usedTalkerIDs.contains(TalkerID.parse(nmea))) {
+                    NmeaSentence sentence;
+                    if (burst != null) {
+                        sentence = burst.addNmeaSentence(nmea);
+                    } else {
+                        sentence = NmeaBurst.parseNmea(nmea);
+                    }
 
-            if (usedTalkerIDs.contains(TalkerID.parse(nmea))) {
-                NmeaSentence sentence;
-                if (burst != null) {
-                    sentence = burst.addNmeaSentence(nmea);
-                } else {
-                    sentence = NmeaBurst.parseNmea(nmea);
+                    if (sentence != null) {
+                        postNmeaReceived(sentence);
+                    }
                 }
-
-                if (sentence != null) {
-                    postNmeaReceived(sentence);
-                }
+            } catch (UnsupportedSentenceException e) {
+                //
             }
 
             lastSentenceTime = now;
@@ -74,7 +79,7 @@ public class NmeaParser {
                 }
             } else if (!initialized) {
                 initialized = true;
-                startInit = System.currentTimeMillis();
+                startInit = now;
             } else {
                 long pause = now - lastSentenceTime;
 
@@ -82,7 +87,7 @@ public class NmeaParser {
                     longestPause = pause;
                 }
 
-                if (startInit - now >= 3000) {
+                if (now - startInit >= 3000) {
                     initialized = false;
                     syncing = true;
                     longestPause *= .8;

@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class GSVSentence extends NmeaSentence implements MultiSentence, Serializable {
-    private ArrayList<Satellite> satellites = new ArrayList<>();
+    private ArrayList<Satellite> satellites;
     private int sentenceNumber, totalSentenceCount, numberOfSatellitesInView;
     private Integer signalID;
 
@@ -30,26 +30,27 @@ public class GSVSentence extends NmeaSentence implements MultiSentence, Serializ
 
         if (tokens.length > 3) {
             try {
+                satellites = new ArrayList<>();
+
                 totalSentenceCount = Integer.parseInt(tokens[1]);
                 sentenceNumber = Integer.parseInt(tokens[2]);
                 numberOfSatellitesInView = Integer.parseInt(tokens[3]);
 
-                int current = 4;
-                for (; current < 16 && current + 3 < tokens.length; current += 4) {
-                    if (tokens[current] != null) {
+                int index = 4;
+                for (; index < 17 && index + 3 < tokens.length; index += 4) {
+                    if (tokens[index] != null) {
                         satellites.add(new Satellite(
-                                Integer.parseInt(tokens[current]),
-                                parseFloat(tokens[current + 1]),
-                                parseFloat(tokens[current + 2]),
-                                parseFloat(tokens[current + 3]),
+                                Integer.parseInt(tokens[index]),
+                                parseFloat(tokens[index + 1]),
+                                parseFloat(tokens[index + 2]),
+                                parseFloat(tokens[index + 3]),
                                 getTalkerID()
                         ));
                     }
                 }
 
-                int sigIdIndex = current - 2;
-                if (tokens.length > sigIdIndex & !TextUtils.isEmpty(tokens[sigIdIndex])) {
-                    NmeaIDs.GnssSignal signal = NmeaIDs.GnssSignal.parseSignalId(Integer.parseInt(tokens[sigIdIndex]), getTalkerID());
+                if (tokens.length > index && !TextUtils.isEmpty(tokens[index])) {
+                    NmeaIDs.GnssSignal signal = NmeaIDs.GnssSignal.parseSignalId(Integer.parseInt(tokens[index]), getTalkerID());
 
                     for (Satellite sat : satellites) {
                         sat.addSignal(signal);
@@ -58,7 +59,7 @@ public class GSVSentence extends NmeaSentence implements MultiSentence, Serializ
 
                 valid = true;
             } catch (Exception ex) {
-                //ex.printStackTrace();
+                ex.printStackTrace();
             }
         }
 
