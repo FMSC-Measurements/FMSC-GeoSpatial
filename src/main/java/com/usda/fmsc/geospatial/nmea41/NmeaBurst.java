@@ -178,7 +178,7 @@ public class NmeaBurst implements INmeaBurst {
         return sentences;
     }
 
-    private ArrayList<? extends NmeaSentence> getSentencesByID(SentenceID id) {
+    public ArrayList<? extends NmeaSentence> getSentencesByID(SentenceID id) {
         switch (id) {
             case GGA: return (cachedPriorityGGA == null ? (cachedPriorityGGA = (ArrayList<GGASentence>) getSentencesByPriority(gga)) : cachedPriorityGGA);
             case RMC: return (cachedPriorityRMC == null ? (cachedPriorityRMC = (ArrayList<RMCSentence>) getSentencesByPriority(rmc)) : cachedPriorityRMC);
@@ -189,6 +189,7 @@ public class NmeaBurst implements INmeaBurst {
 
         throw new MissingNmeaDataException(id);
     }
+
 
     public DateTime getFixTime() {
         for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
