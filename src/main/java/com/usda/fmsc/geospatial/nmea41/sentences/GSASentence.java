@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class GSASentence extends NmeaSentence implements Serializable {
-    private Status mode;
+    private Status operationMode;
     private Fix fix;
     private ArrayList<Integer> satsUsed;
     private Float pdop, hdop, vdop;
@@ -29,7 +29,7 @@ public class GSASentence extends NmeaSentence implements Serializable {
 
         if (tokens.length > 17) {
             try {
-                mode = Status.parse(tokens[1]);
+                operationMode = Status.parse(tokens[1]);
 
                 fix = Fix.parse(tokens[2]);
 
@@ -77,8 +77,8 @@ public class GSASentence extends NmeaSentence implements Serializable {
     }
 
 
-    public Status getMode() {
-        return mode;
+    public Status getOperationMode() {
+        return operationMode;
     }
 
     public Fix getFix() {

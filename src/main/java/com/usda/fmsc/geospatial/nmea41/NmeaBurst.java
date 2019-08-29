@@ -54,7 +54,13 @@ public class NmeaBurst implements INmeaBurst {
     private ArrayList<GSVSentence> cachedPriorityGSV;
     private ArrayList<Satellite> cachedSatellites;
 
+    //GLL Sentence
+    private HashMap<TalkerID, ArrayList<GLLSentence>> gll = new HashMap<>();
+    private ArrayList<GLLSentence> cachedPriorityGLL;
+
     private ArrayList<NmeaSentence> allSentences = new ArrayList<>();
+
+    private Position cachedPosition;
 
 
     public NmeaSentence addNmeaSentence(String sentence) {
@@ -76,6 +82,7 @@ public class NmeaBurst implements INmeaBurst {
                 ggas.add(ggaSentence);
                 allSentences.add(ggaSentence);
                 cachedPriorityGGA = null;
+                cachedPosition = null;
                 return ggaSentence;
             }
             case RMC: {
@@ -89,6 +96,7 @@ public class NmeaBurst implements INmeaBurst {
                 rmcs.add(rmcSentence);
                 allSentences.add(rmcSentence);
                 cachedPriorityRMC = null;
+                cachedPosition = null;
                 return rmcSentence;
             }
             case GSA: {
@@ -117,6 +125,20 @@ public class NmeaBurst implements INmeaBurst {
                 cachedPriorityGSV = null;
                 cachedSatellites = null;
                 return gsvSentence;
+            }
+            case GLL: {
+                ArrayList<GLLSentence> glls;
+                if (!gll.containsKey(talkerID) || (glls = gll.get(talkerID)) == null) {
+                    glls = new ArrayList<>();
+                    gll.put(talkerID, glls);
+                }
+
+                GLLSentence gllSentence = new GLLSentence(sentence);
+                glls.add(gllSentence);
+                allSentences.add(gllSentence);
+                cachedPriorityGLL = null;
+                cachedPosition = null;
+                return gllSentence;
             }
             default: throw new UnsupportedSentenceException(sentenceID, sentence);
         }
@@ -162,6 +184,7 @@ public class NmeaBurst implements INmeaBurst {
             case RMC: return (cachedPriorityRMC == null ? (cachedPriorityRMC = (ArrayList<RMCSentence>) getSentencesByPriority(rmc)) : cachedPriorityRMC);
             case GSA: return (cachedPriorityGSA == null ? (cachedPriorityGSA = (ArrayList<GSASentence>) getSentencesByPriority(gsa)) : cachedPriorityGSA);
             case GSV: return (cachedPriorityGSV == null ? (cachedPriorityGSV = (ArrayList<GSVSentence>) getSentencesByPriority(gsv)) : cachedPriorityGSV);
+            case GLL: return (cachedPriorityGLL == null ? (cachedPriorityGLL = (ArrayList<GLLSentence>) getSentencesByPriority(gll)) : cachedPriorityGLL);
         }
 
         throw new MissingNmeaDataException(id);
@@ -175,6 +198,12 @@ public class NmeaBurst implements INmeaBurst {
         }
 
         for (GGASentence s : (ArrayList<GGASentence>) getSentencesByID(SentenceID.GGA)) {
+            if (s.isValid()) {
+                return s.getFixTime().toDateTimeToday();
+            }
+        }
+
+        for (GLLSentence s : (ArrayList<GLLSentence>) getSentencesByID(SentenceID.GLL)) {
             if (s.isValid()) {
                 return s.getFixTime().toDateTimeToday();
             }
@@ -224,29 +253,48 @@ public class NmeaBurst implements INmeaBurst {
 
 
     public Position getPosition() {
-        for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
-            if (s.isValid() && s.hasPosition()) {
-                return s.getPosition();
+        if (cachedPosition == null) {
+            for (GGASentence s : (ArrayList<GGASentence>) getSentencesByID(SentenceID.GGA)) {
+                if (s.isValid() && s.hasPosition()) {
+                    return (cachedPosition = s.getPosition());
+                }
             }
-        }
 
-        for (GGASentence s : (ArrayList<GGASentence>) getSentencesByID(SentenceID.GGA)) {
-            if (s.isValid() && s.hasPosition()) {
-                return s.getPosition();
+            for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
+                if (s.isValid() && s.hasPosition()) {
+                    return (cachedPosition = s.getPosition());
+                }
             }
+
+            for (GLLSentence s : (ArrayList<GLLSentence>) getSentencesByID(SentenceID.GLL)) {
+                if (s.isValid() && s.hasPosition()) {
+                    return (cachedPosition = s.getPosition());
+                }
+            }
+        } else {
+            return cachedPosition;
         }
 
         throw new MissingNmeaDataException(SentenceID.RMC, SentenceID.GGA);
     }
     public boolean hasPosition() {
-        for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
+        for (GGASentence s : (ArrayList<GGASentence>) getSentencesByID(SentenceID.GGA)) {
             if (s.isValid() && s.hasPosition()) {
+                cachedPosition = s.getPosition();
                 return true;
             }
         }
 
-        for (GGASentence s : (ArrayList<GGASentence>) getSentencesByID(SentenceID.GGA)) {
+        for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
             if (s.isValid() && s.hasPosition()) {
+                cachedPosition = s.getPosition();
+                return true;
+            }
+        }
+
+        for (GLLSentence s : (ArrayList<GLLSentence>) getSentencesByID(SentenceID.GLL)) {
+            if (s.isValid() && s.hasPosition()) {
+                cachedPosition = s.getPosition();
                 return true;
             }
         }
@@ -401,10 +449,10 @@ public class NmeaBurst implements INmeaBurst {
 
         throw new MissingNmeaDataException(SentenceID.GSA);
     }
-    public GSASentence.Mode getMode() {
+    public Status getOperationMode() {
         for (GSASentence s : (ArrayList<GSASentence>) getSentencesByID(SentenceID.GSA)) {
             if (s.isValid()) {
-                return s.getMode();
+                return s.getOperationMode();
             }
         }
 

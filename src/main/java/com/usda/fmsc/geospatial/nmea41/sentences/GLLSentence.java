@@ -24,7 +24,7 @@ public class GLLSentence extends PositionSentence {
         boolean valid = false;
         String[] tokens = nmea.substring(0, nmea.indexOf("*")).split(",", -1);
 
-        if (tokens.length > 13 && tokens[1].length() > 0) {
+        if (tokens.length > 7 && tokens[1].length() > 0) {
             try {
                 try {
                     fixTime = LocalTime.parse(tokens[5], SentenceFormats.TimeFormatter);
