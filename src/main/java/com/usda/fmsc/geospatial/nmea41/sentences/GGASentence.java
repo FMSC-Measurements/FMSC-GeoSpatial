@@ -35,9 +35,9 @@ public class GGASentence extends PositionSentence implements Serializable {
         if (tokens.length > 13 && tokens[1].length() > 0) {
             try {
                 try {
-                    fixTime = LocalTime.parse(tokens[1], SentenceFormats.GGATimeFormatter);
+                    fixTime = LocalTime.parse(tokens[1], SentenceFormats.TimeFormatter);
                 } catch (Exception e) {
-                    fixTime = LocalTime.parse(tokens[1], SentenceFormats.GGATimeFormatterAlt);
+                    fixTime = LocalTime.parse(tokens[1], SentenceFormats.TimeFormatterAlt);
                 }
 
                 position = Position.fromDecimalDms(
