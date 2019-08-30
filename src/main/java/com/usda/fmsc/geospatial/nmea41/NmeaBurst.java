@@ -55,8 +55,20 @@ public class NmeaBurst implements INmeaBurst {
     private ArrayList<Satellite> cachedSatellites;
 
     //GLL Sentence
-    private HashMap<TalkerID, ArrayList<GLLSentence>> gll = new HashMap<>();
+    private HashMap<TalkerID, ArrayList<GLLSentence>> gll;
     private ArrayList<GLLSentence> cachedPriorityGLL;
+
+    //GNS Sentence
+    private HashMap<TalkerID, ArrayList<GNSSentence>> gns;
+    private ArrayList<GNSSentence> cachedPriorityGNS;
+
+    //GST Sentence
+    private HashMap<TalkerID, ArrayList<GSTSentence>> gst;
+    private ArrayList<GSTSentence> cachedPriorityGST;
+
+    //ZDA Sentence
+    private HashMap<TalkerID, ArrayList<ZDASentence>> zda;
+    private ArrayList<ZDASentence> cachedPriorityZDA;
 
     private ArrayList<NmeaSentence> allSentences = new ArrayList<>();
 
@@ -127,6 +139,8 @@ public class NmeaBurst implements INmeaBurst {
                 return gsvSentence;
             }
             case GLL: {
+                if (gll == null) gll = new HashMap<>();
+
                 ArrayList<GLLSentence> glls;
                 if (!gll.containsKey(talkerID) || (glls = gll.get(talkerID)) == null) {
                     glls = new ArrayList<>();
@@ -139,6 +153,52 @@ public class NmeaBurst implements INmeaBurst {
                 cachedPriorityGLL = null;
                 cachedPosition = null;
                 return gllSentence;
+            }
+            case GNS: {
+                if (gns == null) gns = new HashMap<>();
+
+                ArrayList<GNSSentence> gnss;
+                if (!gsa.containsKey(talkerID) || (gnss = gns.get(talkerID)) == null) {
+                    gnss = new ArrayList<>();
+                    gns.put(talkerID, gnss);
+                }
+
+                GNSSentence gnsSentence = new GNSSentence(sentence);
+                gnss.add(gnsSentence);
+                allSentences.add(gnsSentence);
+                cachedPriorityGNS = null;
+                cachedPosition = null;
+                return gnsSentence;
+            }
+            case GST: {
+                if (gns == null) gst = new HashMap<>();
+
+                ArrayList<GSTSentence> gsts;
+                if (!gsa.containsKey(talkerID) || (gsts = gst.get(talkerID)) == null) {
+                    gsts = new ArrayList<>();
+                    gst.put(talkerID, gsts);
+                }
+
+                GSTSentence gstSentence = new GSTSentence(sentence);
+                gsts.add(gstSentence);
+                allSentences.add(gstSentence);
+                cachedPriorityGST = null;
+                return gstSentence;
+            }
+            case ZDA: {
+                if (gns == null) zda = new HashMap<>();
+
+                ArrayList<ZDASentence> zdas;
+                if (!gsa.containsKey(talkerID) || (zdas = zda.get(talkerID)) == null) {
+                    zdas = new ArrayList<>();
+                    zda.put(talkerID, zdas);
+                }
+
+                ZDASentence zdaSentence = new ZDASentence(sentence);
+                zdas.add(zdaSentence);
+                allSentences.add(zdaSentence);
+                cachedPriorityGSA = null;
+                return zdaSentence;
             }
             default: throw new UnsupportedSentenceException(sentenceID, sentence);
         }
@@ -160,8 +220,13 @@ public class NmeaBurst implements INmeaBurst {
 
         return true;
     }
+
     public boolean isComplete() {
         return rmc.size() > 0 && gga.size() > 0 && gsa.size() > 0 && gsv.size() > 0;
+    }
+
+    public boolean hasSentenece(SentenceID id) {
+        return getSentencesByID(id).size() > 0;
     }
 
 
@@ -184,7 +249,10 @@ public class NmeaBurst implements INmeaBurst {
             case RMC: return (cachedPriorityRMC == null ? (cachedPriorityRMC = (ArrayList<RMCSentence>) getSentencesByPriority(rmc)) : cachedPriorityRMC);
             case GSA: return (cachedPriorityGSA == null ? (cachedPriorityGSA = (ArrayList<GSASentence>) getSentencesByPriority(gsa)) : cachedPriorityGSA);
             case GSV: return (cachedPriorityGSV == null ? (cachedPriorityGSV = (ArrayList<GSVSentence>) getSentencesByPriority(gsv)) : cachedPriorityGSV);
-            case GLL: return (cachedPriorityGLL == null ? (cachedPriorityGLL = (ArrayList<GLLSentence>) getSentencesByPriority(gll)) : cachedPriorityGLL);
+            case GLL: return (cachedPriorityGLL == null ? (cachedPriorityGLL = (gll == null ? new ArrayList<>() : (ArrayList<GLLSentence>) getSentencesByPriority(gll))) : cachedPriorityGLL);
+            case GNS: return (cachedPriorityGNS == null ? (cachedPriorityGNS = (gns == null ? new ArrayList<>() : (ArrayList<GNSSentence>) getSentencesByPriority(gns))) : cachedPriorityGNS);
+            case GST: return (cachedPriorityGST == null ? (cachedPriorityGST = (gst == null ? new ArrayList<>() : (ArrayList<GSTSentence>) getSentencesByPriority(gst))) : cachedPriorityGST);
+            case ZDA: return (cachedPriorityZDA == null ? (cachedPriorityZDA = (zda == null ? new ArrayList<>() : (ArrayList<ZDASentence>) getSentencesByPriority(zda))) : cachedPriorityZDA);
         }
 
         throw new MissingNmeaDataException(id);
@@ -261,6 +329,12 @@ public class NmeaBurst implements INmeaBurst {
                 }
             }
 
+            for (GNSSentence s : (ArrayList<GNSSentence>) getSentencesByID(SentenceID.GNS)) {
+                if (s.isValid() && s.hasPosition()) {
+                    return (cachedPosition = s.getPosition());
+                }
+            }
+
             for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
                 if (s.isValid() && s.hasPosition()) {
                     return (cachedPosition = s.getPosition());
@@ -276,10 +350,17 @@ public class NmeaBurst implements INmeaBurst {
             return cachedPosition;
         }
 
-        throw new MissingNmeaDataException(SentenceID.RMC, SentenceID.GGA);
+        throw new MissingNmeaDataException(SentenceID.RMC, SentenceID.GGA, SentenceID.GLL, SentenceID.GNS);
     }
     public boolean hasPosition() {
         for (GGASentence s : (ArrayList<GGASentence>) getSentencesByID(SentenceID.GGA)) {
+            if (s.isValid() && s.hasPosition()) {
+                cachedPosition = s.getPosition();
+                return true;
+            }
+        }
+
+        for (GNSSentence s : (ArrayList<GNSSentence>) getSentencesByID(SentenceID.GNS)) {
             if (s.isValid() && s.hasPosition()) {
                 cachedPosition = s.getPosition();
                 return true;
@@ -328,12 +409,10 @@ public class NmeaBurst implements INmeaBurst {
     }
 
     public UTMCoords getTrueUTM() {
-        Position pos = getPosition();
-        return UTMTools.convertLatLonSignedDecToUTM(pos.getLatitudeSignedDecimal(), pos.getLongitudeSignedDecimal(), null);
+        return UTMTools.convertLatLonToUTM(getPosition());
     }
     public UTMCoords getUTM(int utmZone) {
-        Position pos = getPosition();
-        return UTMTools.convertLatLonSignedDecToUTM(pos.getLatitudeSignedDecimal(), pos.getLongitudeSignedDecimal(), utmZone);
+        return UTMTools.convertLatLonToUTM(getPosition(), utmZone);
     }
 
     public double getHorizDilution() {
@@ -495,6 +574,10 @@ public class NmeaBurst implements INmeaBurst {
             case RMC: return new RMCSentence(nmea);
             case GSA: return new GSASentence(nmea);
             case GSV: return new GSVSentence(nmea);
+            case GLL: return new GLLSentence(nmea);
+            case GNS: return new GNSSentence(nmea);
+            case ZDA: return new ZDASentence(nmea);
+            case GST: return new GSTSentence(nmea);
             default: return null;
         }
     }

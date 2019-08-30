@@ -109,9 +109,8 @@ public class NmeaIDs {
         GSV(4),
         GLL(5),
         GNS(6),
-        RTE(7),
-        VTG(8),
-        ZDA(9);
+        ZDA(7),
+        GST(8);
 
         private final int value;
 
@@ -145,9 +144,8 @@ public class NmeaIDs {
                 case "GSA": return GSA;
                 case "GSV": return GSV;
                 case "RMC": return RMC;
-                case "RTE": return RTE;
-                case "VTG": return VTG;
                 case "ZDA": return ZDA;
+                case "GST": return GST;
                 default: return Unknown;
             }
         }
@@ -161,9 +159,8 @@ public class NmeaIDs {
                 case GSA: return "GSA";
                 case GSV: return "GSV";
                 case RMC: return "RMC";
-                case RTE: return "RTE";
-                case VTG: return "VTG";
                 case ZDA: return "ZDA";
+                case GST: return "GST";
                 default: return "Unknown";
             }
         }
