@@ -59,10 +59,10 @@ public enum GnssType {
     public static GnssType parseNmeaId(int prn) {
         if (prn > 0 && prn < 33) {
             return GPS;
-        } else if (prn > 32 && prn < 55) {
+        } else if ((prn > 32 && prn < 55) || (prn > 119 && prn < 159)) {
             if (prn == 33 || prn == 37 || prn == 39 || prn == 44) {
                 return EGNOS;
-            } else if (prn == 35 || prn == 51 || (prn > 45 && prn < 49)) {
+            } else if (prn == 35 || prn == 51 || prn == 133 || (prn > 45 && prn < 49)) {
                 return WAAS;
             } else if (prn == 38 || prn > 52) {
                 return SDCM;
@@ -75,8 +75,6 @@ public enum GnssType {
             }
         } else if (prn > 64 && prn < 97) {
             return GLONASS;
-        } else if (prn > 151 && prn < 159) {
-            return UnknownSBAS;
         } else if (prn > 172 && prn < 183) {
             return IMES;
         } else if (prn > 192 && prn < 201) {

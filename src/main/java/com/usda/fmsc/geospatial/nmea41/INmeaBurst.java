@@ -67,9 +67,9 @@ public interface INmeaBurst {
 
     //GSASentence.Mode getOperationMode();
 
-    float getHDOP();
+    Float getHDOP();
 
-    float getPDOP();
+    Float getPDOP();
 
-    float getVDOP();
+    Float getVDOP();
 }

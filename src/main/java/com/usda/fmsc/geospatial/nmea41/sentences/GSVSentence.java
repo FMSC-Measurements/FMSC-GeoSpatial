@@ -26,7 +26,7 @@ public class GSVSentence extends NmeaSentence implements MultiSentence, Serializ
     public boolean parse(String nmea) {
         boolean valid = false;
 
-        String[] tokens = nmea.substring(0, nmea.indexOf("*")).split(",", -1);
+        String[] tokens = tokenize(nmea);
 
         if (tokens.length > 3) {
             try {

@@ -206,7 +206,9 @@ public class NmeaBurst implements INmeaBurst {
 
     public boolean isValid() {
         for (NmeaSentence sentence : allSentences) {
-            if (!sentence.isValid())
+            if (!sentence.isValid() &&
+                    (sentence.getSentenceID() == SentenceID.GGA || sentence.getSentenceID() == SentenceID.RMC ||
+                    sentence.getSentenceID() == SentenceID.GSV || sentence.getSentenceID() == SentenceID.GSA))
                 return false;
         }
 
@@ -539,7 +541,7 @@ public class NmeaBurst implements INmeaBurst {
         throw new MissingNmeaDataException(SentenceID.GSA);
     }
 
-    public float getHDOP() {
+    public Float getHDOP() {
         for (GSASentence s : (ArrayList<GSASentence>) getSentencesByID(SentenceID.GSA)) {
             if (s.isValid()) {
                 return s.getHDOP();
@@ -548,7 +550,7 @@ public class NmeaBurst implements INmeaBurst {
 
         throw new MissingNmeaDataException(SentenceID.GSA);
     }
-    public float getPDOP() {
+    public Float getPDOP() {
         for (GSASentence s : (ArrayList<GSASentence>) getSentencesByID(SentenceID.GSA)) {
             if (s.isValid()) {
                 return s.getPDOP();
@@ -557,7 +559,7 @@ public class NmeaBurst implements INmeaBurst {
 
         throw new MissingNmeaDataException(SentenceID.GSA);
     }
-    public float getVDOP() {
+    public Float getVDOP() {
         for (GSASentence s : (ArrayList<GSASentence>) getSentencesByID(SentenceID.GSA)) {
             if (s.isValid()) {
                 return s.getVDOP();
@@ -579,6 +581,20 @@ public class NmeaBurst implements INmeaBurst {
             case ZDA: return new ZDASentence(nmea);
             case GST: return new GSTSentence(nmea);
             default: return null;
+        }
+    }
+
+    @Override
+    public String toString() {
+        if (isValid()) {
+            return String.format("[%s] Valid: True | Lat: %f | Lon: %f | Elev: %f",
+                    getFixTime(), getLatitude(), getLatitude(), getElevation());
+        } else {
+            return String.format("[%s] Valid: False |%s rmc: %b | gga: %b | gsa: %b | gsv: %b",
+                    DateTime.now(),
+                    hasPosition() ? String.format(" (Lat: %f | Lon: %f |%s", getLatitude(), getLatitude(),
+                            hasElevation() ? String.format(" Elev: %f) |", getElevation()) : "") : "No Position |",
+                    isValid(SentenceID.RMC), isValid(SentenceID.GGA), isValid(SentenceID.GSA), isValid(SentenceID.GSV));
         }
     }
 }

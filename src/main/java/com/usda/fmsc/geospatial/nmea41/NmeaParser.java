@@ -16,6 +16,7 @@ public class NmeaParser {
 
     private boolean synced, initialized, syncing;
     private long lastSentenceTime, longestPause, startInit;
+    private ArrayList<Long> pauses = new ArrayList<>();
 
     private NmeaBurst burst;
 
@@ -83,6 +84,8 @@ public class NmeaParser {
             } else {
                 long pause = now - lastSentenceTime;
 
+                pauses.add(pause);
+
                 if (pause > longestPause) {
                     longestPause = pause;
                 }
@@ -90,7 +93,24 @@ public class NmeaParser {
                 if (now - startInit >= 3000) {
                     initialized = false;
                     syncing = true;
+
+                    long pc = 0;
+
+                    for (Long p : pauses) {
+                        pc += p;
+                    }
+
+                    pc /= pauses.size();
+
+                    pc *= 2;
+
                     longestPause *= .8;
+
+                    if (longestPause > 900 && pc < longestPause) {
+                        longestPause = pc;
+                    }
+
+                    pauses = null;
                 }
             }
         }

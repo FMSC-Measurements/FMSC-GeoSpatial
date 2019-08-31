@@ -31,9 +31,9 @@ public class RMCSentence extends PositionSentence implements Serializable {
     @Override
     protected boolean parse(String nmea) {
         boolean valid = false;
-        String[] tokens = nmea.substring(0, nmea.indexOf("*")).split(",", -1);
+        String[] tokens = tokenize(nmea);
 
-        if (tokens.length > 12 && tokens[1].length() > 0) {
+        if (tokens.length > 11) {
             try {
                 String timeString = String.format("%s %s", tokens[1], tokens[9]);
 
@@ -67,14 +67,14 @@ public class RMCSentence extends PositionSentence implements Serializable {
                     magVarDir = EastWest.parse(token);
                 }
 
-                if (tokens.length > 13) {
+                if (tokens.length > 12) {
                     token = tokens[12];
                     if (!TextUtils.isEmpty(token)) {
                         posMode = Status.parse(tokens[12]);
                     }
                 }
 
-                if (tokens.length > 14) {
+                if (tokens.length > 13) {
                     token = tokens[13];
                     if (!TextUtils.isEmpty(token)) {
                         navStatus = Status.parse(tokens[13]);

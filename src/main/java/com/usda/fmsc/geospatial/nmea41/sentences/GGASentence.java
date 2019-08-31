@@ -30,7 +30,7 @@ public class GGASentence extends PositionSentence implements Serializable {
     @Override
     public boolean parse(String nmea) {
         boolean valid = false;
-        String[] tokens = nmea.substring(0, nmea.indexOf("*")).split(",", -1);
+        String[] tokens = tokenize(nmea);
 
         if (tokens.length > 13 && tokens[1].length() > 0) {
             try {

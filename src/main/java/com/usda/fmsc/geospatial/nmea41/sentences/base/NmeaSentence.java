@@ -34,6 +34,11 @@ public abstract class NmeaSentence implements Serializable {
     public abstract boolean isMultiSentence();
 
 
+    protected static String[] tokenize(String nmea) {
+        return nmea.substring(0, nmea.indexOf("*")).split(",", -1);
+    }
+
+
     public static boolean validateChecksum(String nmea) {
         if (nmea.length() > 10 && nmea.startsWith("$") && nmea.contains("*")) {
             String calcString = nmea.substring(1);

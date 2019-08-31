@@ -9,10 +9,12 @@ public class GNSSentence extends PositionSentence {
         super(nmea);
     }
 
+
     @Override
     protected boolean parse(String nmea) {
         return false;
     }
+
 
     @Override
     public SentenceID getSentenceID() {

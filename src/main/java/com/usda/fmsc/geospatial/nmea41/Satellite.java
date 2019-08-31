@@ -7,8 +7,8 @@ import com.usda.fmsc.geospatial.nmea41.NmeaIDs.TalkerID;
 import java.io.Serializable;
 import java.util.EnumSet;
 
-public class Satellite  implements Serializable {
-    private int nmeaId;
+public class Satellite implements Serializable {
+    private int nmeaId, origNmeaId;
     private Float elevation;
     private Float azimuth;
     private Float srn;
@@ -17,16 +17,34 @@ public class Satellite  implements Serializable {
     private EnumSet<GnssSignal> signals;
 
     public Satellite(int nmeaId, Float elevation, Float azimuth, Float srn, TalkerID talkerID) {
-        this.nmeaId = nmeaId;
+        this.origNmeaId = this.nmeaId = nmeaId;
         this.elevation = elevation;
         this.azimuth = azimuth;
         this.srn = srn;
         this.talkerID = talkerID;
         this.signals = EnumSet.noneOf(GnssSignal.class);
+
+        switch (talkerID) {
+            case GL: {
+                if (nmeaId < 33) {
+                    nmeaId += 64;
+                }
+                break;
+            }
+            case GA:
+            case QZ:
+            case GB:
+            case BD:
+            case PQ:
+        }
     }
 
     public int getNmeaID() {
         return nmeaId;
+    }
+
+    public int getOrigNmeaId() {
+        return origNmeaId;
     }
 
     public Float getElevation() {
@@ -43,8 +61,10 @@ public class Satellite  implements Serializable {
 
 
     public GnssType getGnssType() {
-        if (gnssType == null)
+        if (gnssType == null) {
             gnssType = GnssType.parseNmeaId(nmeaId);
+        }
+
         return gnssType;
     }
 

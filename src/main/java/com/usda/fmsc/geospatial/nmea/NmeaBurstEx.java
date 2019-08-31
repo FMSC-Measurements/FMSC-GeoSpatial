@@ -563,7 +563,7 @@ public class NmeaBurstEx implements INmeaBurst, Serializable {
             return String.format("[%s] Valid: False |%s rmc: %b | gga: %b | gsa: %b | gsv: %b",
                     DateTime.now(),
                     hasPosition() ? String.format(" (Lat: %f | Lon: %f |%s", getLatitude(), getLatitude(),
-                            hasElevation() ? String.format(" Elev: %f) |", getElevation()) : "") : "No PositionLegacy |",
+                            hasElevation() ? String.format(" Elev: %f) |", getElevation()) : "") : "No Position |",
                     isValid(SentenceID.RMC), isValid(SentenceID.GGA), isValid(SentenceID.GSA), isValid(SentenceID.GSV));
         }
     }
