@@ -5,11 +5,13 @@ import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.NorthSouth;
 import com.usda.fmsc.geospatial.Position;
 import com.usda.fmsc.geospatial.UomElevation;
+import com.usda.fmsc.geospatial.nmea41.sentences.PositionMode;
 
 import java.io.Serializable;
 
 public abstract class PositionSentence extends NmeaSentence implements Serializable {
     protected Position position;
+    protected PositionMode positionMode;
 
 
     public PositionSentence() {
@@ -60,5 +62,14 @@ public abstract class PositionSentence extends NmeaSentence implements Serializa
 
     public boolean hasElevation() {
         return position.hasElevation();
+    }
+
+
+    public PositionMode getPositionMode() {
+        return positionMode;
+    }
+
+    public boolean hasPositionMode() {
+        return positionMode != null;
     }
 }

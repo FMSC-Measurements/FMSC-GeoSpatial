@@ -20,7 +20,6 @@ public class RMCSentence extends PositionSentence implements Serializable {
     private Double trackAngle;  //in degrees, true
     private Double magVar;
     private EastWest magVarDir;
-    private Status posMode;
     private Status navStatus;
 
 
@@ -33,7 +32,7 @@ public class RMCSentence extends PositionSentence implements Serializable {
         boolean valid = false;
         String[] tokens = tokenize(nmea);
 
-        if (tokens.length > 11) {
+        if (tokens.length > 11 && tokens[3].length() > 0) {
             try {
                 String timeString = String.format("%s %s", tokens[1], tokens[9]);
 
@@ -70,7 +69,7 @@ public class RMCSentence extends PositionSentence implements Serializable {
                 if (tokens.length > 12) {
                     token = tokens[12];
                     if (!TextUtils.isEmpty(token)) {
-                        posMode = Status.parse(tokens[12]);
+                        positionMode = PositionMode.parse(tokens[12]);
                     }
                 }
 
@@ -130,16 +129,6 @@ public class RMCSentence extends PositionSentence implements Serializable {
         return magVarDir != null;
     }
 
-
-    public boolean hasPosMode() {
-        return posMode != null;
-    }
-
-    public Status getPosMode() {
-        return posMode;
-    }
-
-
     public boolean hasNavStatus() {
         return navStatus != null;
     }
@@ -147,6 +136,4 @@ public class RMCSentence extends PositionSentence implements Serializable {
     public Status getNavStatus() {
         return navStatus;
     }
-
-
 }

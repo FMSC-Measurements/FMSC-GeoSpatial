@@ -27,7 +27,7 @@ public class GSASentence extends NmeaSentence implements Serializable {
         boolean valid = false;
         String[] tokens = tokenize(nmea);
 
-        if (tokens.length > 17) {
+        if (tokens.length > 17 && tokens[3].length() > 0) {
             try {
                 operationMode = Status.parse(tokens[1]);
 

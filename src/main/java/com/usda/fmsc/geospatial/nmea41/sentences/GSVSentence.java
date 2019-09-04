@@ -28,7 +28,7 @@ public class GSVSentence extends NmeaSentence implements MultiSentence, Serializ
 
         String[] tokens = tokenize(nmea);
 
-        if (tokens.length > 3) {
+        if (tokens.length > 3 && tokens[1].length() > 0) {
             try {
                 satellites = new ArrayList<>();
 

@@ -280,6 +280,12 @@ public class NmeaBurst implements INmeaBurst {
             }
         }
 
+        for (GNSSentence s : (ArrayList<GNSSentence>) getSentencesByID(SentenceID.GNS)) {
+            if (s.isValid() && s.hasPosition()) {
+                return s.getFixTime().toDateTimeToday();
+            }
+        }
+
         throw new MissingNmeaDataException(SentenceID.RMC, SentenceID.GGA);
     }
 
@@ -456,6 +462,50 @@ public class NmeaBurst implements INmeaBurst {
         throw new MissingNmeaDataException(SentenceID.GGA);
     }
 
+    public boolean hasPositionMode() {
+        for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
+            if (s.isValid()) {
+                return s.hasPositionMode();
+            }
+        }
+
+        for (GNSSentence s : (ArrayList<GNSSentence>) getSentencesByID(SentenceID.GNS)) {
+            if (s.isValid()) {
+                return s.hasPositionMode();
+            }
+        }
+
+        for (GLLSentence s : (ArrayList<GLLSentence>) getSentencesByID(SentenceID.GLL)) {
+            if (s.isValid()) {
+                return s.hasPositionMode();
+            }
+        }
+
+        return false;
+    }
+
+    public PositionMode getPositionMode() {
+        for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
+            if (s.isValid() && s.hasPositionMode()) {
+                return s.getPositionMode();
+            }
+        }
+
+        for (GNSSentence s : (ArrayList<GNSSentence>) getSentencesByID(SentenceID.GNS)) {
+            if (s.isValid() && s.hasPositionMode()) {
+                return s.getPositionMode();
+            }
+        }
+
+        for (GLLSentence s : (ArrayList<GLLSentence>) getSentencesByID(SentenceID.GLL)) {
+            if (s.isValid() && s.hasPositionMode()) {
+                return s.getPositionMode();
+            }
+        }
+
+        throw new MissingNmeaDataException(SentenceID.RMC, SentenceID.GNS, SentenceID.GLL);
+    }
+
     public int getTrackedSatellitesCount() {
         int count = 0;
         for (GGASentence s : (ArrayList<GGASentence>) getSentencesByID(SentenceID.GGA)) {
@@ -519,6 +569,15 @@ public class NmeaBurst implements INmeaBurst {
             }
         }
 
+        if (count == 0) {
+            for (GNSSentence s : (ArrayList<GNSSentence>) getSentencesByID(SentenceID.GNS)) {
+                if (s.isValid()) {
+                    count += s.getSatellitesUsedCount();
+                }
+            }
+
+        }
+
         return count;
     }
 
@@ -543,6 +602,12 @@ public class NmeaBurst implements INmeaBurst {
 
     public Float getHDOP() {
         for (GSASentence s : (ArrayList<GSASentence>) getSentencesByID(SentenceID.GSA)) {
+            if (s.isValid()) {
+                return s.getHDOP();
+            }
+        }
+
+        for (GNSSentence s : (ArrayList<GNSSentence>) getSentencesByID(SentenceID.GNS)) {
             if (s.isValid()) {
                 return s.getHDOP();
             }
@@ -586,7 +651,7 @@ public class NmeaBurst implements INmeaBurst {
 
     @Override
     public String toString() {
-        if (isValid()) {
+        if (isValid() && hasPosition()) {
             return String.format("[%s] Valid: True | Lat: %f | Lon: %f | Elev: %f",
                     getFixTime(), getLatitude(), getLatitude(), getElevation());
         } else {

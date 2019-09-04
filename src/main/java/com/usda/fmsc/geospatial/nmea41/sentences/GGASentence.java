@@ -32,7 +32,7 @@ public class GGASentence extends PositionSentence implements Serializable {
         boolean valid = false;
         String[] tokens = tokenize(nmea);
 
-        if (tokens.length > 13 && tokens[1].length() > 0) {
+        if (tokens.length > 13 && tokens[2].length() > 0) {
             try {
                 try {
                     fixTime = LocalTime.parse(tokens[1], SentenceFormats.TimeFormatter);
