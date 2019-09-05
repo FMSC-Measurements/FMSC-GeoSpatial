@@ -44,44 +44,44 @@ public enum GnssType {
             case "GALILEO": return GALILEO;
             case "BEIDOU": return BEIDOU;
             case "QZSS": return QZSS;
-            case "SBAS": return UnknownSBAS;
-            case "UNKNOWNSBAS": return UnknownSBAS;
             case "WAAS": return WAAS;
             case "EGNOS": return EGNOS;
             case "SDCM": return SDCM;
             case "GAGAN": return GAGAN;
             case "MSAS": return MSAS;
             case "SNAS": return SNAS;
+            case "SBAS":
+            case "UNKNOWNSBAS": return UnknownSBAS;
             default: return Unknown;
         }
     }
 
-    public static GnssType parseNmeaId(int prn) {
-        if (prn > 0 && prn < 33) {
+    public static GnssType parseNmeaId(int nmeaId) {
+        if (nmeaId > 0 && nmeaId < 33) {
             return GPS;
-        } else if ((prn > 32 && prn < 55) || (prn > 119 && prn < 159)) {
-            if (prn == 33 || prn == 37 || prn == 39 || prn == 44) {
+        } else if ((nmeaId > 32 && nmeaId < 55) || (nmeaId > 119 && nmeaId < 159)) {
+            if (nmeaId == 33 || nmeaId == 37 || nmeaId == 39 || nmeaId == 44) {
                 return EGNOS;
-            } else if (prn == 35 || prn == 51 || prn == 133 || (prn > 45 && prn < 49)) {
+            } else if (nmeaId == 46 || nmeaId == 48 || nmeaId == 51) {
                 return WAAS;
-            } else if (prn == 38 || prn > 52) {
+            } else if (nmeaId == 38 || nmeaId > 52) {
                 return SDCM;
-            } else if (prn == 40 || prn == 41 ) {
+            } else if (nmeaId == 40 || nmeaId == 41 ) {
                 return GAGAN;
-            } else if (prn == 42 || prn == 50 ) {
+            } else if (nmeaId == 42 || nmeaId == 50 ) {
                 return MSAS;
             } else {
                 return UnknownSBAS;
             }
-        } else if (prn > 64 && prn < 97) {
+        } else if (nmeaId > 64 && nmeaId < 97) {
             return GLONASS;
-        } else if (prn > 172 && prn < 183) {
+        } else if (nmeaId > 172 && nmeaId < 183) {
             return IMES;
-        } else if (prn > 192 && prn < 201) {
+        } else if (nmeaId > 192 && nmeaId < 201) {
             return QZSS;
-        } else if (prn > 300 && prn < 337) {
+        } else if (nmeaId > 300 && nmeaId < 337) {
             return GALILEO;
-        } else if (prn > 200 && prn < 236 || prn > 400 && prn < 438) {
+        } else if (nmeaId > 200 && nmeaId < 236 || nmeaId > 400 && nmeaId < 438) {
             return BEIDOU;
         } else {
             return Unknown;
@@ -92,7 +92,7 @@ public enum GnssType {
     public String toString() {
         switch(this) {
             case GPS: return "GPS";
-            case GLONASS: return "Glonass";
+            case GLONASS: return "GLONASS";
             case GALILEO: return "Galileo";
             case BEIDOU: return "BeiDou";   //China
             case QZSS: return "QZSS";       //Japan

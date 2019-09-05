@@ -286,7 +286,7 @@ public class NmeaBurst implements INmeaBurst {
             }
         }
 
-        throw new MissingNmeaDataException(SentenceID.RMC, SentenceID.GGA);
+        throw new MissingNmeaDataException(SentenceID.RMC, SentenceID.GGA, SentenceID.GLL, SentenceID.GNS);
     }
 
     public double getMagVar() {
@@ -613,7 +613,7 @@ public class NmeaBurst implements INmeaBurst {
             }
         }
 
-        throw new MissingNmeaDataException(SentenceID.GSA);
+        throw new MissingNmeaDataException(SentenceID.GSA, SentenceID.GNS);
     }
     public Float getPDOP() {
         for (GSASentence s : (ArrayList<GSASentence>) getSentencesByID(SentenceID.GSA)) {
