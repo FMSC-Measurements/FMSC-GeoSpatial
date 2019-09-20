@@ -24,18 +24,22 @@ public class Satellite implements Serializable {
         this.talkerID = talkerID;
         this.signals = EnumSet.noneOf(GnssSignal.class);
 
-        switch (talkerID) {
-            case GL: {
-                if (nmeaId < 33) {
-                    nmeaId += 64;
-                }
-                break;
-            }
-            case GA:
-            case QZ:
-            case GB:
-            case BD:
-            case PQ:
+//        switch (talkerID) {
+//            case GL: {
+//                if (nmeaId < 33) {
+//                    this.nmeaId += 64;
+//                }
+//                break;
+//            }
+//            case GA:
+//            case QZ:
+//            case GB:
+//            case BD:
+//            case PQ:
+//        }
+
+        if (talkerID == TalkerID.GL && this.nmeaId < 33) {
+            this.nmeaId += 64;
         }
     }
 

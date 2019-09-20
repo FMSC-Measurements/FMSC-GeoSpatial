@@ -84,6 +84,10 @@ public class NmeaParser {
             } else {
                 long pause = now - lastSentenceTime;
 
+                if (pauses == null) {
+                    pauses = new ArrayList<>();
+                }
+
                 pauses.add(pause);
 
                 if (pause > longestPause) {
