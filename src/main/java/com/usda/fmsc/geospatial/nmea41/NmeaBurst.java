@@ -70,8 +70,6 @@ public class NmeaBurst implements INmeaBurst {
     private HashMap<TalkerID, ArrayList<ZDASentence>> zda;
     private ArrayList<ZDASentence> cachedPriorityZDA;
 
-    private ArrayList<NmeaSentence> allSentences = new ArrayList<>();
-
     private Position cachedPosition;
 
 
@@ -92,7 +90,6 @@ public class NmeaBurst implements INmeaBurst {
 
                 GGASentence ggaSentence = new GGASentence(sentence);
                 ggas.add(ggaSentence);
-                allSentences.add(ggaSentence);
                 cachedPriorityGGA = null;
                 cachedPosition = null;
                 return ggaSentence;
@@ -106,7 +103,6 @@ public class NmeaBurst implements INmeaBurst {
 
                 RMCSentence rmcSentence = new RMCSentence(sentence);
                 rmcs.add(rmcSentence);
-                allSentences.add(rmcSentence);
                 cachedPriorityRMC = null;
                 cachedPosition = null;
                 return rmcSentence;
@@ -120,7 +116,6 @@ public class NmeaBurst implements INmeaBurst {
 
                 GSASentence gsaSentence = new GSASentence(sentence);
                 gsas.add(gsaSentence);
-                allSentences.add(gsaSentence);
                 cachedPriorityGSA = null;
                 return gsaSentence;
             }
@@ -133,7 +128,6 @@ public class NmeaBurst implements INmeaBurst {
 
                 GSVSentence gsvSentence = new GSVSentence(sentence);
                 gsvs.add(gsvSentence);
-                allSentences.add(gsvSentence);
                 cachedPriorityGSV = null;
                 cachedSatellites = null;
                 return gsvSentence;
@@ -149,7 +143,6 @@ public class NmeaBurst implements INmeaBurst {
 
                 GLLSentence gllSentence = new GLLSentence(sentence);
                 glls.add(gllSentence);
-                allSentences.add(gllSentence);
                 cachedPriorityGLL = null;
                 cachedPosition = null;
                 return gllSentence;
@@ -165,7 +158,6 @@ public class NmeaBurst implements INmeaBurst {
 
                 GNSSentence gnsSentence = new GNSSentence(sentence);
                 gnss.add(gnsSentence);
-                allSentences.add(gnsSentence);
                 cachedPriorityGNS = null;
                 cachedPosition = null;
                 return gnsSentence;
@@ -181,7 +173,6 @@ public class NmeaBurst implements INmeaBurst {
 
                 GSTSentence gstSentence = new GSTSentence(sentence);
                 gsts.add(gstSentence);
-                allSentences.add(gstSentence);
                 cachedPriorityGST = null;
                 return gstSentence;
             }
@@ -196,7 +187,6 @@ public class NmeaBurst implements INmeaBurst {
 
                 ZDASentence zdaSentence = new ZDASentence(sentence);
                 zdas.add(zdaSentence);
-                allSentences.add(zdaSentence);
                 cachedPriorityGSA = null;
                 return zdaSentence;
             }
@@ -205,14 +195,10 @@ public class NmeaBurst implements INmeaBurst {
     }
 
     public boolean isValid() {
-        for (NmeaSentence sentence : allSentences) {
-            if (!sentence.isValid() &&
-                    (sentence.getSentenceID() == SentenceID.GGA || sentence.getSentenceID() == SentenceID.RMC ||
-                    sentence.getSentenceID() == SentenceID.GSV || sentence.getSentenceID() == SentenceID.GSA))
-                return false;
-        }
-
-        return true;
+        return areAnyValid(SentenceID.RMC) &&
+                areAnyValid(SentenceID.GGA) &&
+                isValid(SentenceID.GSV) &&
+                isValid(SentenceID.GSA);
     }
     public boolean isValid(SentenceID id) {
         for (NmeaSentence sentence : getSentencesByID(id)) {
@@ -221,6 +207,14 @@ public class NmeaBurst implements INmeaBurst {
         }
 
         return true;
+    }
+    public boolean areAnyValid(SentenceID id) {
+        for (NmeaSentence sentence : getSentencesByID(id)) {
+            if (sentence.isValid())
+                return true;
+        }
+
+        return false;
     }
 
     public boolean isComplete() {
@@ -289,7 +283,7 @@ public class NmeaBurst implements INmeaBurst {
         throw new MissingNmeaDataException(SentenceID.RMC, SentenceID.GGA, SentenceID.GLL, SentenceID.GNS);
     }
 
-    public double getMagVar() {
+    public Double getMagVar() {
         for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
             if (s.isValid()) {
                 return s.getMagVar();

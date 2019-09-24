@@ -117,7 +117,7 @@ public class RMCSentence extends PositionSentence implements Serializable {
     }
 
 
-    public double getMagVar() {
+    public Double getMagVar() {
         return magVar;
     }
 

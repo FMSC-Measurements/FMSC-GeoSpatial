@@ -21,7 +21,7 @@ public interface INmeaBurst {
 
     DateTime getFixTime();
 
-    double getMagVar();
+    Double getMagVar();
     EastWest getMagVarDir();
 
     double getTrackAngle();
