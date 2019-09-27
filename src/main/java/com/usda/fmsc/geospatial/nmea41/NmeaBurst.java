@@ -201,12 +201,17 @@ public class NmeaBurst implements INmeaBurst {
                 isValid(SentenceID.GSA);
     }
     public boolean isValid(SentenceID id) {
+        boolean hasNmea = false;
         for (NmeaSentence sentence : getSentencesByID(id)) {
             if (!sentence.isValid())
                 return false;
+
+            if (!hasNmea) {
+                hasNmea = true;
+            }
         }
 
-        return true;
+        return hasNmea;
     }
     public boolean areAnyValid(SentenceID id) {
         for (NmeaSentence sentence : getSentencesByID(id)) {
