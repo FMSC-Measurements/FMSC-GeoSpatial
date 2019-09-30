@@ -391,6 +391,9 @@ public class NmeaBurst implements INmeaBurst {
         return false;
     }
 
+    public double getLatitude() {
+        return getPosition().getLatitude();
+    }
     public double getLatitudeSD() {
         return getPosition().getLatitudeSignedDecimal();
     }
@@ -398,6 +401,9 @@ public class NmeaBurst implements INmeaBurst {
         return getPosition().getLatDir();
     }
 
+    public double getLongitude() {
+        return getPosition().getLongitude();
+    }
     public double getLongitudeSD() {
         return getPosition().getLongitudeSignedDecimal();
     }
