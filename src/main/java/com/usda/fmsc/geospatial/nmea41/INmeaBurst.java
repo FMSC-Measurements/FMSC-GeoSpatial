@@ -32,10 +32,10 @@ public interface INmeaBurst {
     Position getPosition();
     boolean hasPosition();
 
-    double getLatitude();
+    double getLatitudeSD();
     NorthSouth getLatDir();
 
-    double getLongitude();
+    double getLongitudeSD();
     EastWest getLonDir();
 
     double getElevation();

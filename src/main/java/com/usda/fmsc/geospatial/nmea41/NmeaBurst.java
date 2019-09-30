@@ -391,15 +391,15 @@ public class NmeaBurst implements INmeaBurst {
         return false;
     }
 
-    public double getLatitude() {
-        return getPosition().getLatitude();
+    public double getLatitudeSD() {
+        return getPosition().getLatitudeSignedDecimal();
     }
     public NorthSouth getLatDir() {
         return getPosition().getLatDir();
     }
 
-    public double getLongitude() {
-        return getPosition().getLongitude();
+    public double getLongitudeSD() {
+        return getPosition().getLongitudeSignedDecimal();
     }
     public EastWest getLonDir() {
         return getPosition().getLonDir();
@@ -652,11 +652,11 @@ public class NmeaBurst implements INmeaBurst {
     public String toString() {
         if (isValid() && hasPosition()) {
             return String.format("[%s] Valid: True | Lat: %f | Lon: %f | Elev: %f",
-                    getFixTime(), getLatitude(), getLatitude(), getElevation());
+                    getFixTime(), getLatitudeSD(), getLongitudeSD(), getElevation());
         } else {
             return String.format("[%s] Valid: False |%s rmc: %b | gga: %b | gsa: %b | gsv: %b",
                     DateTime.now(),
-                    hasPosition() ? String.format(" (Lat: %f | Lon: %f |%s", getLatitude(), getLatitude(),
+                    hasPosition() ? String.format(" (Lat: %f | Lon: %f |%s", getLatitudeSD(), getLongitudeSD(),
                             hasElevation() ? String.format(" Elev: %f) |", getElevation()) : "") : "No Position |",
                     isValid(SentenceID.RMC), isValid(SentenceID.GGA), isValid(SentenceID.GSA), isValid(SentenceID.GSV));
         }
