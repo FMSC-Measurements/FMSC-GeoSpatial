@@ -308,7 +308,7 @@ public class NmeaBurst implements INmeaBurst {
     }
 
 
-    public double getTrackAngle() {
+    public Double getTrackAngle() {
         for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
             if (s.isValid()) {
                 return s.getTrackAngle();
@@ -317,7 +317,7 @@ public class NmeaBurst implements INmeaBurst {
 
         throw new MissingNmeaDataException(SentenceID.RMC);
     }
-    public double getGroundSpeed() {
+    public Double getGroundSpeed() {
         for (RMCSentence s : (ArrayList<RMCSentence>) getSentencesByID(SentenceID.RMC)) {
             if (s.isValid()) {
                 return s.getGroundSpeed();

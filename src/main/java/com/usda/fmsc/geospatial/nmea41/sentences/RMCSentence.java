@@ -108,11 +108,11 @@ public class RMCSentence extends PositionSentence implements Serializable {
         return status;
     }
 
-    public double getGroundSpeed() {
+    public Double getGroundSpeed() {
         return groundSpeed;
     }
 
-    public double getTrackAngle() {
+    public Double getTrackAngle() {
         return trackAngle;
     }
 

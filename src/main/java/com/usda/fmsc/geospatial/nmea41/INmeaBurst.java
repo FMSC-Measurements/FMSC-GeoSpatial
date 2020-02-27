@@ -24,9 +24,9 @@ public interface INmeaBurst {
     Double getMagVar();
     EastWest getMagVarDir();
 
-    double getTrackAngle();
+    Double getTrackAngle();
 
-    double getGroundSpeed();
+    Double getGroundSpeed();
 
 
     Position getPosition();
