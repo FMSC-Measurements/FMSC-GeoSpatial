@@ -38,7 +38,7 @@ public class GSVSentence extends NmeaSentence implements MultiSentence, Serializ
 
                 int index = 4;
                 for (; index < 17 && index + 3 < tokens.length; index += 4) {
-                    if (tokens[index] != null) {
+                    if (tokens[index] != null && !tokens[index].isEmpty()) {
                         satellites.add(new Satellite(
                                 Integer.parseInt(tokens[index]),
                                 parseFloat(tokens[index + 1]),

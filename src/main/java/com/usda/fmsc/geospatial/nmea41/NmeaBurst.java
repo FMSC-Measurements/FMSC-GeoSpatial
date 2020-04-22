@@ -151,7 +151,7 @@ public class NmeaBurst implements INmeaBurst {
                 if (gns == null) gns = new HashMap<>();
 
                 ArrayList<GNSSentence> gnss;
-                if (!gsa.containsKey(talkerID) || (gnss = gns.get(talkerID)) == null) {
+                if (!gns.containsKey(talkerID) || (gnss = gns.get(talkerID)) == null) {
                     gnss = new ArrayList<>();
                     gns.put(talkerID, gnss);
                 }
@@ -163,10 +163,10 @@ public class NmeaBurst implements INmeaBurst {
                 return gnsSentence;
             }
             case GST: {
-                if (gns == null) gst = new HashMap<>();
+                if (gst == null) gst = new HashMap<>();
 
                 ArrayList<GSTSentence> gsts;
-                if (!gsa.containsKey(talkerID) || (gsts = gst.get(talkerID)) == null) {
+                if (!gst.containsKey(talkerID) || (gsts = gst.get(talkerID)) == null) {
                     gsts = new ArrayList<>();
                     gst.put(talkerID, gsts);
                 }
@@ -177,10 +177,10 @@ public class NmeaBurst implements INmeaBurst {
                 return gstSentence;
             }
             case ZDA: {
-                if (gns == null) zda = new HashMap<>();
+                if (zda == null) zda = new HashMap<>();
 
                 ArrayList<ZDASentence> zdas;
-                if (!gsa.containsKey(talkerID) || (zdas = zda.get(talkerID)) == null) {
+                if (!zda.containsKey(talkerID) || (zdas = zda.get(talkerID)) == null) {
                     zdas = new ArrayList<>();
                     zda.put(talkerID, zdas);
                 }
@@ -595,7 +595,7 @@ public class NmeaBurst implements INmeaBurst {
 
         throw new MissingNmeaDataException(SentenceID.GSA);
     }
-    public Status getOperationMode() {
+    public GSASentence.Mode getOperationMode() {
         for (GSASentence s : (ArrayList<GSASentence>) getSentencesByID(SentenceID.GSA)) {
             if (s.isValid()) {
                 return s.getOperationMode();
