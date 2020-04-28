@@ -4,6 +4,7 @@ import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.NorthSouth;
 import com.usda.fmsc.geospatial.Position;
 import com.usda.fmsc.geospatial.UomElevation;
+import com.usda.fmsc.geospatial.nmea41.exceptions.InvalidChecksumException;
 import com.usda.fmsc.geospatial.nmea41.exceptions.MissingNmeaDataException;
 import com.usda.fmsc.geospatial.nmea41.exceptions.UnsupportedSentenceException;
 import com.usda.fmsc.geospatial.nmea41.sentences.*;
@@ -75,7 +76,7 @@ public class NmeaBurst implements INmeaBurst {
 
     public NmeaSentence addNmeaSentence(String sentence) {
         if (sentence == null) throw new NullPointerException("sentence");
-        //if (!NmeaSentence.validateChecksum(sentence)) throw new InvalidChecksumException(sentence);
+        if (!NmeaSentence.validateChecksum(sentence)) throw new InvalidChecksumException(sentence);
 
         TalkerID talkerID = TalkerID.parse(sentence);
         SentenceID sentenceID = SentenceID.parse(sentence);
