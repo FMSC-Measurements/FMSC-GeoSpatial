@@ -66,6 +66,7 @@ public class GSASentence extends NmeaSentence implements Serializable {
         return valid;
     }
 
+
     @Override
     public SentenceID getSentenceID() {
         return SentenceID.GSA;

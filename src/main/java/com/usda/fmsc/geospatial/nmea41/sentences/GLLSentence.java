@@ -5,6 +5,8 @@ import com.usda.fmsc.geospatial.NorthSouth;
 import com.usda.fmsc.geospatial.Position;
 import com.usda.fmsc.geospatial.nmea41.NmeaIDs.SentenceID;
 import com.usda.fmsc.geospatial.nmea41.SentenceFormats;
+import com.usda.fmsc.geospatial.nmea41.codes.PositionMode;
+import com.usda.fmsc.geospatial.nmea41.codes.Status;
 import com.usda.fmsc.geospatial.nmea41.sentences.base.PositionSentence;
 
 import org.joda.time.LocalTime;

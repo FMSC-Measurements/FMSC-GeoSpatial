@@ -5,7 +5,7 @@ import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.NorthSouth;
 import com.usda.fmsc.geospatial.Position;
 import com.usda.fmsc.geospatial.UomElevation;
-import com.usda.fmsc.geospatial.nmea41.sentences.PositionMode;
+import com.usda.fmsc.geospatial.nmea41.codes.PositionMode;
 
 import java.io.Serializable;
 

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class GSVSentence extends NmeaSentence implements MultiSentence, Serializable {
     private ArrayList<Satellite> satellites;
     private int sentenceNumber, totalSentenceCount, numberOfSatellitesInView;
-    private Integer signalID;
+    private NmeaIDs.GnssSignal signal;
 
 
     public GSVSentence(String nmea) {
@@ -50,7 +50,7 @@ public class GSVSentence extends NmeaSentence implements MultiSentence, Serializ
                 }
 
                 if (tokens.length > index && !TextUtils.isEmpty(tokens[index])) {
-                    NmeaIDs.GnssSignal signal = NmeaIDs.GnssSignal.parseSignalId(Integer.parseInt(tokens[index]), getTalkerID());
+                    signal = NmeaIDs.GnssSignal.parseSignalId(Integer.parseInt(tokens[index]), getTalkerID());
 
                     for (Satellite sat : satellites) {
                         sat.addSignal(signal);
@@ -88,8 +88,8 @@ public class GSVSentence extends NmeaSentence implements MultiSentence, Serializ
         return numberOfSatellitesInView;
     }
 
-    public Integer getSignalID() {
-        return signalID;
+    public NmeaIDs.GnssSignal getSignal() {
+        return signal;
     }
 
     @Override

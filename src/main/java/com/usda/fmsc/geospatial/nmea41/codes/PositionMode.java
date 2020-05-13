@@ -1,4 +1,4 @@
-package com.usda.fmsc.geospatial.nmea41.sentences;
+package com.usda.fmsc.geospatial.nmea41.codes;
 
 public enum PositionMode {
     Unknown(0),

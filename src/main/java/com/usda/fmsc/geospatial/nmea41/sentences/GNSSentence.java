@@ -6,6 +6,8 @@ import com.usda.fmsc.geospatial.Position;
 import com.usda.fmsc.geospatial.UomElevation;
 import com.usda.fmsc.geospatial.nmea41.NmeaIDs.SentenceID;
 import com.usda.fmsc.geospatial.nmea41.SentenceFormats;
+import com.usda.fmsc.geospatial.nmea41.codes.NavigationStatus;
+import com.usda.fmsc.geospatial.nmea41.codes.PositionMode;
 import com.usda.fmsc.geospatial.nmea41.sentences.base.PositionSentence;
 
 import org.joda.time.LocalTime;
@@ -17,13 +19,12 @@ public class GNSSentence extends PositionSentence {
     private float geoid;
     private Float diffAge;
     private Integer diffStation;
-    private Status status;
+    private NavigationStatus status;
 
 
     public GNSSentence(String nmea) {
         super(nmea);
     }
-
 
     @Override
     protected boolean parse(String nmea) {
@@ -60,7 +61,7 @@ public class GNSSentence extends PositionSentence {
                 }
 
                 if (tokens.length > 13 && !tokens[13].isEmpty()) {
-                    status = Status.parse(tokens[13]);
+                    status = NavigationStatus.parse(tokens[13]);
                 }
 
                 valid = true;
@@ -107,76 +108,8 @@ public class GNSSentence extends PositionSentence {
         return diffStation;
     }
 
-    public Status getStatus() {
+    public NavigationStatus getStatus() {
         return status;
     }
 
-    public enum Status {
-        Unknown(0),
-        Safe(1),
-        Caution(2),
-        Unsafe(3),
-        NotValid(4);
-
-        private final int value;
-
-        Status(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public static Status parse(int id) {
-            Status[] types = values();
-            if(types.length > id && id > -1)
-                return types[id];
-            throw new IllegalArgumentException("Invalid Status id: " + id);
-        }
-
-        public static Status parse(String value) {
-            switch(value.toLowerCase()) {
-                case "unknown":
-                case "0": return Unknown;
-                case "s":
-                case "safe":
-                case "1": return Safe;
-                case "c":
-                case "caution":
-                case "2": return Caution;
-                case "u":
-                case "unsafe":
-                case "3": return Unsafe;
-                case "v":
-                case "not valid":
-                case "notvalid":
-                case "4": return NotValid;
-                default: throw new IllegalArgumentException("Invalid Status Name: " + value);
-            }
-        }
-
-        @Override
-        public String toString() {
-            switch(this) {
-                case Unknown: return "Unknown";
-                case Safe: return "Safe";
-                case Caution: return "Caution";
-                case Unsafe: return "Unsafe";
-                case NotValid: return "Not Valid";
-                default: throw new IllegalArgumentException();
-            }
-        }
-
-        public String toStringF() {
-            switch(this) {
-                case Unknown: return "0 (Unknown)";
-                case Safe: return "1 (Safe)";
-                case Caution: return "2 (Caution)";
-                case Unsafe: return "3 (Unsafe)";
-                case NotValid: return "4 (Not Valid)";
-                default: throw new IllegalArgumentException();
-            }
-        }
-    }
 }

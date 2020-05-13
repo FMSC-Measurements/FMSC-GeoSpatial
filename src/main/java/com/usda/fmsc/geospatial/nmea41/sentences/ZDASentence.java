@@ -15,7 +15,6 @@ public class ZDASentence extends NmeaSentence {
         super(nmea);
     }
 
-
     @Override
     protected boolean parse(String nmea) {
         boolean valid = false;
@@ -42,6 +41,7 @@ public class ZDASentence extends NmeaSentence {
 
         return valid;
     }
+
 
     @Override
     public SentenceID getSentenceID() {

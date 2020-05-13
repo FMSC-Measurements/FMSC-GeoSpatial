@@ -4,6 +4,7 @@ import com.usda.fmsc.geospatial.EastWest;
 import com.usda.fmsc.geospatial.NorthSouth;
 import com.usda.fmsc.geospatial.Position;
 import com.usda.fmsc.geospatial.UomElevation;
+import com.usda.fmsc.geospatial.nmea41.codes.PositionMode;
 import com.usda.fmsc.geospatial.nmea41.exceptions.InvalidChecksumException;
 import com.usda.fmsc.geospatial.nmea41.exceptions.MissingNmeaDataException;
 import com.usda.fmsc.geospatial.nmea41.exceptions.UnsupportedSentenceException;

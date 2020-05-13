@@ -7,6 +7,9 @@ import com.usda.fmsc.geospatial.NorthSouth;
 import com.usda.fmsc.geospatial.Position;
 import com.usda.fmsc.geospatial.nmea41.NmeaIDs.SentenceID;
 import com.usda.fmsc.geospatial.nmea41.SentenceFormats;
+import com.usda.fmsc.geospatial.nmea41.codes.NavigationStatus;
+import com.usda.fmsc.geospatial.nmea41.codes.PositionMode;
+import com.usda.fmsc.geospatial.nmea41.codes.Status;
 import com.usda.fmsc.geospatial.nmea41.sentences.base.PositionSentence;
 
 import org.joda.time.DateTime;
@@ -20,7 +23,7 @@ public class RMCSentence extends PositionSentence implements Serializable {
     private Double trackAngle;  //in degrees, true
     private Double magVar;
     private EastWest magVarDir;
-    private Status navStatus;
+    private NavigationStatus navStatus;
 
 
     public RMCSentence(String nmea) {
@@ -73,10 +76,11 @@ public class RMCSentence extends PositionSentence implements Serializable {
                     }
                 }
 
+                // NMEA 4.1 Only
                 if (tokens.length > 13) {
                     token = tokens[13];
                     if (!TextUtils.isEmpty(token)) {
-                        navStatus = Status.parse(tokens[13]);
+                        navStatus = NavigationStatus.parse(tokens[13]);
                     }
                 }
 
@@ -88,6 +92,7 @@ public class RMCSentence extends PositionSentence implements Serializable {
 
         return valid;
     }
+
 
     @Override
     public SentenceID getSentenceID() {
@@ -133,7 +138,7 @@ public class RMCSentence extends PositionSentence implements Serializable {
         return navStatus != null;
     }
 
-    public Status getNavStatus() {
+    public NavigationStatus getNavStatus() {
         return navStatus;
     }
 }

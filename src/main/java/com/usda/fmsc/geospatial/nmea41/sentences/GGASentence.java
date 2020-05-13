@@ -71,6 +71,7 @@ public class GGASentence extends PositionSentence implements Serializable {
         return valid;
     }
 
+
     @Override
     public SentenceID getSentenceID() {
         return SentenceID.GGA;
