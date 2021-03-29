@@ -72,7 +72,7 @@ public class NmeaIDs {
                 case CD: return "DSC";
                 case GA: return "Galileo";
                 case GL: return "GLONASS";
-                case GN: return "GPS + GLONASS";
+                case GN: return "Multiple GNSS";
                 case GB:
                 case BD:
                 case PQ: return "BeiDou";   //China
@@ -167,18 +167,34 @@ public class NmeaIDs {
     }
 
     public enum GnssSignal {
-        Unknown(0),
-        GPS_L1(1),
-        GPS_L2(2),
-        GPS_L5(3),
-        GLONASS_G1(4),
-        GLONASS_G2(5),
-        GLONASS_G3(6),
-        Galileo_E1(7),
-        Galileo_E6(8),
-        Galileo_E5(9),
-        BeiDou_B1(10),
-        BeiDou_B2(11);
+        GPS_ALL(0),
+        Unknown(1),
+        GPS_UNKNOWN(3),
+        GPS_L1(4),
+        GPS_L2(5),
+        GPS_L5(6),
+        GLONASS_ALL(7),
+        GLONASS_UNKNOWN(8),
+        GLONASS_G1(9),
+        GLONASS_G2(10),
+        GLONASS_G3(11),
+        Galileo_ALL(12),
+        Galileo_UNKNOWN(13),
+        Galileo_E1(14),
+        Galileo_E5(15),
+        Galileo_E6(16),
+        BeiDou_ALL(17),
+        BeiDou_UNKNOWN(18),
+        BeiDou_B1(19),
+        BeiDou_B2(20),
+        BeiDou_B3(21),
+        QZSS_ALL(22),
+        QZSS_UNKNOWN(23),
+        QZSS_L1(24),
+        QZSS_L2(25),
+        QZSS_L5(26),
+        QZSS_L6(27),
+        Mixed(28);
 
         private final int value;
 
@@ -200,38 +216,64 @@ public class NmeaIDs {
         public static GnssSignal parseSignalId(int sigId, TalkerID talkerID) {
             switch (talkerID) {
                 case GP: {
-                    switch (sigId) {
-                        case 1: return GPS_L1;
-                        case 5:
-                        case 6: return GPS_L2;
-                        default: return Unknown;
-                    }
+                    if (sigId == 0) return GPS_ALL;
+                    else if (sigId >= 1 && sigId <= 3) return GPS_L1;
+                    else if (sigId >= 4 && sigId <= 6) return GPS_L2;
+                    else if (sigId >= 7 && sigId <= 8) return GPS_L5;
+                    else return GPS_UNKNOWN;
                 }
                 case GL: {
-                    switch (sigId) {
-                        case 1: return GLONASS_G1;
-                        case 3: return GLONASS_G2;
-                        default: return Unknown;
-                    }
+                    if (sigId == 0) return GLONASS_ALL;
+                    else if (sigId >= 1 && sigId <= 2) return GLONASS_G1;
+                    else if (sigId >= 3 && sigId <= 4) return GLONASS_G2;
+                    else return GLONASS_UNKNOWN;
                 }
                 case GA: {
-                    switch (sigId) {
-                        case 7: return Galileo_E1;
-                        case 2: return Galileo_E5;
-                        default: return Unknown;
-                    }
+                    if (sigId == 0) return Galileo_ALL;
+                    else if (sigId >= 1 && sigId <= 3) return Galileo_E5;
+                    else if (sigId >= 4 && sigId <= 5) return Galileo_E6;
+                    else if (sigId >= 6 && sigId <= 7) return Galileo_E1;
+                    else return Galileo_UNKNOWN;
                 }
                 case BD:
                 case PQ:
                 case GB: {
-                    switch (sigId) {
-                        case 1: return BeiDou_B1;
-                        case 3: return BeiDou_B2;
-                        default: return Unknown;
-                    }
+                    if (sigId == 0) return BeiDou_ALL;
+                    else if (sigId >= 1 && sigId <= 4) return BeiDou_B1;
+                    else if (sigId >= 5 && sigId <= 7) return BeiDou_B2;
+                    else if (sigId >= 8 && sigId <= 9) return BeiDou_B3;
+                    else return BeiDou_UNKNOWN;
+                }
+                case QZ: {
+                    if (sigId == 0) return QZSS_ALL;
+                    else if (sigId >= 1 && sigId <= 4) return QZSS_L1;
+                    else if (sigId >= 5 && sigId <= 6) return QZSS_L2;
+                    else if (sigId >= 7 && sigId <= 8) return QZSS_L5;
+                    else if (sigId >= 9 && sigId <= 10) return QZSS_L6;
+                    else return QZSS_UNKNOWN;
                 }
                 default: return Unknown;
             }
+        }
+
+        public static GnssSignal fromTalkerID(TalkerID talkerID) {
+            switch (talkerID) {
+                case GP: return GPS_UNKNOWN;
+                case GA: return Galileo_UNKNOWN;
+                case GL: return GLONASS_UNKNOWN;
+                case GN: return Mixed;
+                case GB:
+                case BD:
+                case PQ: return BeiDou_UNKNOWN;
+                case QZ: return QZSS_UNKNOWN;
+                case Unknown:
+                default: return Unknown;
+            }
+        }
+
+        public boolean isUnkown() {
+            return  (this == Unknown || this == GPS_UNKNOWN || this == GLONASS_UNKNOWN ||
+                    this == Galileo_UNKNOWN || this == BeiDou_UNKNOWN || this == QZSS_UNKNOWN);
         }
     }
 }

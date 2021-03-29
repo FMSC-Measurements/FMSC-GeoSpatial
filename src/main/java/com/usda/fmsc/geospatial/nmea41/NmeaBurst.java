@@ -19,6 +19,7 @@ import static com.usda.fmsc.geospatial.nmea41.NmeaIDs.SentenceID;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 
 @SuppressWarnings("unchecked")
@@ -200,7 +201,7 @@ public class NmeaBurst implements INmeaBurst {
         return areAnyValid(SentenceID.RMC) &&
                 areAnyValid(SentenceID.GGA) &&
                 isValid(SentenceID.GSV) &&
-                isValid(SentenceID.GSA);
+                areAnyValid(SentenceID.GSA);
     }
     public boolean isValid(SentenceID id) {
         boolean hasNmea = false;
@@ -533,7 +534,10 @@ public class NmeaBurst implements INmeaBurst {
                         if (!sats.containsKey(sat.getNmeaID())) {
                             sats.put(sat.getNmeaID(), sat);
                         } else {
-                            sats.get(sat.getNmeaID()).addSignals(sat.getSignals());
+                            Satellite satu = sats.get(sat.getNmeaID());
+                            if (sat.getSignalID().isUnkown()) {
+                                sat.setSignal(satu.getSignalID());
+                            }
                         }
                     }
                 }
@@ -666,7 +670,7 @@ public class NmeaBurst implements INmeaBurst {
                     DateTime.now(),
                     hasPosition() ? String.format(" (Lat: %f | Lon: %f |%s", getLatitudeSD(), getLongitudeSD(),
                             hasElevation() ? String.format(" Elev: %f) |", getElevation()) : "") : "No Position |",
-                    isValid(SentenceID.RMC), isValid(SentenceID.GGA), isValid(SentenceID.GSA), isValid(SentenceID.GSV));
+                    areAnyValid(SentenceID.RMC), areAnyValid(SentenceID.GGA), areAnyValid(SentenceID.GSA), isValid(SentenceID.GSV));
         }
     }
 }

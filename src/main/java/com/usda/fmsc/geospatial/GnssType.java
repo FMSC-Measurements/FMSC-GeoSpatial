@@ -1,5 +1,7 @@
 package com.usda.fmsc.geospatial;
 
+import com.usda.fmsc.geospatial.nmea41.NmeaIDs;
+
 public enum GnssType {
     Unknown(0),
     GPS(1),
@@ -60,9 +62,9 @@ public enum GnssType {
         if (nmeaId > 0 && nmeaId < 33) {
             return GPS;
         } else if ((nmeaId > 32 && nmeaId < 55) || (nmeaId > 119 && nmeaId < 159)) {
-            if (nmeaId == 33 || nmeaId == 37 || nmeaId == 39 || nmeaId == 44) {
+            if (nmeaId == 33 || nmeaId == 37 || nmeaId == 39 || nmeaId == 49 || nmeaId == 36) {
                 return EGNOS;
-            } else if (nmeaId == 46 || nmeaId == 48 || nmeaId == 51) {
+            } else if (nmeaId == 46 || nmeaId == 48 || nmeaId == 51 || nmeaId == 35 || nmeaId == 47 || nmeaId == 44) {
                 return WAAS;
             } else if (nmeaId == 38 || nmeaId > 52) {
                 return SDCM;
