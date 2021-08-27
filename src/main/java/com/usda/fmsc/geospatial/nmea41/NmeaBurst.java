@@ -19,12 +19,11 @@ import static com.usda.fmsc.geospatial.nmea41.NmeaIDs.SentenceID;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.HashMap;
 
 @SuppressWarnings("unchecked")
 public class NmeaBurst implements INmeaBurst {
-    private static TalkerID[] priorityIds = new TalkerID[] {
+    private static final TalkerID[] priorityIds = new TalkerID[] {
             TalkerID.GP,
             TalkerID.GN,
             TalkerID.GL,
@@ -41,19 +40,19 @@ public class NmeaBurst implements INmeaBurst {
     };
 
     //RMC Sentence
-    private HashMap<TalkerID, ArrayList<RMCSentence>> rmc = new HashMap<>();
+    private final HashMap<TalkerID, ArrayList<RMCSentence>> rmc = new HashMap<>();
     private ArrayList<RMCSentence> cachedPriorityRMC;
 
     //GGA Sentence
-    private HashMap<TalkerID, ArrayList<GGASentence>> gga = new HashMap<>();
+    private final HashMap<TalkerID, ArrayList<GGASentence>> gga = new HashMap<>();
     private ArrayList<GGASentence> cachedPriorityGGA;
 
     //GSA Sentence
-    private HashMap<TalkerID, ArrayList<GSASentence>> gsa = new HashMap<>();
+    private final HashMap<TalkerID, ArrayList<GSASentence>> gsa = new HashMap<>();
     private ArrayList<GSASentence> cachedPriorityGSA;
 
     //GSV Sentence
-    private HashMap<TalkerID, ArrayList<GSVSentence>> gsv = new HashMap<>();
+    private final HashMap<TalkerID, ArrayList<GSVSentence>> gsv = new HashMap<>();
     private ArrayList<GSVSentence> cachedPriorityGSV;
     private ArrayList<Satellite> cachedSatellites;
 
@@ -229,7 +228,7 @@ public class NmeaBurst implements INmeaBurst {
         return rmc.size() > 0 && gga.size() > 0 && gsa.size() > 0 && gsv.size() > 0;
     }
 
-    public boolean hasSentenece(SentenceID id) {
+    public boolean hasSentence(SentenceID id) {
         return getSentencesByID(id).size() > 0;
     }
 
@@ -535,8 +534,14 @@ public class NmeaBurst implements INmeaBurst {
                             sats.put(sat.getNmeaID(), sat);
                         } else {
                             Satellite satu = sats.get(sat.getNmeaID());
-                            if (sat.getSignalID().isUnkown()) {
-                                sat.setSignal(satu.getSignalID());
+                            if (satu != null) {
+                                for (NmeaIDs.GnssSignal sig : sat.getSignals()) {
+                                    if (satu.getSignals() != null) {
+                                        if (!sig.isUnknown() && !satu.getSignals().contains(sig)) {
+                                            satu.addSignal(sig);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -663,14 +668,33 @@ public class NmeaBurst implements INmeaBurst {
     @Override
     public String toString() {
         if (isValid() && hasPosition()) {
-            return String.format("[%s] Valid: True | Lat: %f | Lon: %f | Elev: %f",
-                    getFixTime(), getLatitudeSD(), getLongitudeSD(), getElevation());
+            return String.format("[%s] Valid: True | Lat: %f | Lon: %f | Elev: %f", getFixTime(), getLatitudeSD(),
+                    getLongitudeSD(), getElevation());
         } else {
-            return String.format("[%s] Valid: False |%s rmc: %b | gga: %b | gsa: %b | gsv: %b",
-                    DateTime.now(),
-                    hasPosition() ? String.format(" (Lat: %f | Lon: %f |%s", getLatitudeSD(), getLongitudeSD(),
-                            hasElevation() ? String.format(" Elev: %f) |", getElevation()) : "") : "No Position |",
-                    areAnyValid(SentenceID.RMC), areAnyValid(SentenceID.GGA), areAnyValid(SentenceID.GSA), isValid(SentenceID.GSV));
+            return String.format("[%s] Valid: False |%s rmc: %b | gga: %b | gsa: %b | gsv: %b", DateTime.now(),
+                    hasPosition()
+                            ? String.format(" (Lat: %f | Lon: %f |%s", getLatitudeSD(), getLongitudeSD(),
+                            hasElevation() ? String.format(" Elev: %f) |", getElevation()) : "")
+                            : "No Position |",
+                    areAnyValid(SentenceID.RMC), areAnyValid(SentenceID.GGA), isValid(SentenceID.GSA),
+                    isValid(SentenceID.GSV));
+        }
+    }
+
+    public String toStringX() {
+        if (isValid() && hasPosition()) {
+            return String.format("[%s] Valid: True | Lat: %f | Lon: %f | Elev: %f | Fix: %s-%s | Sats (VTU): %d/%d/%d",
+                    getFixTime(), getLatitudeSD(), getLongitudeSD(), getElevation(), getFix().toString(),
+                    getFixQuality().toString(), getSatellitesInViewCount(), getTrackedSatellitesCount(),
+                    getUsedSatellitesCount());
+        } else {
+            return String.format("[%s] Valid: False |%s rmc: %b | gga: %b | gsa: %b | gsv: %b", DateTime.now(),
+                    hasPosition()
+                            ? String.format(" (Lat: %f | Lon: %f |%s", getLatitudeSD(), getLongitudeSD(),
+                            hasElevation() ? String.format(" Elev: %f) |", getElevation()) : "")
+                            : "No Position |",
+                    areAnyValid(SentenceID.RMC), areAnyValid(SentenceID.GGA), isValid(SentenceID.GSA),
+                    isValid(SentenceID.GSV));
         }
     }
 }

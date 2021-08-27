@@ -8,13 +8,14 @@ import java.io.Serializable;
 import java.util.EnumSet;
 
 public class Satellite implements Serializable {
-    private int nmeaId, origNmeaId;
-    private Float elevation;
-    private Float azimuth;
-    private Float srn;
+    private int nmeaId;
+    private final int origNmeaId;
+    private final Float elevation;
+    private final Float azimuth;
+    private final Float srn;
     private GnssType gnssType;
-    private TalkerID talkerID;
-    private EnumSet<GnssSignal> signals;
+    private final TalkerID talkerID;
+    private final EnumSet<GnssSignal> signals;
 
     public Satellite(int nmeaId, Float elevation, Float azimuth, Float srn, TalkerID talkerID) {
         this.origNmeaId = this.nmeaId = nmeaId;
@@ -23,20 +24,6 @@ public class Satellite implements Serializable {
         this.srn = srn;
         this.talkerID = talkerID;
         this.signals = EnumSet.noneOf(GnssSignal.class);
-
-//        switch (talkerID) {
-//            case GL: {
-//                if (nmeaId < 33) {
-//                    this.nmeaId += 64;
-//                }
-//                break;
-//            }
-//            case GA:
-//            case QZ:
-//            case GB:
-//            case BD:
-//            case PQ:
-//        }
 
         if (talkerID == TalkerID.GL && this.nmeaId < 33) {
             this.nmeaId += 64;

@@ -2,17 +2,17 @@ package com.usda.fmsc.geospatial.nmea41;
 
 import com.usda.fmsc.geospatial.nmea41.NmeaIDs.TalkerID;
 import com.usda.fmsc.geospatial.nmea41.exceptions.UnsupportedSentenceException;
+import com.usda.fmsc.geospatial.nmea41.exceptions.InvalidChecksumException;
 import com.usda.fmsc.geospatial.nmea41.sentences.base.NmeaSentence;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 
 
 public class NmeaParser {
-    private List<Listener> listeners;
-    private EnumSet<TalkerID> usedTalkerIDs;
+    private final List<Listener> listeners;
+    private final EnumSet<TalkerID> usedTalkerIDs;
 
     private boolean synced, initialized, syncing;
     private long lastSentenceTime, longestPause, startInit;
@@ -36,6 +36,8 @@ public class NmeaParser {
         if (synced) {
             long now = System.currentTimeMillis();
 
+            nmea = sanitizeNmea(nmea);
+
             try {
                 if (now - lastSentenceTime > longestPause) {
                     if (burst != null) {
@@ -57,7 +59,7 @@ public class NmeaParser {
                         postNmeaReceived(sentence);
                     }
                 }
-            } catch (UnsupportedSentenceException e) {
+            } catch (UnsupportedSentenceException | InvalidChecksumException e) {
                 //
             }
 
@@ -167,5 +169,10 @@ public class NmeaParser {
         void onBurstReceived(NmeaBurst burst);
 
         void onNmeaReceived(NmeaSentence sentence);
+    }
+
+
+    public static String sanitizeNmea(String nmea) {
+        return nmea.replaceAll("[$]>", "");
     }
 }

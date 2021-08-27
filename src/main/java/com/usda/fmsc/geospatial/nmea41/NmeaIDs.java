@@ -271,7 +271,7 @@ public class NmeaIDs {
             }
         }
 
-        public boolean isUnkown() {
+        public boolean isUnknown() {
             return  (this == Unknown || this == GPS_UNKNOWN || this == GLONASS_UNKNOWN ||
                     this == Galileo_UNKNOWN || this == BeiDou_UNKNOWN || this == QZSS_UNKNOWN);
         }
