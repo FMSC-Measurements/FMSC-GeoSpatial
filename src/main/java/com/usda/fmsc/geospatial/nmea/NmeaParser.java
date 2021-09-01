@@ -12,8 +12,8 @@ import com.usda.fmsc.geospatial.nmea.sentences.base.NmeaSentence;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class NmeaParser<TNmeaBurst extends INmeaBurst> {
-    private List<Listener> listeners;
-    private List<TalkerID> usedTalkerIDs;
+    private final List<Listener> listeners;
+    private final List<TalkerID> usedTalkerIDs;
 
     private INmeaBurst burst;
     private Class<TNmeaBurst> clazz;

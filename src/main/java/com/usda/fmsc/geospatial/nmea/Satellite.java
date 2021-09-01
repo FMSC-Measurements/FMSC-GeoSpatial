@@ -5,10 +5,10 @@ import com.usda.fmsc.geospatial.GnssType;
 import java.io.Serializable;
 
 public class Satellite  implements Serializable {
-    private int nmeaId;
-    private Float elevation;
-    private Float azimuth;
-    private Float srn;
+    private final int nmeaId;
+    private final Float elevation;
+    private final Float azimuth;
+    private final Float srn;
     private GnssType gnssType;
 
     public Satellite(int nmeaId, Float elevation, Float azimuth, Float srn) {

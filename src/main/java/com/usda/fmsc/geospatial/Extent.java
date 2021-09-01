@@ -55,7 +55,7 @@ public class Extent implements Serializable {
 
 
     public static class Builder {
-        List<Position> positions = new ArrayList<>();
+        private final List<Position> positions = new ArrayList<>();
 
         public void include(Position position) {
             positions.add(position);

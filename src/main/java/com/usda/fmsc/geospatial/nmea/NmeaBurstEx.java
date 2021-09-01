@@ -28,7 +28,7 @@ import java.util.HashMap;
 @SuppressLint("DefaultLocale")
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class NmeaBurstEx implements INmeaBurst, Serializable {
-    private static TalkerID[] priorityIds = new TalkerID[] {
+    private static final TalkerID[] priorityIds = new TalkerID[] {
             TalkerID.GP,
             TalkerID.GN,
             TalkerID.GL,
