@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion '30.0.3'
+    compileSdkVersion 31
+    buildToolsVersion '31.0.0'
 
     defaultConfig {
         minSdkVersion 24
-        targetSdkVersion 30
+        targetSdkVersion 31
     }
 
     buildTypes {
@@ -27,7 +27,7 @@ dependencies {
     implementation 'joda-time:joda-time:2.10.10'
 
     // Required -- JUnit 4 framework
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.1'
     // Optional -- Robolectric environment
     testImplementation 'androidx.test:core:1.4.0'
     // Optional -- Mockito framework
