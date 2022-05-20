@@ -110,6 +110,10 @@ public class UTMTools {
         return new UTMCoords(UTMEasting, UTMNorthing, Zone);
     }
 
+    public static Position convertUTMtoLatLonSignedDec(UTMCoords coords) {
+        return convertUTMtoLatLonSignedDec(coords.getX(), coords.getY(), coords.getZone());
+    }
+
     public static Position convertUTMtoLatLonSignedDec(double utmX, double utmY, int utmZone) {
         //boolean isNorthHemisphere = true; // utmZone[utmZone.Length - 1] >= 'N';
 

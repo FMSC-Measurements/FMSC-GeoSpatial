@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         minSdkVersion 24
-        targetSdkVersion 31
+        targetSdkVersion 32
     }
 
     buildTypes {
@@ -20,6 +20,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    namespace 'com.usda.fmsc.geospatial'
 }
 
 dependencies {
