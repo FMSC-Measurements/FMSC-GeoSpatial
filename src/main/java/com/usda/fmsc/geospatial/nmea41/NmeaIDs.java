@@ -40,7 +40,7 @@ public class NmeaIDs {
                 throw new NullPointerException();
             }
 
-            if(value.startsWith("$"))
+            if(value.startsWith("$") && value.length() > 3)
                 value = value.substring(1, 3);
 
             switch(value.toUpperCase()) {
@@ -134,7 +134,7 @@ public class NmeaIDs {
                 throw new NullPointerException();
             }
 
-            if(value.startsWith("$"))
+            if(value.startsWith("$") && value.length() > 6)
                 value = value.substring(3, 6);
 
             switch(value.toUpperCase()) {
@@ -274,6 +274,47 @@ public class NmeaIDs {
         public boolean isUnknown() {
             return  (this == Unknown || this == GPS_UNKNOWN || this == GLONASS_UNKNOWN ||
                     this == Galileo_UNKNOWN || this == BeiDou_UNKNOWN || this == QZSS_UNKNOWN);
+        }
+    }
+
+    public enum SystemID {
+        Unknown(0),
+        GPS(1),
+        GLONASS(2),
+        Galileo(3),
+        BeiDou(4),
+        QZSS(5),
+        NavIC(6);
+
+        private final int value;
+
+        SystemID(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static SystemID parse(int id) {
+            SystemID[] types = values();
+            if(types.length > id && id > -1)
+                return types[id];
+            throw new IllegalArgumentException("Invalid System id: " + id);
+        }
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case Unknown: return "Unknown";
+                case GPS: return "GPS";
+                case GLONASS: return "GLONASS";
+                case Galileo: return "Galileo";
+                case BeiDou: return "BeiDou";
+                case QZSS: return "QZSS";
+                case NavIC: return "NavIC";
+                default: return "";
+            }
         }
     }
 }

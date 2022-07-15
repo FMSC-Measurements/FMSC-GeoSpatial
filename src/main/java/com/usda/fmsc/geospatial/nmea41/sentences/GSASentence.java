@@ -3,6 +3,8 @@ package com.usda.fmsc.geospatial.nmea41.sentences;
 import android.text.TextUtils;
 
 import static com.usda.fmsc.geospatial.nmea41.NmeaIDs.SentenceID;
+
+import com.usda.fmsc.geospatial.nmea41.NmeaIDs;
 import com.usda.fmsc.geospatial.nmea41.sentences.base.NmeaSentence;
 
 import java.io.Serializable;
@@ -13,7 +15,7 @@ public class GSASentence extends NmeaSentence implements Serializable {
     private Fix fix;
     private ArrayList<Integer> satsUsed;
     private Float pdop, hdop, vdop;
-    private Integer sysID;
+    private NmeaIDs.SystemID sysID;
 
 
     public GSASentence(String nmea) {
@@ -55,7 +57,7 @@ public class GSASentence extends NmeaSentence implements Serializable {
                 if (tokens.length > 19) {
                     token = tokens[18];
                     if (!TextUtils.isEmpty(token))
-                        sysID = Integer.parseInt(token);
+                        sysID = NmeaIDs.SystemID.parse(Integer.parseInt(token));
                 }
                 valid = true;
             } catch (Exception ex) {
@@ -106,7 +108,7 @@ public class GSASentence extends NmeaSentence implements Serializable {
         return vdop;
     }
 
-    public Integer getSystemID() {
+    public NmeaIDs.SystemID getSystemID() {
         return sysID;
     }
 
