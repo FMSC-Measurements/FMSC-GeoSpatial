@@ -8,17 +8,19 @@
 -optimizationpasses 5
 -allowaccessmodification
 
-
 # For native methods, see http://proguard.sourceforge.net/manual/examples.html#native
 -keepclasseswithmembernames class * {
  native <methods>;
 }
 
-
 # For enumeration classes, see http://proguard.sourceforge.net/manual/examples.html#enumerations
 -keepclassmembers enum * {
  public static **[] values();
  public static ** valueOf(java.lang.String);
+}
+
+-keepclassmembers class **.R$* {
+ public static <fields>;
 }
 
 -keep class org.joda.time.** { *; }
