@@ -1,20 +1,22 @@
-package com.usda.fmsc.geospatial.nmea.sentences;
+package com.usda.fmsc.geospatial.nmea41.sentences;
+
+import android.text.TextUtils;
+
+import static com.usda.fmsc.geospatial.nmea41.NmeaIDs.SentenceID;
+
+import com.usda.fmsc.geospatial.nmea41.NmeaIDs;
+import com.usda.fmsc.geospatial.nmea41.sentences.base.NmeaSentence;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import com.usda.fmsc.geospatial.nmea.NmeaIDs.*;
-import com.usda.fmsc.geospatial.nmea.sentences.base.NmeaSentence;
-
-public class GSASentence extends NmeaSentence  implements Serializable {
-
-    private Mode mode;
+public class GSASentence extends NmeaSentence implements Serializable {
+    private Mode operationMode;
     private Fix fix;
     private ArrayList<Integer> satsUsed;
     private Float pdop, hdop, vdop;
+    private NmeaIDs.SystemID sysID;
 
-
-    public GSASentence() { }
 
     public GSASentence(String nmea) {
         super(nmea);
@@ -24,53 +26,62 @@ public class GSASentence extends NmeaSentence  implements Serializable {
     public boolean parse(String nmea) {
         satsUsed = new ArrayList<>();
 
-        if (super.parse(nmea)) {
-            valid = false;
-            String[] tokens = nmea.substring(0, nmea.indexOf("*")).split(",", -1);
+        boolean valid = false;
+        String[] tokens = tokenize(nmea);
 
-            if (tokens.length > 17) {
-                try {
-                    mode = Mode.parse(tokens[1]);
+        if (tokens.length > 17 && tokens[3].length() > 0) {
+            try {
+                operationMode = Mode.parse(tokens[1]);
 
-                    fix = Fix.parse(tokens[2]);
+                fix = Fix.parse(tokens[2]);
 
-                    String token;
-                    for (int i = 3; i < 15; i++) {
-                        token = tokens[i];
-                        if (token != null && !token.equals(""))
-                            satsUsed.add(Integer.parseInt(token));
-                    }
-
-                    token = tokens[15];
-                    if (token != null && !token.equals(""))
-                        pdop = Float.parseFloat(token);
-
-                    token = tokens[16];
-                    if (token != null && !token.equals(""))
-                        hdop = Float.parseFloat(token);
-
-                    token = tokens[17];
-                    if (token != null && !token.equals(""))
-                        vdop = Float.parseFloat(token);
-
-                    valid = true;
-                } catch (Exception ex) {
-                    //ex.printStackTrace();
+                String token;
+                for (int i = 3; i < 15; i++) {
+                    token = tokens[i];
+                    if (!TextUtils.isEmpty(token))
+                        satsUsed.add(Integer.parseInt(token));
                 }
+
+                token = tokens[15];
+                if (!TextUtils.isEmpty(token))
+                    pdop = Float.parseFloat(token);
+
+                token = tokens[16];
+                if (!TextUtils.isEmpty(token))
+                    hdop = Float.parseFloat(token);
+
+                token = tokens[17];
+                if (!TextUtils.isEmpty(token))
+                    vdop = Float.parseFloat(token);
+
+                if (tokens.length > 19) {
+                    token = tokens[18];
+                    if (!TextUtils.isEmpty(token))
+                        sysID = NmeaIDs.SystemID.parse(Integer.parseInt(token));
+                }
+                valid = true;
+            } catch (Exception ex) {
+                //ex.printStackTrace();
             }
         }
 
         return valid;
     }
 
+
     @Override
     public SentenceID getSentenceID() {
         return SentenceID.GSA;
     }
 
+    @Override
+    public boolean isMultiSentence() {
+        return false;
+    }
 
-    public Mode getMode() {
-        return mode;
+
+    public Mode getOperationMode() {
+        return operationMode;
     }
 
     public Fix getFix() {
@@ -95,6 +106,10 @@ public class GSASentence extends NmeaSentence  implements Serializable {
 
     public Float getVDOP() {
         return vdop;
+    }
+
+    public NmeaIDs.SystemID getSystemID() {
+        return sysID;
     }
 
 

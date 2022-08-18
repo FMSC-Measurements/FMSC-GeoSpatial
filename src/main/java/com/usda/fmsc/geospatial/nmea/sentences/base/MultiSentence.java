@@ -31,10 +31,11 @@ public abstract class MultiSentence extends NmeaSentence implements Serializable
         return valid;
     }
 
-    @Override
-    public boolean isValid() {
-        return super.isValid() && totalMessageCount > 0 && (totalMessageCount == messageCount);
-    }
+    //totalMessageCount may not match if there is multiple talkerIDs included in that number
+//    @Override
+//    public boolean isValid() {
+//        return super.isValid() && totalMessageCount > 0 && (totalMessageCount == messageCount);
+//    }
 
     protected void setTotalMessageCount(int count) {
         totalMessageCount = count;

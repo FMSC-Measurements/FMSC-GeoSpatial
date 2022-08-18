@@ -3,7 +3,7 @@ package com.usda.fmsc.geospatial;
 import java.io.Serializable;
 
 @SuppressWarnings("unused")
-public class GeoPosition extends Position implements Serializable {
+public class GeoPosition extends PositionLegacy implements Serializable {
     private Double elevation;
     private UomElevation uomElevation;
 
@@ -12,7 +12,7 @@ public class GeoPosition extends Position implements Serializable {
         super();
     }
 
-    public GeoPosition(Position position) {
+    public GeoPosition(PositionLegacy position) {
         super(position);
     }
 

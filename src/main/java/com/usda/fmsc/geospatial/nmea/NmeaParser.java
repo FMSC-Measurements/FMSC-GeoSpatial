@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 
 
-import com.usda.fmsc.geospatial.nmea.exceptions.ExcessiveStringException;
 import com.usda.fmsc.geospatial.nmea.NmeaIDs.*;
 import com.usda.fmsc.geospatial.nmea.sentences.*;
 import com.usda.fmsc.geospatial.nmea.sentences.base.MultiSentence;
@@ -13,8 +12,8 @@ import com.usda.fmsc.geospatial.nmea.sentences.base.NmeaSentence;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class NmeaParser<TNmeaBurst extends INmeaBurst> {
-    private List<Listener> listeners;
-    private List<TalkerID> usedTalkerIDs;
+    private final List<Listener> listeners;
+    private final List<TalkerID> usedTalkerIDs;
 
     private INmeaBurst burst;
     private Class<TNmeaBurst> clazz;
@@ -57,8 +56,7 @@ public class NmeaParser<TNmeaBurst extends INmeaBurst> {
             if (usedTalkerIDs.contains(TalkerID.parse(nmea))) {
                 NmeaSentence sentence = burst.addNmeaSentence(nmea);
 
-                if (sentence != null &&
-                        (!sentence.isMultiString() || ((MultiSentence)sentence).hasAllMessages())) {
+                if (sentence != null && (!sentence.isMultiString() || ((MultiSentence)sentence).hasAllMessages())) {
                         postNmeaReceived(sentence);
                 }
 
@@ -100,9 +98,7 @@ public class NmeaParser<TNmeaBurst extends INmeaBurst> {
     }
 
     public void removeListener(Listener listener) {
-        if (listeners.contains(listener)) {
-            listeners.remove(listener);
-        }
+        listeners.remove(listener);
     }
 
 

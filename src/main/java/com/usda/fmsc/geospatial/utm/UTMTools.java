@@ -1,6 +1,7 @@
 package com.usda.fmsc.geospatial.utm;
 
 import com.usda.fmsc.geospatial.Position;
+import com.usda.fmsc.geospatial.PositionLegacy;
 import com.usda.fmsc.geospatial.Latitude;
 import com.usda.fmsc.geospatial.Longitude;
 import com.usda.fmsc.geospatial.GeoPosition;
@@ -15,11 +16,11 @@ public class UTMTools {
         return convertLatLonToUTM(position.getLatitude(), position.getLongitude(), utmToUsed);
     }
 
-    public static UTMCoords convertLatLonToUTM(Position position) {
+    public static UTMCoords convertLatLonToUTM(PositionLegacy position) {
         return convertLatLonToUTM(position.getLatitude(), position.getLongitude());
     }
 
-    public static UTMCoords convertLatLonToUTM(Position position, Integer utmToUsed) {
+    public static UTMCoords convertLatLonToUTM(PositionLegacy position, Integer utmToUsed) {
         return convertLatLonToUTM(position.getLatitude(), position.getLongitude(), utmToUsed);
     }
 
@@ -30,6 +31,17 @@ public class UTMTools {
     public static UTMCoords convertLatLonToUTM(Latitude latitude, Longitude longitude, Integer targetUTM) {
         return convertLatLonSignedDecToUTM(latitude.toSignedDecimal(), longitude.toSignedDecimal(), targetUTM);
     }
+
+
+
+    public static UTMCoords convertLatLonToUTM(Position position) {
+        return convertLatLonSignedDecToUTM(position.getLatitudeSignedDecimal(), position.getLongitudeSignedDecimal(), null);
+    }
+
+    public static UTMCoords convertLatLonToUTM(Position position, Integer utmToUsed) {
+        return convertLatLonSignedDecToUTM(position.getLatitudeSignedDecimal(), position.getLongitudeSignedDecimal(), utmToUsed);
+    }
+
 
     public static UTMCoords convertLatLonSignedDecToUTM(double latitude, double longitude, Integer targetUTM) {
         final double deg2rad = Math.PI / 180;
@@ -98,8 +110,54 @@ public class UTMTools {
         return new UTMCoords(UTMEasting, UTMNorthing, Zone);
     }
 
+    public static Position convertUTMtoLatLonSignedDec(UTMCoords coords) {
+        return convertUTMtoLatLonSignedDec(coords.getX(), coords.getY(), coords.getZone());
+    }
 
-    public static GeoPosition convertUTMtoLatLonSignedDec(double utmX, double utmY, int utmZone) {
+    public static Position convertUTMtoLatLonSignedDec(double utmX, double utmY, int utmZone) {
+        //boolean isNorthHemisphere = true; // utmZone[utmZone.Length - 1] >= 'N';
+
+        double diflat = 0;// -0.00066286966871111111111111111111111111;
+        double diflon = 0;// -0.0003868060578;
+
+        double c_sa = 6378137.000000;
+        double c_sb = 6356752.314245;
+        double e2 = Math.pow((Math.pow(c_sa, 2) - Math.pow(c_sb, 2)), 0.5) / c_sb;
+        double e2cuadrada = Math.pow(e2, 2);
+        double c = Math.pow(c_sa, 2) / c_sb;
+        double x = utmX - 500000;
+        double y = utmY;// isNorthHemisphere ? utmY : utmY - 10000000;
+
+        double s = ((utmZone * 6.0) - 183.0);
+        double lat = y / (c_sa * 0.9996);
+        double v = (c / Math.pow(1 + (e2cuadrada * Math.pow(Math.cos(lat), 2)), 0.5)) * 0.9996;
+        double a = x / v;
+        double a1 = Math.sin(2 * lat);
+        double a2 = a1 * Math.pow((Math.cos(lat)), 2);
+        double j2 = lat + (a1 / 2.0);
+        double j4 = ((3 * j2) + a2) / 4.0;
+        double j6 = ((5 * j4) + Math.pow(a2 * (Math.cos(lat)), 2)) / 3.0;
+        double alfa = (3.0 / 4.0) * e2cuadrada;
+        double beta = (5.0 / 3.0) * Math.pow(alfa, 2);
+        double gama = (35.0 / 27.0) * Math.pow(alfa, 3);
+        double bm = 0.9996 * c * (lat - alfa * j2 + beta * j4 - gama * j6);
+        double b = (y - bm) / v;
+        double epsi = ((e2cuadrada * Math.pow(a, 2)) / 2.0) * Math.pow((Math.cos(lat)), 2);
+        double eps = a * (1 - (epsi / 3.0));
+        double nab = (b * (1 - epsi)) + lat;
+        double senoheps = (Math.exp(eps) - Math.exp(-eps)) / 2.0;
+        double delt = Math.atan(senoheps / (Math.cos(nab)));
+        double tao = Math.atan(Math.cos(delt) * Math.tan(nab));
+
+        double longitude = ((delt * (180.0 / Math.PI)) + s) + diflon;
+        double latitude = ((lat + (1 + e2cuadrada * Math.pow(Math.cos(lat), 2) -
+                (3.0 / 2.0) * e2cuadrada * Math.sin(lat) * Math.cos(lat) * (tao - lat)) *
+                (tao - lat)) * (180.0 / Math.PI)) + diflat;
+
+        return new Position(latitude, longitude);
+    }
+
+    public static GeoPosition convertUTMtoLatLonSignedDecLegacy(double utmX, double utmY, int utmZone) {
         //boolean isNorthHemisphere = true; // utmZone[utmZone.Length - 1] >= 'N';
 
         double diflat = 0;// -0.00066286966871111111111111111111111111;

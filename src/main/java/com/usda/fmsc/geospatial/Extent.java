@@ -37,6 +37,14 @@ public class Extent implements Serializable {
     }
 
 
+    public Position getCenter() {
+        return new Position(
+            ((northEast.getLatitude() - southWest.getLatitude()) / 2d),
+            ((northEast.getLongitude() - southWest.getLongitude()) / 2d)
+        );
+    }
+
+
     public Double getNorth() {
         return northEast.getLatitudeSignedDecimal();
     }
@@ -55,7 +63,7 @@ public class Extent implements Serializable {
 
 
     public static class Builder {
-        List<Position> positions = new ArrayList<>();
+        private final List<Position> positions = new ArrayList<>();
 
         public void include(Position position) {
             positions.add(position);
@@ -91,6 +99,10 @@ public class Extent implements Serializable {
             }
 
             return new Extent(north, east, south, west);
+        }
+
+        public int numberOfPositions() {
+            return positions.size();
         }
     }
 }
