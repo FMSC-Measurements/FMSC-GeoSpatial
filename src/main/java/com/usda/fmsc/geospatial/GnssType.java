@@ -1,7 +1,5 @@
 package com.usda.fmsc.geospatial;
 
-import com.usda.fmsc.geospatial.nmea41.NmeaIDs;
-
 public enum GnssType {
     Unknown(0),
     GPS(1),
@@ -118,8 +116,15 @@ public enum GnssType {
             case GAGAN:
             case MSAS:
             case SNAS: return true;
+            case BEIDOU:
+            case GALILEO:
+            case GLONASS:
+            case GPS:
+            case IMES:
+            case QZSS:
+            case Unknown:
+            default:
+                return false;
         }
-
-        return false;
     }
 }

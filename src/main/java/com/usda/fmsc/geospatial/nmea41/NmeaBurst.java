@@ -20,6 +20,7 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 @SuppressWarnings("unchecked")
 public class NmeaBurst implements INmeaBurst {
@@ -668,13 +669,13 @@ public class NmeaBurst implements INmeaBurst {
     @Override
     public String toString() {
         if (isValid() && hasPosition()) {
-            return String.format("[%s] Valid: True | Lat: %f | Lon: %f | Elev: %f", getFixTime(), getLatitudeSD(),
+            return String.format(Locale.getDefault(), "[%s] Valid: True | Lat: %.10f | Lon: %.10f | Elev: %f", getFixTime(), getLatitudeSD(),
                     getLongitudeSD(), getElevation());
         } else {
             return String.format("[%s] Valid: False |%s rmc: %b | gga: %b | gsa: %b | gsv: %b", DateTime.now(),
                     hasPosition()
-                            ? String.format(" (Lat: %f | Lon: %f |%s", getLatitudeSD(), getLongitudeSD(),
-                            hasElevation() ? String.format(" Elev: %f) |", getElevation()) : "")
+                            ? String.format(Locale.getDefault(), " (Lat: %.10f | Lon: %.10f |%s", getLatitudeSD(), getLongitudeSD(),
+                            hasElevation() ? String.format(Locale.getDefault(), " Elev: %f) |", getElevation()) : "")
                             : "No Position |",
                     areAnyValid(SentenceID.RMC), areAnyValid(SentenceID.GGA), isValid(SentenceID.GSA),
                     isValid(SentenceID.GSV));
@@ -683,15 +684,15 @@ public class NmeaBurst implements INmeaBurst {
 
     public String toStringX() {
         if (isValid() && hasPosition()) {
-            return String.format("[%s] Valid: True | Lat: %f | Lon: %f | Elev: %f | Fix: %s-%s | Sats (VTU): %d/%d/%d",
+            return String.format(Locale.getDefault(), "[%s] Valid: True | Lat: %.10f | Lon: %.10f | Elev: %f | Fix: %s-%s | Sats (VTU): %d/%d/%d",
                     getFixTime(), getLatitudeSD(), getLongitudeSD(), getElevation(), getFix().toString(),
                     getFixQuality().toString(), getSatellitesInViewCount(), getTrackedSatellitesCount(),
                     getUsedSatellitesCount());
         } else {
             return String.format("[%s] Valid: False |%s rmc: %b | gga: %b | gsa: %b | gsv: %b", DateTime.now(),
                     hasPosition()
-                            ? String.format(" (Lat: %f | Lon: %f |%s", getLatitudeSD(), getLongitudeSD(),
-                            hasElevation() ? String.format(" Elev: %f) |", getElevation()) : "")
+                            ? String.format(Locale.getDefault(), " (Lat: %.10f | Lon: %.10f |%s", getLatitudeSD(), getLongitudeSD(),
+                            hasElevation() ? String.format(Locale.getDefault(), " Elev: %f) |", getElevation()) : "")
                             : "No Position |",
                     areAnyValid(SentenceID.RMC), areAnyValid(SentenceID.GGA), isValid(SentenceID.GSA),
                     isValid(SentenceID.GSV));

@@ -50,7 +50,7 @@ public class GSVSentence extends NmeaSentence implements MultiSentence, Serializ
                 }
 
                 if (tokens.length > index && !TextUtils.isEmpty(tokens[index])) {
-                    signal = NmeaIDs.GnssSignal.parseSignalId(Integer.parseInt(tokens[index]), getTalkerID());
+                    signal = NmeaIDs.GnssSignal.parseSignalId(Integer.parseInt(tokens[index], 16), getTalkerID());
 
                     for (Satellite sat : satellites) {
                         sat.addSignal(signal);
