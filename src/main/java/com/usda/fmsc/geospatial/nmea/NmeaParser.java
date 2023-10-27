@@ -1,137 +1,41 @@
 package com.usda.fmsc.geospatial.nmea;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.EnumSet;
+import java.util.function.Supplier;
+
+import com.usda.fmsc.geospatial.base.IIDParser;
+import com.usda.fmsc.geospatial.nmea.sentences.NmeaSentence;
+
+public class NmeaParser<
+    TalkerID extends Enum<TalkerID>,
+    SentenceID extends Enum<SentenceID>,
+    GnssNmeaBurst extends INmeaBurst<NmeaSentence>,
+    Listener extends INmeaParserListener<NmeaSentence, GnssNmeaBurst>,
+    MsgIDParser extends IIDParser<TalkerID>>
+    extends BaseNmeaParser<TalkerID, SentenceID, NmeaSentence, GnssNmeaBurst, Listener, MsgIDParser> {
 
 
-import com.usda.fmsc.geospatial.nmea.NmeaIDs.*;
-import com.usda.fmsc.geospatial.nmea.sentences.*;
-import com.usda.fmsc.geospatial.nmea.sentences.base.MultiSentence;
-import com.usda.fmsc.geospatial.nmea.sentences.base.NmeaSentence;
-
-@SuppressWarnings({"WeakerAccess", "unused"})
-public class NmeaParser<TNmeaBurst extends INmeaBurst> {
-    private final List<Listener> listeners;
-    private final List<TalkerID> usedTalkerIDs;
-
-    private INmeaBurst burst;
-    private Class<TNmeaBurst> clazz;
-
-
-    public NmeaParser(Class<TNmeaBurst> clazz) {
-        this(TalkerID.GP, clazz);
+    public NmeaParser(Supplier<GnssNmeaBurst> supplier, MsgIDParser msgIDParser, Class<TalkerID> talkerIDClass) {
+        super(supplier, msgIDParser, talkerIDClass);
     }
 
-    public NmeaParser(TalkerID talkerID, Class<TNmeaBurst> clazz) {
-        this.clazz = clazz;
-
-        listeners = new ArrayList<>();
-        usedTalkerIDs = new ArrayList<>();
-        usedTalkerIDs.add(talkerID);
+    public NmeaParser(Supplier<GnssNmeaBurst> supplier, MsgIDParser msgIDParser, TalkerID talkerID) {
+        super(supplier, msgIDParser, talkerID);
     }
 
-    public NmeaParser(Collection<TalkerID> talkerIDs) {
-        listeners = new ArrayList<>();
-        usedTalkerIDs = new ArrayList<>(talkerIDs);
+    public NmeaParser(Supplier<GnssNmeaBurst> supplier, MsgIDParser msgIDParser, TalkerID talkerID, String burstDelimiter) {
+        super(supplier, msgIDParser, talkerID, burstDelimiter);
     }
 
-
-    private TNmeaBurst newBurst() throws InstantiationException, IllegalAccessException {
-        return this.clazz.newInstance();
+    public NmeaParser(Supplier<GnssNmeaBurst> supplier, MsgIDParser msgIDParser, EnumSet<TalkerID> talkerIDs) {
+        super(supplier, msgIDParser, talkerIDs);
     }
 
-    public boolean parse(String nmea) {
-        boolean usedNmea = false;
-
-        if (burst == null) {
-            try {
-                burst = newBurst();
-            } catch (Exception e) {
-                //
-            }
-        }
-
-        //try {
-            if (usedTalkerIDs.contains(TalkerID.parse(nmea))) {
-                NmeaSentence sentence = burst.addNmeaSentence(nmea);
-
-                if (sentence != null && (!sentence.isMultiString() || ((MultiSentence)sentence).hasAllMessages())) {
-                        postNmeaReceived(sentence);
-                }
-
-                usedNmea = true;
-            }
-        //} catch (ExcessiveStringException e) {
-            //burst = new NmeaBurst();
-        //}
-
-        if (burst != null && burst.isFull()) {
-            postBurstReceived(burst);
-            burst = null;
-        }
-
-        return usedNmea;
+    public NmeaParser(Supplier<GnssNmeaBurst> supplier, MsgIDParser msgIDParser, EnumSet<TalkerID> talkerIDs, String burstDelimiter) {
+        super(supplier, msgIDParser, talkerIDs, burstDelimiter);
     }
 
-    public void reset() {
-        burst = null;
-    }
-
-    private void postBurstReceived(INmeaBurst burst) {
-        for (Listener listener : listeners) {
-            listener.onBurstReceived(burst);
-        }
-    }
-
-    private void postNmeaReceived(NmeaSentence sentence) {
-        for (Listener listener : listeners) {
-            listener.onNmeaReceived(sentence);
-        }
-    }
-
-
-    public void addListener(Listener listener) {
-        if (listener != null && !listeners.contains(listener)) {
-            listeners.add(listener);
-        }
-    }
-
-    public void removeListener(Listener listener) {
-        listeners.remove(listener);
-    }
-
-
-    public void addTalkerID(TalkerID talkerID) {
-        if (!usedTalkerIDs.contains(talkerID))
-            usedTalkerIDs.add(talkerID);
-    }
-
-    public void removeTalkerID(TalkerID talkerID) {
-        usedTalkerIDs.remove(talkerID);
-    }
-
-
-    public static NmeaSentence getNmeaSentence(String sentence) {
-        if (sentence == null) {
-            throw new NullPointerException();
-        }
-
-        if (NmeaSentence.validateChecksum(sentence)) {
-            switch (SentenceID.parse(sentence)) {
-                case GGA: return new GGASentence(sentence);
-                case GSA: return new GSASentence(sentence);
-                case RMC: return new RMCSentence(sentence);
-                case GSV: return new GSVSentence(sentence);
-            }
-        }
-
-        return null;
-    }
-
-    public interface Listener {
-        void onBurstReceived(INmeaBurst burst);
-
-        void onNmeaReceived(NmeaSentence sentence);
+    public NmeaParser(Supplier<GnssNmeaBurst> supplier, MsgIDParser msgIDParser, EnumSet<TalkerID> talkerIDs, long longestPause) {
+        super(supplier, msgIDParser, talkerIDs, longestPause);
     }
 }

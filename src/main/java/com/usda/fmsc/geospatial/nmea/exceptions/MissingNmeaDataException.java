@@ -1,18 +1,25 @@
 package com.usda.fmsc.geospatial.nmea.exceptions;
 
-import com.usda.fmsc.geospatial.nmea.NmeaIDs.SentenceID;
+import com.usda.fmsc.geospatial.nmea.codes.SentenceID;
 
-@SuppressWarnings("unused")
 public class MissingNmeaDataException extends NmeaException {
-    public MissingNmeaDataException() {
-        super("Missing Nmea sentence data.");
-    }
-
-    public MissingNmeaDataException(String message) {
-        super(message);
-    }
-
     public MissingNmeaDataException(SentenceID sentenceID) {
-        super(String.format("Missing %s sentence data.", sentenceID.toString()));
+        super(String.format("Missing %s sentence data.", sentenceID.toString()), null);
+    }
+
+    public MissingNmeaDataException(SentenceID ... sentenceIDs) {
+        super(packMessage(sentenceIDs), null);
+    }
+
+    private static String packMessage(SentenceID[] sentenceIDs) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Missing sentences: ");
+
+        for (SentenceID sid : sentenceIDs) {
+            sb.append(sid.toString());
+            sb.append(" ");
+        }
+
+        return sb.toString();
     }
 }

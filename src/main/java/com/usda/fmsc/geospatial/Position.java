@@ -2,19 +2,25 @@ package com.usda.fmsc.geospatial;
 
 import java.io.Serializable;
 
-public class Position implements Serializable {
+import com.usda.fmsc.geospatial.codes.EastWest;
+import com.usda.fmsc.geospatial.codes.NorthSouth;
+import com.usda.fmsc.geospatial.codes.UomElevation;
+import com.usda.fmsc.geospatial.gnss.DMS;
+
+public class Position implements IPosition, Serializable {
     private double latitude;
-    private NorthSouth latDir;
     private double longitude;
-    private EastWest lonDir;
     private Double elevation;
     private UomElevation uomElevation;
 
+
+    public Position() {
+        setPosition(0, null, 0, null, 0, null);
+    }
+
     public Position(Position position) {
         this.latitude = position.latitude;
-        this.latDir = position.latDir;
         this.longitude = position.longitude;
-        this.lonDir = position.lonDir;
         this.elevation = position.elevation;
         this.uomElevation = position.uomElevation;
     }
@@ -31,26 +37,17 @@ public class Position implements Serializable {
         setPosition(latitude, latDir, longitude, lonDir, 0, null);
     }
 
-    public Position(double latitude, NorthSouth latDir, double longitude, EastWest lonDir, double elevation, UomElevation uomElevation) {
+    public Position(double latitude, NorthSouth latDir, double longitude, EastWest lonDir, double elevation,
+            UomElevation uomElevation) {
         setPosition(latitude, latDir, longitude, lonDir, elevation, uomElevation);
     }
 
-    private void setPosition(double latitude, NorthSouth latDir, double longitude, EastWest lonDir, double elevation, UomElevation uomElevation) {
-        if (latDir != null) {
-            this.latitude = latitude;
-            this.latDir = latDir;
-        } else {
-            this.latitude = Math.abs(latitude);
-            this.latDir = latitude < 0 ? NorthSouth.South : NorthSouth.North;
-        }
 
-        if (lonDir != null) {
-            this.longitude = longitude;
-            this.lonDir = lonDir;
-        } else {
-            this.longitude = Math.abs(longitude);
-            this.lonDir = longitude < 0 ? EastWest.West : EastWest.East;
-        }
+    private void setPosition(double latitude, NorthSouth latDir, double longitude, EastWest lonDir, double elevation,
+            UomElevation uomElevation) {
+            
+        this.latitude = latDir != null ? (Math.abs(latitude) * (latDir == NorthSouth.North ? 1 : -1)) : latitude;
+        this.longitude = lonDir != null ? (Math.abs(longitude) * (lonDir == EastWest.East ? 1 : -1)) : longitude;
 
         this.elevation = elevation;
         this.uomElevation = uomElevation;
@@ -60,52 +57,42 @@ public class Position implements Serializable {
     public double getLatitude() {
         return latitude;
     }
-
-    public double getLatitudeSignedDecimal() {
-        return latDir == NorthSouth.North ? latitude : latitude * -1;
-    }
-
+    
     public DMS getLatitudeDMS() {
-        return new DMS(getLatitudeSignedDecimal());
+        return new DMS(getLatitude());
     }
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
+    public void setLatitude(double latitude, NorthSouth latDir) {
+        this.latitude = latDir != null ? (Math.abs(latitude) * (latDir == NorthSouth.North ? 1 : -1)) : latitude;
+    }
+
+    public NorthSouth getLatDir() {
+        return latitude >= 0 ? NorthSouth.North : NorthSouth.South;
+    }
+
 
     public double getLongitude() {
         return longitude;
     }
-    public double getLongitudeSignedDecimal() {
-        return lonDir == EastWest.East ? longitude : longitude * -1;
-    }
 
     public DMS getLongitudeDMS() {
-        return new DMS(getLongitudeSignedDecimal());
+        return new DMS(getLongitude());
     }
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-
-
-    public NorthSouth getLatDir() {
-        return latDir;
+    public void setLongitude(double longitude, EastWest lonDir) {
+        this.longitude = lonDir != null ? (Math.abs(longitude) * (lonDir == EastWest.East ? 1 : -1)) : longitude;
     }
-
-    public void setLatDir(NorthSouth latDir) {
-        this.latDir = latDir;
-    }
-
 
     public EastWest getLonDir() {
-        return lonDir;
-    }
-
-    public void setLonDir(EastWest lonDir) {
-        this.lonDir = lonDir;
+        return longitude >= 0 ? EastWest.East : EastWest.West;
     }
 
 
@@ -113,7 +100,7 @@ public class Position implements Serializable {
         return uomElevation != null;
     }
 
-    public double getElevation() {
+    public Double getElevation() {
         return elevation;
     }
 
@@ -129,34 +116,17 @@ public class Position implements Serializable {
         this.uomElevation = uomElevation;
     }
 
-    public boolean isNorthernHemisphere() {
-        return latDir == NorthSouth.North;
-    }
-
-    public boolean isSouthernHemisphere() {
-        return latDir == NorthSouth.South;
-    }
-
-    public boolean isWesternHemisphere() {
-        return lonDir == EastWest.West;
-    }
-
-    public boolean isEasternHemisphere() {
-        return lonDir == EastWest.East;
-    }
-
-
+    
     public static double fromDecimalDMS(double dms) {
         dms = Math.abs(dms / 100);
-        double deg = (int)dms;
+        double deg = (int) dms;
 
         double decMinAndSec = (dms - deg) * 100d;
-        int decMin = (int)decMinAndSec;
+        int decMin = (int) decMinAndSec;
         double decSec = (decMinAndSec - decMin) * 60d;
 
         return deg + decMin / 60d + decSec / 3600d;
     }
-
 
     public static Position fromDecimalDms(double lat, double lon) {
         return new Position(fromDecimalDMS(lat) * lat < 0 ? -1 : 1, fromDecimalDMS(lon) * lon < 0 ? -1 : 1);
@@ -166,7 +136,8 @@ public class Position implements Serializable {
         return new Position(fromDecimalDMS(lat), northSouth, fromDecimalDMS(lon), eastWest);
     }
 
-    public static Position fromDecimalDms(double lat, NorthSouth northSouth, double lon, EastWest eastWest, double elevation, UomElevation uomElevation) {
+    public static Position fromDecimalDms(double lat, NorthSouth northSouth, double lon, EastWest eastWest,
+            double elevation, UomElevation uomElevation) {
         return new Position(fromDecimalDMS(lat), northSouth, fromDecimalDMS(lon), eastWest, elevation, uomElevation);
     }
 }
