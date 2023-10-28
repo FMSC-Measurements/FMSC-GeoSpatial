@@ -77,9 +77,9 @@ public abstract class BaseNmeaParser<
         String rawNmeaSentence = sanitizeNmea(data);
 
         try {
-            MessageID msg1ID = msgIDParser.parse(rawNmeaSentence);
+            MessageID msgID = msgIDParser.parse(rawNmeaSentence);
 
-            if (usedMsgIDs.contains(msg1ID)) {
+            if (usedMsgIDs.contains(msgID)) {
                 if (burst == null) {
                     burst = supplier.get();
                 }

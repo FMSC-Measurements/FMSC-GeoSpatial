@@ -3,6 +3,7 @@ package com.usda.fmsc.geospatial.gnss;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.usda.fmsc.geospatial.Extent;
 import com.usda.fmsc.geospatial.Position;
 
 public class GeoTools {

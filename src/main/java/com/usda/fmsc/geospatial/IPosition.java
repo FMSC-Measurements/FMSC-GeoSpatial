@@ -3,7 +3,6 @@ package com.usda.fmsc.geospatial;
 import com.usda.fmsc.geospatial.codes.EastWest;
 import com.usda.fmsc.geospatial.codes.NorthSouth;
 import com.usda.fmsc.geospatial.codes.UomElevation;
-import com.usda.fmsc.geospatial.gnss.DMS;
 
 public interface IPosition {
     public double getLatitude();

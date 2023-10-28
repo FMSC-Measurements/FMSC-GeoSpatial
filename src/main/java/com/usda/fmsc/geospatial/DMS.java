@@ -1,4 +1,4 @@
-package com.usda.fmsc.geospatial.gnss;
+package com.usda.fmsc.geospatial;
 
 import java.io.Serializable;
 

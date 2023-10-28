@@ -1,10 +1,8 @@
-package com.usda.fmsc.geospatial.gnss;
+package com.usda.fmsc.geospatial;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.usda.fmsc.geospatial.Position;
 
 public class Extent implements Serializable {
     private Position northEast;
