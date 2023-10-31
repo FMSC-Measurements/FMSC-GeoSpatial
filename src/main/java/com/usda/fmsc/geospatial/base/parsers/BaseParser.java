@@ -18,12 +18,13 @@ public abstract class BaseParser<
     private long lastMessageTime, longestPause, startInit;
     private ArrayList<Long> pauses = new ArrayList<>();
 
-    private ParseMode parseMode = ParseMode.None;
+    private ParseMode parseMode = ParseMode.Delimiter;
     private PDT delimiter = null;
 
     
     public BaseParser() {
         listeners = new ArrayList<>();
+        synced = true;
     }
 
     public BaseParser(PDT delimiter) {
@@ -46,11 +47,12 @@ public abstract class BaseParser<
             long now = System.currentTimeMillis();
 
             if ((parseMode == ParseMode.Time && now - lastMessageTime > longestPause) ||
-                (parseMode == ParseMode.Delimiter && checkForDelimiter(data))) {
+                (parseMode == ParseMode.Delimiter && data != null && checkForDelimiter(data))) {
                 onDelimination();
             }
 
-            message = parseMessage(data);
+            if (data != null)
+                message = parseMessage(data);
 
             if (message != null) {
                 onMessageReceived(message);
@@ -142,8 +144,8 @@ public abstract class BaseParser<
                         pauses = null;
                     }
                 }
-            } else {
-                if (checkForDelimiter(data)) {
+            } else if (parseMode == ParseMode.Delimiter) {
+                if (data != null && checkForDelimiter(data)) {
                     syncing = false;
                     synced = true;
                 } else {
@@ -167,6 +169,7 @@ public abstract class BaseParser<
 
     public void reset() {
         initialized = syncing = synced = false;
+        if (parseMode == ParseMode.None) synced = true;
     }
 
 

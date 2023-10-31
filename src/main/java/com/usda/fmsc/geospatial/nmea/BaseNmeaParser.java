@@ -18,6 +18,7 @@ public abstract class BaseNmeaParser<
     GnssNmeaBurst extends INmeaBurst<NmeaSentence>,
     Listener extends INmeaParserListener<NmeaSentence, GnssNmeaBurst>,
     MsgIDParser extends IIDParser<MessageID>> extends BaseStringMsgParser<NmeaSentence, Listener> {
+    private static final String DEFAULT_DELIMITER = "\r\n";
 
     private final Supplier<GnssNmeaBurst> supplier;
     private final MsgIDParser msgIDParser;
@@ -41,6 +42,7 @@ public abstract class BaseNmeaParser<
     }
 
     public BaseNmeaParser(Supplier<GnssNmeaBurst> supplier, MsgIDParser msgIDParser, EnumSet<MessageID> msgIDs) {
+        super(DEFAULT_DELIMITER);
         this.supplier = supplier;
         this.msgIDParser = msgIDParser;
         this.listeners = new ArrayList<>();

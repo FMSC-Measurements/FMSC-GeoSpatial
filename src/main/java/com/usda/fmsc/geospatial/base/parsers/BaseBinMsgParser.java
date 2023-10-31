@@ -8,7 +8,7 @@ public abstract class BaseBinMsgParser<
     Listener extends IBinMsgListener<BinMessage>> extends BaseParser<byte[], BinMessage, Listener> {
 
     public BaseBinMsgParser() {
-
+        super();
     }
 
     public BaseBinMsgParser(byte[] delimiter) {

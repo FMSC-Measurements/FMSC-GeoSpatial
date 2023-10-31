@@ -8,7 +8,7 @@ public abstract class BaseStringMsgParser<
     Listener extends IStringMsgListener<StringMessage>> extends BaseParser<String, StringMessage, Listener> {
 
     public BaseStringMsgParser() {
-
+        super();
     }
 
     public BaseStringMsgParser(String delimiter) {

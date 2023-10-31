@@ -42,7 +42,7 @@ public class VNDataReader extends BaseMsgByteDataReader {
 			byte[] msgData = Arrays.copyOfRange(data, 0, lastBinMsgConfig.getTotalPacketSize());
 			listener.onBinMsgBytesReceived(lastBinMsgConfig, msgData);
             dequeue(lastBinMsgConfig.getTotalPacketSize());
-			return msgData;
+            return msgData;
 		}
 
         for (int i = 0; i < data.length; i++) {
