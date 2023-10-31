@@ -40,7 +40,6 @@ public class VNDataReader extends BaseMsgByteDataReader {
             data[lastBinMsgConfig.getTotalPacketSize()] == BINARY_SYNC_BYTE) {
 
 			byte[] msgData = Arrays.copyOfRange(data, 0, lastBinMsgConfig.getTotalPacketSize());
-            listener.onBytesReceived(data);
 			listener.onBinMsgBytesReceived(lastBinMsgConfig, msgData);
             dequeue(lastBinMsgConfig.getTotalPacketSize());
 			return msgData;
@@ -62,6 +61,11 @@ public class VNDataReader extends BaseMsgByteDataReader {
 
                                 if (((int)msgData[0]) != -6) {
                                     msgData[0] = (byte)-6;
+                                }
+
+                                if (i > 0) {
+								    byte[] invalidData = Arrays.copyOfRange(data, 0, i);
+                                    listener.onInvalidDataRecieved(invalidData);
                                 }
 
 								listener.onBinMsgBytesReceived(config, msgData);
@@ -93,6 +97,6 @@ public class VNDataReader extends BaseMsgByteDataReader {
     public interface Listener {
         void onBinMsgBytesReceived(BinaryMsgConfig config, byte[] data);
         void onNmeaMsgBytesReceived(byte[] data);
-        void onBytesReceived(byte[] data);
+        void onInvalidDataRecieved(byte[] data);
     }
 }

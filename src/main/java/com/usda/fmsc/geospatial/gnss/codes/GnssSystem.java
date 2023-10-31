@@ -46,6 +46,9 @@ public enum GnssSystem {
                 return BEIDOU;
             case "QZSS":
                 return QZSS;
+            case "MULTI":
+            case "MULTI_GNSS":
+                return MULTI_GNSS;
             default:
                 return UNKOWN;
         }
@@ -67,6 +70,8 @@ public enum GnssSystem {
                 return "QZSS"; // Japan
             case NAV_IC:
                 return "NAV_IC";
+            case MULTI_GNSS:
+                return "Multi GNSS";
             default:
                 return "Unknown";
         }

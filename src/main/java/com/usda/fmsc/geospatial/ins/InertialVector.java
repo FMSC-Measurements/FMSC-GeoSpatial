@@ -1,39 +1,39 @@
 package com.usda.fmsc.geospatial.ins;
 
 public class InertialVector implements IVectorData, IVelocityData, IRotationData {
-    private double time;
+    private double timespan;
     private double velocityX, velocityY, velocityZ;
-    private double rotationX, rotationY, rotationZ;
+    private double yaw, pitch, roll;
 
-    public InertialVector(double time, double vX, double vY, double vZ, double rX, double rY, double rZ) {
-        this.time = time;
+    public InertialVector(double timespan, double vX, double vY, double vZ, double yaw, double pitch, double roll) {
+        this.timespan = timespan;
         this.velocityX = vX;
         this.velocityY = vY;
         this.velocityZ = vZ;
-        this.rotationX = rX;
-        this.rotationY = rY;
-        this.rotationZ = rZ;
+        this.yaw = yaw;
+        this.pitch = pitch;
+        this.roll = roll;
     }
 
     @Override
     public double getDistanceX() {
-        return getVelocityX() / getTime();
+        return getVelocityX() / getTimespan();
     }
 
     @Override
     public double getDistanceY() {
-        return getVelocityY() / getTime();
+        return getVelocityY() / getTimespan();
     }
 
     @Override
     public double getDistanceZ() {
-        return getVelocityZ() / getTime();
+        return getVelocityZ() / getTimespan();
     }
 
 
     @Override
-    public double getTime() {
-        return time;
+    public double getTimespan() {
+        return timespan;
     }
 
     @Override
@@ -53,17 +53,17 @@ public class InertialVector implements IVectorData, IVelocityData, IRotationData
 
 
     @Override
-    public double getRotationX() {
-        return rotationX;
+    public double getYaw() {
+        return yaw;
     }
 
     @Override
-    public double getRotationY() {
-        return rotationY;
+    public double getPitch() {
+        return pitch;
     }
 
     @Override
-    public double getRotationZ() {
-        return rotationZ;
+    public double getRoll() {
+        return roll;
     }
 }

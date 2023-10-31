@@ -18,6 +18,10 @@ public abstract class VNBinMessage implements IBinMessage {
     private final boolean _isValid;
     private BinaryMsgConfig _config;
 
+
+    protected VNBinMessage() {
+        this._isValid = true;
+    }
     
     public VNBinMessage(byte[] message) {
         this(null, message);

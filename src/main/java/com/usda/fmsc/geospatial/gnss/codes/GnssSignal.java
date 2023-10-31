@@ -58,6 +58,10 @@ public enum GnssSignal {
 
     @Override
     public String toString() {
+        return this.toStringSignalOnly();
+    }
+
+    public String toStringSignalOnly() {
         switch (this) {
             case GPS_UNKNOWN:
                 return "Unknown";
@@ -88,7 +92,7 @@ public enum GnssSignal {
             case Galileo_E6:
                 return "E6";
             case Galileo_E1:
-                return "L1";
+                return "E1";
 
             case BeiDou_UNKNOWN:
                 return "Unknown";

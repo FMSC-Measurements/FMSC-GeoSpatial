@@ -28,8 +28,8 @@ import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class GnssNmeaBurst implements IGnssNmeaBurst {
-    private static final List<TalkerID> priorityIds = Arrays.asList(new TalkerID[] { TalkerID.GP, TalkerID.GN, TalkerID.GL, TalkerID.GA,
-            TalkerID.GB, TalkerID.BD, TalkerID.QZ });
+    private static final List<TalkerID> priorityIds = Arrays.asList(TalkerID.GP, TalkerID.GN, TalkerID.GL, TalkerID.GA,
+            TalkerID.GB, TalkerID.BD, TalkerID.QZ);
 
     // RMC Sentence
     private HashMap<TalkerID, ArrayList<RMCSentence>> rmc = new HashMap<>();

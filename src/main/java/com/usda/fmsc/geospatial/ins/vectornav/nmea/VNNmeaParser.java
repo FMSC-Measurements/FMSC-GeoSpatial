@@ -17,20 +17,7 @@ public class VNNmeaParser extends BaseNmeaParser<MessageID, RegisterID, VNNmeaSe
         super(VNNmeaBurst::new, new VNMsgIDParser(), msgId);
     }
 
-    public VNNmeaParser(MessageID messageID, String burstDelimiter) {
-        super(VNNmeaBurst::new, new VNMsgIDParser(), messageID, burstDelimiter);
-    }
-
     public VNNmeaParser(EnumSet<MessageID> talkerIDs) {
         super(VNNmeaBurst::new, new VNMsgIDParser(), talkerIDs);
     }
-
-    public VNNmeaParser(EnumSet<MessageID> talkerIDs, String burstDelimiter) {
-        super(VNNmeaBurst::new, new VNMsgIDParser(), talkerIDs);
-    }
-
-    public VNNmeaParser(EnumSet<MessageID> talkerIDs, long longestPause) {
-        super(VNNmeaBurst::new, new VNMsgIDParser(), talkerIDs);
-    }
-
 }

@@ -6,6 +6,7 @@ import java.nio.ByteOrder;
 import com.usda.fmsc.geospatial.Position;
 import com.usda.fmsc.geospatial.codes.UomElevation;
 import com.usda.fmsc.geospatial.ins.Data3DF;
+import com.usda.fmsc.geospatial.ins.IINSData;
 import com.usda.fmsc.geospatial.ins.YawPitchRoll;
 import com.usda.fmsc.geospatial.ins.vectornav.INSStatus;
 import com.usda.fmsc.geospatial.ins.vectornav.VPEStatus;
@@ -45,7 +46,33 @@ public class CommonBinMessage extends VNBinMessage {
         super(config, message);
     }
 
+    public CommonBinMessage(CommonBinMessage message) {
+        super();
 
+        this.commonGroup = message.commonGroup;
+        this.timeStatup = message.timeStatup;
+        this.timeSyncIn = message.timeSyncIn;
+        this.timeGps = message.timeGps;
+        this.yawPitchRoll = message.yawPitchRoll;
+        this.quaternion = message.quaternion;
+        this.angularRate = message.angularRate;
+        this.position = message.position;
+        this.velocity = message.velocity;
+        this.acceleration = message.acceleration;
+        this.imuAcceleration = message.imuAcceleration;
+        this.imuAngularRate = message.imuAngularRate;
+        this.magnetic = message.magnetic;
+        this.temperature = message.temperature;
+        this.pressure = message.pressure;
+        this.deltaTime = message.deltaTime;
+        this.deltaTheta = message.deltaTheta;
+        this.deltaVelocity = message.deltaVelocity;
+        this.status = message.status;
+        this.syncInCnt = message.syncInCnt;
+        this.timeGpsPps = message.timeGpsPps;
+    }
+    
+    
     @Override
     protected void parseMessage(ByteBuffer message) {
         message.order(ByteOrder.LITTLE_ENDIAN);

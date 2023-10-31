@@ -65,13 +65,16 @@ public enum GnssFixQuality {
             case "rtkfloat":
             case "5":
                 return RTK_Float;
+            case "est":
             case "estimate":
             case "estimated":
             case "6":
                 return Estimated;
+            case "man":
             case "manual":
             case "7":
                 return Manual;
+            case "sim":
             case "simulate":
             case "simulation":
             case "8":

@@ -1,7 +1,7 @@
 package com.usda.fmsc.geospatial.ins;
 
 public interface IVelocityData {
-    double getTime();
+    double getTimespan();
 
     double getVelocityX();
     double getVelocityY();
