@@ -28,8 +28,8 @@ import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class GnssNmeaBurst implements IGnssNmeaBurst {
-    private static final List<TalkerID> priorityIds = Arrays.asList(TalkerID.GP, TalkerID.GN, TalkerID.GL, TalkerID.GA,
-            TalkerID.GB, TalkerID.BD, TalkerID.QZ);
+    private static final List<TalkerID> priorityIds = Arrays.asList(new TalkerID[] { TalkerID.GP, TalkerID.GN, TalkerID.GL, TalkerID.GA,
+            TalkerID.GB, TalkerID.BD, TalkerID.QZ });
 
     // RMC Sentence
     private HashMap<TalkerID, ArrayList<RMCSentence>> rmc = new HashMap<>();
@@ -70,43 +70,22 @@ public class GnssNmeaBurst implements IGnssNmeaBurst {
     private Position cachedPosition;
 
 
-    public NmeaSentence parseNmea(String nmea) throws UnsupportedSentenceException, InvalidChecksumException {
-        return parseNmeaSentence(nmea);
+
+    @Override
+    public final NmeaSentence parseMessage(String data) {
+        return parseNmea(data);
     }
     
-    public static NmeaSentence parseNmeaSentence(String nmea) {
-        TalkerID talkerID = TalkerID.parse(nmea);
-
-        switch (talkerID) {
-            case RD1: return new RD1Sentence(nmea);
-            case PSAT_GBS: return new GBSSentence(nmea);
-            case PJSI_BATT: return new BATTSentence(nmea);
-            default: break;
-        }
-
-        switch (SentenceID.parse(nmea)) {
-            case GGA:
-                return new GGASentence(talkerID, nmea);
-            case RMC:
-                return new RMCSentence(talkerID, nmea);
-            case GSA:
-                return new GSASentence(talkerID, nmea);
-            case GSV:
-                return new GSVSentence(talkerID, nmea);
-            case GLL:
-                return new GLLSentence(talkerID, nmea);
-            case GNS:
-                return new GNSSentence(talkerID, nmea);
-            case ZDA:
-                return new ZDASentence(talkerID, nmea);
-            case GST:
-                return new GSTSentence(talkerID, nmea);
-            default: break;
-        }
-
-        return null;
+    @Override
+    public final NmeaSentence addMessage(String data) {
+        return addNmeaSentence(data);
     }
 
+
+    public NmeaSentence parseNmea(String nmea) throws UnsupportedSentenceException, InvalidChecksumException {
+        return GnssNmeaTools.parseGnssNmeaSentence(nmea);
+    }
+    
     public NmeaSentence addNmeaSentence(String sentence) throws UnsupportedSentenceException, InvalidChecksumException {
         if (sentence == null)
             throw new NullPointerException("sentence");

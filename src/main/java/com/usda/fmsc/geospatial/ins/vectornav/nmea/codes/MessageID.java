@@ -52,7 +52,7 @@ public enum MessageID {
         }
 
         if (msg.startsWith("$VN") && msg.length() > 6) {
-            switch (msg.substring(2, 6).toUpperCase()) {
+            switch (msg.substring(3, 6).toUpperCase()) {
                 case "RRG": return RRG;
                 case "WRG": return WRG;
                 case "ERR": return ERR;

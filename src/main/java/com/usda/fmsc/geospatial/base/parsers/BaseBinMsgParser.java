@@ -10,12 +10,4 @@ public abstract class BaseBinMsgParser<
     public BaseBinMsgParser() {
         super();
     }
-
-    public BaseBinMsgParser(byte[] delimiter) {
-        super(delimiter);
-    }
-
-    public BaseBinMsgParser(long longestPause) {
-        super(longestPause);
-    }
 }

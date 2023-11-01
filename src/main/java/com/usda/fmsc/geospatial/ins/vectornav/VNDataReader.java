@@ -34,55 +34,75 @@ public class VNDataReader extends BaseMsgByteDataReader {
     public byte[] readBytes() throws IOException {
         byte[] data = fill();
 
-		if (lastBinMsgConfig != null &&
-            data.length >= lastBinMsgConfig.getTotalPacketSize() + 1 &&
-            data[0] == BINARY_SYNC_BYTE &&
-            data[lastBinMsgConfig.getTotalPacketSize()] == BINARY_SYNC_BYTE) {
+        if (data.length > 0)
+        {  
+            if (lastBinMsgConfig != null &&
+                data.length >= lastBinMsgConfig.getTotalPacketSize() + 1 &&
+                data[0] == BINARY_SYNC_BYTE &&
+                data[lastBinMsgConfig.getTotalPacketSize()] == BINARY_SYNC_BYTE) {
 
-			byte[] msgData = Arrays.copyOfRange(data, 0, lastBinMsgConfig.getTotalPacketSize());
-			listener.onBinMsgBytesReceived(lastBinMsgConfig, msgData);
-            dequeue(lastBinMsgConfig.getTotalPacketSize());
-            return msgData;
-		}
+                byte[] msgData = Arrays.copyOfRange(data, 0, lastBinMsgConfig.getTotalPacketSize());
+                listener.onBinMsgBytesReceived(lastBinMsgConfig, msgData);
+                dequeue(lastBinMsgConfig.getTotalPacketSize());
+                return msgData;
+            }
 
-        for (int i = 0; i < data.length; i++) {
-            if (data[i] == BINARY_SYNC_BYTE) {
-				if (i + VNBinMessage.MIN_PACKET_SIZE < data.length) {
-                    BinaryMsgConfig config = BinaryMsgConfig.fromBytes(Arrays.copyOfRange(data, i, i + VNBinMessage.MIN_PACKET_SIZE));
+            for (int i = 0; i < data.length; i++) {
+                if (data[i] == BINARY_SYNC_BYTE) {
+                    if (i + VNBinMessage.MIN_PACKET_SIZE < data.length) {
+                        BinaryMsgConfig config = BinaryMsgConfig.fromBytes(Arrays.copyOfRange(data, i, i + VNBinMessage.MIN_PACKET_SIZE));
 
-                    if (config != null && config.isValid()) {
-                        int totalLen = config.getTotalPacketSize();
+                        if (config != null && config.isValid()) {
+                            int totalLen = config.getTotalPacketSize();
 
-                        if (totalLen >= VNBinMessage.MIN_PACKET_SIZE && totalLen < MAX_BUFFER_SIZE && totalLen + i < data.length) {
-							if (Utils.validateChecksum16(data, i + 1, totalLen - 1)) {
-								lastBinMsgConfig = config;
-								
-								byte[] msgData = Arrays.copyOfRange(data, i, i + totalLen);
+                            if (totalLen >= VNBinMessage.MIN_PACKET_SIZE && totalLen < MAX_BUFFER_SIZE && totalLen + i < data.length) {
+                                if (Utils.validateChecksum16(data, i + 1, totalLen - 1)) {
+                                    lastBinMsgConfig = config;
+                                    
+                                    byte[] msgData = Arrays.copyOfRange(data, i, i + totalLen);
 
-                                if (((int)msgData[0]) != -6) {
-                                    msgData[0] = (byte)-6;
+                                    if (((int)msgData[0]) != -6) {
+                                        msgData[0] = (byte)-6;
+                                    }
+
+                                    if (i > 0) {
+                                        byte[] invalidData = Arrays.copyOfRange(data, 0, i);
+                                        listener.onInvalidDataRecieved(invalidData);
+                                    }
+
+                                    listener.onBinMsgBytesReceived(config, msgData);
+                                    dequeue(i + lastBinMsgConfig.getTotalPacketSize());
+                                    return msgData;
                                 }
+                            }
+                        }
+                    }
+                } else if (data[i] == ASII_START_CHAR) {
+                    int csIdx = Utils.getIndexOf(data, ASII_START_CHKSUM, i);
 
-                                if (i > 0) {
-								    byte[] invalidData = Arrays.copyOfRange(data, 0, i);
-                                    listener.onInvalidDataRecieved(invalidData);
-                                }
+                    if (csIdx > i && csIdx + 3 < data.length) {
+                        byte[] nmeaData = Arrays.copyOfRange(data, i, csIdx + 3);
+                        // if (data.length >= csIdx + 3 + nmeaData.length + 2) {
+                        //     System.out.println("*************");
+                        //     System.out.println(new String(nmeaData));
+                        //     dequeue(csIdx + 3);
+                        //     data = fill();
+                        //     System.out.println("------");
+                        //     System.out.println(new String(Arrays.copyOfRange(data, 0, nmeaData.length + 2)));
+                        //     System.out.println("*************");
+                        // }
 
-								listener.onBinMsgBytesReceived(config, msgData);
-                                dequeue(i + lastBinMsgConfig.getTotalPacketSize());
-								return msgData;
-							}
-						}
+
+                        listener.onNmeaMsgBytesReceived(nmeaData);
+                        // System.out.println("*************");
+                        // System.out.println(new String(data));
+                        // System.out.println("*************");
+                        dequeue(csIdx + 5);
+
+                        return nmeaData;
                     }
                 }
-            }// else if (data[i] == ASII_START_CHAR) {
-                //int aIdx = ByteArrayTools.getIndexOf(data, ASII_START_CHKSUM, i);
-
-                //if (aIdx + 2 < data.length) {
-                    
-                //}
-            //}
-
+            }
         }
 
         return new byte[0];

@@ -20,21 +20,9 @@ public class VNBinMsgParser extends BaseBinMsgParser<VNBinMessage, IVNBinMsgList
         setBinMsgConfig(config);
     }
 
-    public VNBinMsgParser(BinaryMsgConfig config, byte[] delimiter) {
-        super(delimiter);
-        setBinMsgConfig(config);
-    }
-
-    public VNBinMsgParser(BinaryMsgConfig config, long longestPause) {
-        super(longestPause);
-        setBinMsgConfig(config);
-    }
-
-
     public void setBinMsgConfig(BinaryMsgConfig config) {
         this.config = config;
     }
-
 
     @Override
     protected VNBinMessage parseMessage(byte[] data) {

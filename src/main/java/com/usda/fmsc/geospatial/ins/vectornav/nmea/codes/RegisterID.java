@@ -1,5 +1,7 @@
 package com.usda.fmsc.geospatial.ins.vectornav.nmea.codes;
 
+import com.usda.fmsc.geospatial.nmea.NmeaTools;
+
 public enum RegisterID {
     UNKNOWN(Integer.MIN_VALUE),
     NONE(Integer.MAX_VALUE),
@@ -66,5 +68,19 @@ public enum RegisterID {
             if (rid.getValue() == value) return rid;
         }
         throw new IllegalArgumentException("Invalid RegisterId value: " + value);
+    }
+
+    public static RegisterID parse(String nmea) {
+        String[] tokens = NmeaTools.tokenize(nmea);
+
+        if (tokens.length > 2) {
+            try {
+                return parse(Integer.parseInt(tokens[1]));
+            } catch (Exception e) {
+                //
+            }
+        }
+
+        return RegisterID.UNKNOWN;
     }
 }

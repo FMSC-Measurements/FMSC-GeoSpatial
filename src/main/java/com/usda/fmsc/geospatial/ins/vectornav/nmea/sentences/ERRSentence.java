@@ -9,8 +9,8 @@ public class ERRSentence extends VNNmeaSentence {
     private ErrorCode errCode;
 
     
-    public ERRSentence(String nmea) {
-        super(MessageID.ERR, nmea);
+    public ERRSentence(MessageID msgID, String nmea) {
+        super(msgID, nmea);
     }
 
 

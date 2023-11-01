@@ -1,7 +1,6 @@
 package com.usda.fmsc.geospatial.base.parsers;
 
 public enum ParseMode {
-    None(0),
     Time(1),
     Delimiter(2);
 

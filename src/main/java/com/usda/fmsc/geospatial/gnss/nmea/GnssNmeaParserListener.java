@@ -1,12 +1,20 @@
 package com.usda.fmsc.geospatial.gnss.nmea;
 
-import com.usda.fmsc.geospatial.nmea.INmeaParserListener;
+import com.usda.fmsc.geospatial.nmea.INmeaBurstParserListener;
 import com.usda.fmsc.geospatial.nmea.sentences.NmeaSentence;
 
-public abstract class GnssNmeaParserListener implements INmeaParserListener<NmeaSentence, GnssNmeaBurst> {
+public abstract class GnssNmeaParserListener implements INmeaBurstParserListener<NmeaSentence, GnssNmeaBurst> {
+    public abstract void onNmeaReceived(NmeaSentence sentence);
+    public abstract void onNmeaBurstReceived(GnssNmeaBurst bust);
+
     @Override
-    public void onMessageReceived(NmeaSentence message) {
-        //use onNmeaSentence for now
+    public final void onMessageReceived(NmeaSentence message) {
+        onNmeaReceived(message);
+    }
+
+    @Override
+    public final void onBurstReceived(GnssNmeaBurst burst) {
+        onNmeaBurstReceived(burst);
     }
 
     @Override

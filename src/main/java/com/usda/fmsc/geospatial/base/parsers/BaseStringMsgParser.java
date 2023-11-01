@@ -10,12 +10,4 @@ public abstract class BaseStringMsgParser<
     public BaseStringMsgParser() {
         super();
     }
-
-    public BaseStringMsgParser(String delimiter) {
-        super(delimiter);
-    }
-
-    public BaseStringMsgParser(long longestPause) {
-        super(longestPause);
-    }
 }

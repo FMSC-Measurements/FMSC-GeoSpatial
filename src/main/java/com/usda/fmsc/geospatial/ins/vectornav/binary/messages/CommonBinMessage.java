@@ -6,7 +6,6 @@ import java.nio.ByteOrder;
 import com.usda.fmsc.geospatial.Position;
 import com.usda.fmsc.geospatial.codes.UomElevation;
 import com.usda.fmsc.geospatial.ins.Data3DF;
-import com.usda.fmsc.geospatial.ins.IINSData;
 import com.usda.fmsc.geospatial.ins.YawPitchRoll;
 import com.usda.fmsc.geospatial.ins.vectornav.INSStatus;
 import com.usda.fmsc.geospatial.ins.vectornav.VPEStatus;

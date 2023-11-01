@@ -2,7 +2,20 @@ package com.usda.fmsc.geospatial.gnss.nmea;
 
 import com.usda.fmsc.geospatial.gnss.codes.GnssSignal;
 import com.usda.fmsc.geospatial.gnss.codes.GnssSystem;
+import com.usda.fmsc.geospatial.gnss.hemisphere.nmea.sentences.GBSSentence;
+import com.usda.fmsc.geospatial.gnss.juniper.nmea.sentences.BATTSentence;
+import com.usda.fmsc.geospatial.gnss.nmea.sentences.GGASentence;
+import com.usda.fmsc.geospatial.gnss.nmea.sentences.GLLSentence;
+import com.usda.fmsc.geospatial.gnss.nmea.sentences.GNSSentence;
+import com.usda.fmsc.geospatial.gnss.nmea.sentences.GSASentence;
+import com.usda.fmsc.geospatial.gnss.nmea.sentences.GSTSentence;
+import com.usda.fmsc.geospatial.gnss.nmea.sentences.GSVSentence;
+import com.usda.fmsc.geospatial.gnss.nmea.sentences.RD1Sentence;
+import com.usda.fmsc.geospatial.gnss.nmea.sentences.RMCSentence;
+import com.usda.fmsc.geospatial.gnss.nmea.sentences.ZDASentence;
+import com.usda.fmsc.geospatial.nmea.codes.SentenceID;
 import com.usda.fmsc.geospatial.nmea.codes.TalkerID;
+import com.usda.fmsc.geospatial.nmea.sentences.NmeaSentence;
 
 public class GnssNmeaTools {
 
@@ -181,4 +194,36 @@ public class GnssNmeaTools {
         }
     }
 
+    public static NmeaSentence parseGnssNmeaSentence(String nmea) {
+        TalkerID talkerID = TalkerID.parse(nmea);
+
+        switch (talkerID) {
+            case RD1: return new RD1Sentence(nmea);
+            case PSAT_GBS: return new GBSSentence(nmea);
+            case PJSI_BATT: return new BATTSentence(nmea);
+            default: break;
+        }
+
+        switch (SentenceID.parse(nmea)) {
+            case GGA:
+                return new GGASentence(talkerID, nmea);
+            case RMC:
+                return new RMCSentence(talkerID, nmea);
+            case GSA:
+                return new GSASentence(talkerID, nmea);
+            case GSV:
+                return new GSVSentence(talkerID, nmea);
+            case GLL:
+                return new GLLSentence(talkerID, nmea);
+            case GNS:
+                return new GNSSentence(talkerID, nmea);
+            case ZDA:
+                return new ZDASentence(talkerID, nmea);
+            case GST:
+                return new GSTSentence(talkerID, nmea);
+            default: break;
+        }
+
+        return null;
+    }
 }

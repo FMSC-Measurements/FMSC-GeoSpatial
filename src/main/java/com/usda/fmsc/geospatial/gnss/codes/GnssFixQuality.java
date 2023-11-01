@@ -5,8 +5,8 @@ public enum GnssFixQuality {
     GPS(1),
     DGPS(2),
     PPS(3),
-    RTK(4),
     RTK_Float(5),
+    RTK(4),
     Estimated(6),
     Manual(7),
     Simulation(8),
@@ -70,7 +70,6 @@ public enum GnssFixQuality {
             case "estimated":
             case "6":
                 return Estimated;
-            case "man":
             case "manual":
             case "7":
                 return Manual;

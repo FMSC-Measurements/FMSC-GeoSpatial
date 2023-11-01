@@ -11,8 +11,8 @@ public class YMRSentence extends VNNmeaSentence {
     private float gyroX, gyroY, gyroZ;
 
 
-    public YMRSentence(String nmea) {
-        super(MessageID.RRG, nmea);
+    public YMRSentence(MessageID msgID, String nmea) {
+        super(msgID, nmea);
     }
 
 

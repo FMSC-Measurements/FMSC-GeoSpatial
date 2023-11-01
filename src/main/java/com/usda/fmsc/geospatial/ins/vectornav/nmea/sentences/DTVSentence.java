@@ -11,7 +11,7 @@ public class DTVSentence extends VNNmeaSentence {
 
 
     public DTVSentence(MessageID msgID, String nmea) {
-        super(msgID, nmea);
+        super(MessageID.DTV, nmea);
     }
 
 

@@ -10,8 +10,8 @@ public class YIASentence extends VNNmeaSentence {
     private float gyroX, gyroY, gyroZ;
 
 
-    public YIASentence(String nmea) {
-        super(MessageID.RRG, nmea);
+    public YIASentence(MessageID msgID, String nmea) {
+        super(msgID, nmea);
     }
 
 

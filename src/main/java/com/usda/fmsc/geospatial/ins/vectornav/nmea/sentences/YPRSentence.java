@@ -8,8 +8,8 @@ public class YPRSentence extends VNNmeaSentence {
     private float yaw, pitch, roll;
 
 
-    public YPRSentence(String nmea) {
-        super(MessageID.RRG, nmea);
+    public YPRSentence(MessageID msgID, String nmea) {
+        super(msgID, nmea);
     }
 
 
