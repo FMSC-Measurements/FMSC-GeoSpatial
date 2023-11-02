@@ -1,7 +1,7 @@
 package com.usda.fmsc.geospatial.ins.vectornav.commands;
 
-import com.usda.fmsc.geospatial.ins.vectornav.nmea.codes.MessageID;
-import com.usda.fmsc.geospatial.ins.vectornav.nmea.codes.RegisterID;
+import com.usda.fmsc.geospatial.ins.vectornav.codes.MessageID;
+import com.usda.fmsc.geospatial.ins.vectornav.codes.RegisterID;
 
 public abstract class BaseCommand {
     public static final String DELIMITER = ",";
