@@ -6,18 +6,22 @@ public class NmeaTools {
     }
 
     public static boolean validateChecksum(String nmea) {
-        if (nmea.length() > 10 && nmea.startsWith("$") && nmea.contains("*")) {
-            String calcString = nmea.substring(1);
-            int ast = calcString.indexOf("*");
-            int nCheckSum = Integer.parseInt(calcString.substring(ast + 1, ast + 3), 16);
-            calcString = calcString.substring(0, ast);
+        try {
+            if (nmea.length() > 10 && nmea.startsWith("$") && nmea.contains("*")) {
+                String calcString = nmea.substring(1);
+                int ast = calcString.indexOf("*");
+                int nCheckSum = Integer.parseInt(calcString.substring(ast + 1, ast + 3), 16);
+                calcString = calcString.substring(0, ast);
 
-            int checksum = 0;
+                int checksum = 0;
 
-            for(int i = 0; i < calcString.length(); i++) {
-                checksum ^= (byte)calcString.charAt(i);
+                for(int i = 0; i < calcString.length(); i++) {
+                    checksum ^= (byte)calcString.charAt(i);
+                }
+                return checksum == nCheckSum;
             }
-            return checksum == nCheckSum;
+        } catch (Exception e) {
+            //
         }
 
         return false;

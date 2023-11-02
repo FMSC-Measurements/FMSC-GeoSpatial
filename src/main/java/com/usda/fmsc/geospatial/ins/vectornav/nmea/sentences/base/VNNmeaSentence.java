@@ -1,7 +1,8 @@
 package com.usda.fmsc.geospatial.ins.vectornav.nmea.sentences.base;
 
-import com.usda.fmsc.geospatial.ins.vectornav.nmea.codes.MessageID;
-import com.usda.fmsc.geospatial.ins.vectornav.nmea.codes.RegisterID;
+import com.usda.fmsc.geospatial.ins.vectornav.codes.MessageID;
+import com.usda.fmsc.geospatial.ins.vectornav.codes.RegisterID;
+import com.usda.fmsc.geospatial.ins.vectornav.nmea.VNNmeaTools;
 import com.usda.fmsc.geospatial.nmea.sentences.BaseNmeaSentence;
 
 public abstract class VNNmeaSentence extends BaseNmeaSentence {
@@ -27,7 +28,7 @@ public abstract class VNNmeaSentence extends BaseNmeaSentence {
 
     @Override
     protected boolean validateChecksum(String nmea) {
-        return super.validateChecksum(nmea) || nmea.length() > 10 && nmea.endsWith("XX");
+        return VNNmeaTools.validateChecksum(nmea);
     }
 
     

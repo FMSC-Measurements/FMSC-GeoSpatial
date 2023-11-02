@@ -1,4 +1,4 @@
-package com.usda.fmsc.geospatial.ins.vectornav.nmea.codes;
+package com.usda.fmsc.geospatial.ins.vectornav.codes;
 
 public enum ErrorCode {
     Unknown(0),

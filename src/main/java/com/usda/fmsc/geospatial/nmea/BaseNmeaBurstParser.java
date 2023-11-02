@@ -1,8 +1,6 @@
 package com.usda.fmsc.geospatial.nmea;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.function.Supplier;
 
 import com.usda.fmsc.geospatial.base.IIDParser;
@@ -23,7 +21,6 @@ public abstract class BaseNmeaBurstParser<
     private final Supplier<NmeaBurst> supplier;
     private final MsgIDParser msgIDParser;
 
-    private final List<Listener> listeners;
     private final EnumSet<MessageID> usedMsgIDs;
 
     private NmeaBurst burst;
@@ -38,7 +35,6 @@ public abstract class BaseNmeaBurstParser<
 
         this.supplier = supplier;
         this.msgIDParser = msgIDParser;
-        this.listeners = new ArrayList<>();
         this.usedMsgIDs = EnumSet.copyOf(msgIDs);
     }
 
@@ -47,7 +43,6 @@ public abstract class BaseNmeaBurstParser<
 
         this.supplier = supplier;
         this.msgIDParser = msgIDParser;
-        this.listeners = new ArrayList<>();
         this.usedMsgIDs = EnumSet.copyOf(msgIDs);
     }
 
@@ -84,7 +79,7 @@ public abstract class BaseNmeaBurstParser<
 
 
     private void postBurstReceived(NmeaBurst burst) {
-        for (Listener listener : listeners) {
+        for (Listener listener : getListeners()) {
             listener.onBurstReceived(burst);
         }
     }

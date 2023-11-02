@@ -1,15 +1,15 @@
-package com.usda.fmsc.geospatial.ins.vectornav.binary.commands;
+package com.usda.fmsc.geospatial.ins.vectornav.commands;
 
 import com.usda.fmsc.geospatial.ins.vectornav.binary.BinaryMsgConfig;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.codes.AsyncMode;
-import com.usda.fmsc.geospatial.ins.vectornav.nmea.codes.RegisterID;
+import com.usda.fmsc.geospatial.ins.vectornav.codes.RegisterID;
 
 public class ConfigBinMsgsCommand extends WriteRegisterCommand {
     public static final int DEFAULT_RATE_DIVISOR = 80; //800hz / 80 = 10hz
 
-    BinaryMsgConfig binMsgConfig;
-    private AsyncMode asyncMode;
-    private int rateDivisor;
+    private final BinaryMsgConfig binMsgConfig;
+    private final AsyncMode asyncMode;
+    private final int rateDivisor;
 
 
     public ConfigBinMsgsCommand(BinaryMsgConfig binMsgConfig) {

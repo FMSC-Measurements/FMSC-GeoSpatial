@@ -8,6 +8,7 @@ import com.usda.fmsc.geospatial.Utils;
 import com.usda.fmsc.geospatial.base.readers.BaseMsgByteDataReader;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.BinaryMsgConfig;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.messages.VNBinMessage;
+import com.usda.fmsc.geospatial.ins.vectornav.nmea.VNNmeaTools;
 
 public class VNDataReader extends BaseMsgByteDataReader {
     public static final byte ASII_START_CHAR = '$';
@@ -42,7 +43,8 @@ public class VNDataReader extends BaseMsgByteDataReader {
                 data[lastBinMsgConfig.getTotalPacketSize()] == BINARY_SYNC_BYTE) {
 
                 byte[] msgData = Arrays.copyOfRange(data, 0, lastBinMsgConfig.getTotalPacketSize());
-                listener.onBinMsgBytesReceived(lastBinMsgConfig, msgData);
+                if (listener != null)
+                    listener.onBinMsgBytesReceived(lastBinMsgConfig, msgData);
                 dequeue(lastBinMsgConfig.getTotalPacketSize());
                 return msgData;
             }
@@ -65,12 +67,13 @@ public class VNDataReader extends BaseMsgByteDataReader {
                                         msgData[0] = (byte)-6;
                                     }
 
-                                    if (i > 0) {
+                                    if (i > 0 && listener != null) {
                                         byte[] invalidData = Arrays.copyOfRange(data, 0, i);
                                         listener.onInvalidDataRecieved(invalidData);
                                     }
 
-                                    listener.onBinMsgBytesReceived(config, msgData);
+                                    if (listener != null)
+                                        listener.onBinMsgBytesReceived(config, msgData);
                                     dequeue(i + lastBinMsgConfig.getTotalPacketSize());
                                     return msgData;
                                 }
@@ -82,24 +85,12 @@ public class VNDataReader extends BaseMsgByteDataReader {
 
                     if (csIdx > i && csIdx + 3 < data.length) {
                         byte[] nmeaData = Arrays.copyOfRange(data, i, csIdx + 3);
-                        // if (data.length >= csIdx + 3 + nmeaData.length + 2) {
-                        //     System.out.println("*************");
-                        //     System.out.println(new String(nmeaData));
-                        //     dequeue(csIdx + 3);
-                        //     data = fill();
-                        //     System.out.println("------");
-                        //     System.out.println(new String(Arrays.copyOfRange(data, 0, nmeaData.length + 2)));
-                        //     System.out.println("*************");
-                        // }
 
-
-                        listener.onNmeaMsgBytesReceived(nmeaData);
-                        // System.out.println("*************");
-                        // System.out.println(new String(data));
-                        // System.out.println("*************");
-                        dequeue(csIdx + 5);
-
-                        return nmeaData;
+                        if (VNNmeaTools.validateChecksum(new String(nmeaData))) {
+                            listener.onNmeaMsgBytesReceived(nmeaData);
+                            dequeue(csIdx + 5); //3 for the Checksum and 2 for EOL
+                            return nmeaData;
+                        }
                     }
                 }
             }

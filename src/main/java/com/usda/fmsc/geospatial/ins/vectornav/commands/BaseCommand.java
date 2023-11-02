@@ -1,4 +1,4 @@
-package com.usda.fmsc.geospatial.ins.vectornav.binary.commands;
+package com.usda.fmsc.geospatial.ins.vectornav.commands;
 
 import com.usda.fmsc.geospatial.ins.vectornav.nmea.codes.MessageID;
 import com.usda.fmsc.geospatial.ins.vectornav.nmea.codes.RegisterID;

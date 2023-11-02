@@ -9,13 +9,13 @@ import com.usda.fmsc.geospatial.ins.vectornav.binary.codes.IMUGroup;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.codes.OutputGroups;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.codes.TimeGroup;
 
-//todo update for all groups
+//todo update for all 7 groups
 public class BinaryMsgConfig {
-    private CommonGroup commonGroup;
-    private TimeGroup timeGroup;
-    private IMUGroup imuGroup;
-    private AttitudeGroup attitudeGroup;
-    private OutputGroups outputGroups;
+    private final CommonGroup commonGroup;
+    private final TimeGroup timeGroup;
+    private final IMUGroup imuGroup;
+    private final AttitudeGroup attitudeGroup;
+    private final OutputGroups outputGroups;
 
     private int groupField1, groupField2, groupField3, fieldIdx = 1, totalPacketSize = 4, headerSize = 2;
 
@@ -66,14 +66,9 @@ public class BinaryMsgConfig {
 
     //todo update for all 7 groups
     public boolean isValid() {
-        if (outputGroups.getValue() > 0b1110000 || //max of the 7 groups
-            !(commonGroup.hasAny() || timeGroup.hasAny() || imuGroup.hasAny() || attitudeGroup.hasAny()) || //no groups selected
-            (commonGroup.hasAny() && timeGroup.hasAny() && imuGroup.hasAny() && attitudeGroup.hasAny())) //all groups selected
-            {
-            return false;
-        }
-
-        return true;
+        return outputGroups.getValue() <= 0b1110000 && //max of the 7 groups
+                (commonGroup.hasAny() || timeGroup.hasAny() || imuGroup.hasAny() || attitudeGroup.hasAny()) && //no groups selected
+                (!commonGroup.hasAny() || !timeGroup.hasAny() || !imuGroup.hasAny() || !attitudeGroup.hasAny());
     }
 
     
@@ -85,6 +80,7 @@ public class BinaryMsgConfig {
             default: throw new RuntimeException("No more than 3 groups can be selected");
         }
         
+        fieldIdx++;
         headerSize += 2;
         totalPacketSize += 2;
     }

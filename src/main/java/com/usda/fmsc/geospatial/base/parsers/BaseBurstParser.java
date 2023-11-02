@@ -33,7 +33,7 @@ public abstract class BaseBurstParser<
 
 
     @Override
-    protected boolean shouldParse() {
+    protected boolean shouldParse(PDT data) {
         return parseMode != ParseMode.Time || synced;
     }
 

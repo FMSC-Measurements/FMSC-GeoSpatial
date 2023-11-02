@@ -1,7 +1,7 @@
 package com.usda.fmsc.geospatial.ins.vectornav.nmea;
 
 import com.usda.fmsc.geospatial.base.IIDParser;
-import com.usda.fmsc.geospatial.ins.vectornav.nmea.codes.MessageID;
+import com.usda.fmsc.geospatial.ins.vectornav.codes.MessageID;
 
 public class VNMsgIDParser implements IIDParser<MessageID> {
     @Override

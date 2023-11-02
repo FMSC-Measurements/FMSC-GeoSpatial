@@ -1,4 +1,4 @@
-package com.usda.fmsc.geospatial.ins.vectornav.nmea.codes;
+package com.usda.fmsc.geospatial.ins.vectornav.codes;
 
 import com.usda.fmsc.geospatial.nmea.NmeaTools;
 

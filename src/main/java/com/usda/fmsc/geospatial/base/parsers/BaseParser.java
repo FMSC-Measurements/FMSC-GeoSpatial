@@ -11,7 +11,6 @@ public abstract class BaseParser<
     Message extends IMessage,
     Listener extends IMsgListener<PDT, Message>> {
 
-
     private final List<Listener> listeners;
 
     public BaseParser() {
@@ -21,7 +20,7 @@ public abstract class BaseParser<
     public final Message parse(PDT data) {
         Message message = null;
 
-        if (shouldParse()) {
+        if (shouldParse(data)) {
             onPreParse(data);
 
             message = parseMessage(data);
@@ -41,7 +40,7 @@ public abstract class BaseParser<
     protected abstract Message parseMessage(PDT data);
 
 
-    protected boolean shouldParse() {
+    protected boolean shouldParse(PDT data) {
         return true;
     }
 
@@ -54,13 +53,13 @@ public abstract class BaseParser<
     }
 
     protected void onMessageReceived(Message message) {
-          for (Listener listener : listeners) {
+        for (Listener listener : listeners) {
             listener.onMessageReceived(message);
         }
     }
 
     protected void onInvalidMessageReceived(PDT invalidMessageData) {
-          for (Listener listener : listeners) {
+        for (Listener listener : listeners) {
             listener.onInvalidMessageReceived(invalidMessageData);
         }
     }
@@ -76,4 +75,7 @@ public abstract class BaseParser<
         listeners.remove(listener);
     }
 
+    protected final List<Listener> getListeners() {
+        return listeners;
+    }
 }
