@@ -1,9 +1,10 @@
-package com.usda.fmsc.geospatial.ins.vectornav.commands;
+package com.usda.fmsc.geospatial.ins.vectornav.commands.system;
 
 import com.usda.fmsc.geospatial.ins.vectornav.codes.MessageID;
 import com.usda.fmsc.geospatial.ins.vectornav.codes.RegisterID;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.VNCommand;
 
-public class WriteRegisterCommand extends VNBaseCommand {
+public class WriteRegisterCommand extends VNCommand {
     private final String payload;
 
     protected WriteRegisterCommand(RegisterID registerID) {

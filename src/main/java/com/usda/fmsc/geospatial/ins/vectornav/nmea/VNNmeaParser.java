@@ -1,6 +1,6 @@
 package com.usda.fmsc.geospatial.ins.vectornav.nmea;
 
-import com.usda.fmsc.geospatial.ins.vectornav.commands.VNBaseCommand;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.VNCommand;
 import com.usda.fmsc.geospatial.ins.vectornav.nmea.sentences.base.VNNmeaSentence;
 import com.usda.fmsc.geospatial.nmea.BaseNmeaParser;
 
@@ -15,7 +15,7 @@ public class VNNmeaParser extends BaseNmeaParser<VNNmeaSentence, VNNmeaParserLis
     protected boolean shouldParse(String data) {
         if (data != null) {
             if (VNNmeaTools.isCommandMessage(data)) {
-                VNBaseCommand command = VNNmeaTools.parseCommand(data);
+                VNCommand command = VNNmeaTools.parseCommand(data);
                 if (command != null)
                     onCommandReceived(command);
                 else
@@ -31,9 +31,9 @@ public class VNNmeaParser extends BaseNmeaParser<VNNmeaSentence, VNNmeaParserLis
         return VNNmeaTools.parseSentence(data);
     }
 
-    protected void onCommandReceived(VNBaseCommand command) {
+    protected void onCommandReceived(VNCommand command) {
         for (VNNmeaParserListener listener : getListeners()) {
-            listener.onCommandReceived(command);
+            listener.onCommandResponseReceived(command);
         }
     }
 }

@@ -4,19 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.usda.fmsc.geospatial.ins.vectornav.binary.BinaryMsgConfig;
+import com.usda.fmsc.geospatial.ins.vectornav.binary.IVNBinMsgListener;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.VNBinMsgParser;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.messages.CommonBinMessage;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.messages.VNBinMessage;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.VNCommand;
 import com.usda.fmsc.geospatial.ins.vectornav.nmea.VNNmeaParser;
+import com.usda.fmsc.geospatial.ins.vectornav.nmea.VNNmeaParserListener;
 import com.usda.fmsc.geospatial.ins.vectornav.nmea.sentences.base.VNNmeaSentence;
 
 public class VNParser {
     private final List<IVNMsgListener> listeners;
 
-    private VNBinMsgParser binMsgParser;
-    private VNNmeaParser nmeaParser;
+    private final VNBinMsgParser binMsgParser;
+    private final VNNmeaParser nmeaParser;
+    private final BinaryMsgConfig config;
 
-    private BinaryMsgConfig config;
     private boolean isConsecutive = true;
     
 
@@ -29,40 +32,56 @@ public class VNParser {
         this.config = config;
 
         this.binMsgParser = new VNBinMsgParser(this.config);
+        this.binMsgParser.addListener(new IVNBinMsgListener<VNBinMessage>() {
+            @Override
+            public void onMessageReceived(VNBinMessage message) {
+                onBinMessageReceived(message);
+            }
+
+            @Override
+            public void onInvalidMessageReceived(byte[] invalidMessageData) {
+                VNParser.this.onInvalidMessageReceived(invalidMessageData);
+            }
+        });
+
         this.nmeaParser = new VNNmeaParser();
+        this.nmeaParser.addListener(new VNNmeaParserListener() {
+            @Override
+            public void onCommandResponseReceived(VNCommand command) {
+                VNParser.this.onCommandResponseReceived(command);
+            }
+
+            @Override
+            public void onMessageReceived(VNNmeaSentence message) {
+                onNmeaMessageReceived(message);
+            }
+
+            @Override
+            public void onInvalidMessageReceived(String invalidMessageData) {
+                VNParser.this.onInvalidMessageReceived(invalidMessageData.getBytes());
+            }
+        });
     }
 
     public VNBinMessage parseBinMessage(byte[] data) {
         VNBinMessage message = binMsgParser.parse(data);
         
         if (message != null) {
-            onBinMessageReceived(message);
-
             if (message instanceof CommonBinMessage) {
                 onInsData(new VNInsData((CommonBinMessage)message, isConsecutive));
             }
 
             isConsecutive = true;
-        } else {
-            onInvalidData(data);
         }
 
         return message;
     }
 
     public VNNmeaSentence parseNmeaMessage(byte[] data) {
-        VNNmeaSentence sentence = nmeaParser.parse(new String(data));
-
-        if (sentence != null) {
-            onNmeaMessageReceived(sentence);
-        } else {
-            onInvalidData(data);
-        }
-
-        return sentence;
+        return nmeaParser.parse(new String(data));
     }
 
-    public void onInvalidData(byte[] data) {
+    public void postInvalidData(byte[] data) {
         isConsecutive = false;
         onInvalidMessageReceived(data);
     }
@@ -83,6 +102,12 @@ public class VNParser {
     protected void onNmeaMessageReceived(VNNmeaSentence sentence) {
         for (IVNMsgListener listener : listeners) {
             listener.onNmeaMsgReceived(sentence);
+        }
+    }
+
+    protected void onCommandResponseReceived(VNCommand command) {
+        for (IVNMsgListener listener : listeners) {
+            listener.onCommandResponseReceived(command);
         }
     }
 

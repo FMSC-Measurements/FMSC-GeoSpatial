@@ -1,9 +1,10 @@
-package com.usda.fmsc.geospatial.ins.vectornav.commands;
+package com.usda.fmsc.geospatial.ins.vectornav.commands.system;
 
 import com.usda.fmsc.geospatial.ins.vectornav.codes.MessageID;
 import com.usda.fmsc.geospatial.ins.vectornav.codes.RegisterID;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.VNCommand;
 
-public class ReadRegisterCommand extends VNBaseCommand {
+public class ReadRegisterCommand extends VNCommand {
     private final String payload;
 
     public ReadRegisterCommand(RegisterID registerID, String payload) {

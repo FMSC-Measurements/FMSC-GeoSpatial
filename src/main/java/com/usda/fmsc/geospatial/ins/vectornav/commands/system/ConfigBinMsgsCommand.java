@@ -1,4 +1,4 @@
-package com.usda.fmsc.geospatial.ins.vectornav.commands;
+package com.usda.fmsc.geospatial.ins.vectornav.commands.system;
 
 import com.usda.fmsc.geospatial.ins.vectornav.binary.BinaryMsgConfig;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.codes.AsyncMode;

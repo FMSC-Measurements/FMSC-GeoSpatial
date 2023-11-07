@@ -2,15 +2,19 @@ package com.usda.fmsc.geospatial.ins.vectornav.nmea;
 
 import com.usda.fmsc.geospatial.ins.vectornav.codes.MessageID;
 import com.usda.fmsc.geospatial.ins.vectornav.codes.RegisterID;
-import com.usda.fmsc.geospatial.ins.vectornav.commands.AsyncOutputPauseCommand;
-import com.usda.fmsc.geospatial.ins.vectornav.commands.BinaryOutputPollCommand;
-import com.usda.fmsc.geospatial.ins.vectornav.commands.FirmwareUpdateCommand;
-import com.usda.fmsc.geospatial.ins.vectornav.commands.ReadRegisterCommand;
-import com.usda.fmsc.geospatial.ins.vectornav.commands.ResetCommand;
-import com.usda.fmsc.geospatial.ins.vectornav.commands.RestoreFactorySettingsCommand;
-import com.usda.fmsc.geospatial.ins.vectornav.commands.SerialCommandPromptCommand;
-import com.usda.fmsc.geospatial.ins.vectornav.commands.VNBaseCommand;
-import com.usda.fmsc.geospatial.ins.vectornav.commands.WriteRegisterCommand;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.VNCommand;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.attitude.KnownAccelDisturbCommand;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.attitude.KnownMagDisturbCommand;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.attitude.SetGyroBiasCommand;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.attitude.TareCommand;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.system.AsyncOutputPauseCommand;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.system.BinaryOutputPollCommand;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.system.FirmwareUpdateCommand;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.system.ReadRegisterCommand;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.system.ResetCommand;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.system.RestoreFactorySettingsCommand;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.system.SerialCommandPromptCommand;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.system.WriteRegisterCommand;
 import com.usda.fmsc.geospatial.ins.vectornav.nmea.sentences.ACCSentence;
 import com.usda.fmsc.geospatial.ins.vectornav.nmea.sentences.DTVSentence;
 import com.usda.fmsc.geospatial.ins.vectornav.nmea.sentences.ERRSentence;
@@ -124,6 +128,10 @@ public class VNNmeaTools {
             case CMD:
             case ASY:
             case BOM:
+            case TAR:
+            case KMD:
+            case KAD:
+            case SGB:
                 return true;
             case RRG:
             case WRG: return isAsyncMsg(RegisterID.parse(data));
@@ -134,7 +142,7 @@ public class VNNmeaTools {
         return false;
     }
 
-    public static VNBaseCommand parseCommand(String data) {
+    public static VNCommand parseCommand(String data) {
         switch (MessageID.parse(data)) {
             case RFS: return new RestoreFactorySettingsCommand();
             case RST: return new ResetCommand();
@@ -144,12 +152,16 @@ public class VNNmeaTools {
             case BOM: return BinaryOutputPollCommand.parse(data);
             case RRG: return ReadRegisterCommand.parse(data);
             case WRG: return WriteRegisterCommand.parse(data);
+            case TAR: return new TareCommand();
+            case KMD: return KnownMagDisturbCommand.parse(data);
+            case KAD: return KnownAccelDisturbCommand.parse(data);
+            case SGB: return new SetGyroBiasCommand();
             default:
                 return null;
         }
     }
 
     public static boolean validateChecksum(String nmea) {
-        return (nmea.length() > 10 && nmea.endsWith("XX")) || NmeaTools.validateChecksum(nmea);
+        return (nmea.length() > 7 && nmea.endsWith("XX")) || NmeaTools.validateChecksum(nmea);
     }
 }

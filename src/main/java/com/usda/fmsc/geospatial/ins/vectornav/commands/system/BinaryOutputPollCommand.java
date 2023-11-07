@@ -1,9 +1,10 @@
-package com.usda.fmsc.geospatial.ins.vectornav.commands;
+package com.usda.fmsc.geospatial.ins.vectornav.commands.system;
 
 import com.usda.fmsc.geospatial.ins.vectornav.codes.MessageID;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.VNCommand;
 import com.usda.fmsc.geospatial.nmea.NmeaTools;
 
-public class BinaryOutputPollCommand extends VNBaseCommand {
+public class BinaryOutputPollCommand extends VNCommand {
     private final int outputRegister; 
 
     public BinaryOutputPollCommand(int outputRegister) {

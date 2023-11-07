@@ -80,18 +80,14 @@ public class Utils {
 
         return -1;
     }
-
     
     public static boolean validateChecksum16(byte[] data, int startIdx, int length) {
         if (startIdx + length <= data.length) {
             int crc = 0;                // initial value
             int polynomial = 0x1021;    // 0001 0000 0010 0001  (0, 5, 12)
 
-            int c = 0;
-
             for (int i = startIdx; i < startIdx + length; i++) {
                 byte b = data[i];
-                c = b;
                 for (int j = 0; j < 8; j++) {
                     boolean bit = ((b   >> (7-j) & 1) == 1);
                     boolean c15 = ((crc >> 15    & 1) == 1);

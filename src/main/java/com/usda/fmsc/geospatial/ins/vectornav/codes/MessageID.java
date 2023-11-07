@@ -2,16 +2,18 @@ package com.usda.fmsc.geospatial.ins.vectornav.codes;
 
 public enum MessageID {
     UNKNOWN(0),
+
+    //SYSTEM
     RRG(1000), //Read Register
-    WRG(1002), //Write Register
-    WNV(1003), //Write Settings
-    ERR(1004), //Error
-    RFS(1005), //Restore Factory Settings
-    RST(1006), //Reset
-    FWU(1007), //Firmare Update
-    CMD(1008), //Serial Command
-    ASY(1009), //Asynchronous Output Pause Command
-    BOM(1010), //Binary Output Poll
+    WRG(1001), //Write Register
+    WNV(1002), //Write Settings
+    ERR(1003), //Error
+    RFS(1004), //Restore Factory Settings
+    RST(1005), //Reset
+    FWU(1006), //Firmare Update
+    CMD(1007), //Serial Command
+    ASY(1008), //Asynchronous Output Pause Command
+    BOM(1009), //Binary Output Poll
 
     //ASYNC Headers
     IMU(54), //IMU Measurements
@@ -27,7 +29,15 @@ public enum MessageID {
     MAR(20), //Magnetic, Acceleration and Angular Rates
     YBA(239), //Yaw, Pitch, Roll, True Body Acceleration, and Angular Rates
     YIA(240), //Magnetic, True Acceleration, and Angular Rates
-    HVE(115); //Heave
+    HVE(115), //Heave
+
+    //ATTITUDE
+    TAR(2000), //Tare
+    KMD(2001), //Known Magnetic Disturbance
+    KAD(2002), //Known Acceleration Disturbance
+    SGB(2003), //Set Gyro Bias
+
+    XXX(9999);
 
     private final int value;
 
@@ -55,6 +65,7 @@ public enum MessageID {
             switch (msg.substring(3, 6).toUpperCase()) {
                 case "RRG": return RRG;
                 case "WRG": return WRG;
+                case "WNV": return WNV;
                 case "ERR": return ERR;
                 case "RFS": return RFS;
                 case "RST": return RST;
@@ -77,6 +88,11 @@ public enum MessageID {
                 case "YBA": return YBA;
                 case "YIA": return YIA;
                 case "HVE": return HVE;
+
+                case "TAR": return TAR;
+                case "KMD": return KMD;
+                case "KAD": return KAD;
+                case "SGB": return SGB;
             }
         }
 
@@ -111,6 +127,12 @@ public enum MessageID {
             case YBA: return "Yaw, Pitch, Roll, True Body Acceleration, and Angular Rates";
             case YIA: return "Magnetic, True Acceleration, and Angular Rates";
             case HVE: return "Heave";
+
+            //ATTITUDE
+            case TAR: return "Tare";
+            case KMD: return "Known Magnetic Disturbance";
+            case KAD: return "Known Acceleration Disturbance";
+            case SGB: return "Set Gyro Bias";
             
             case UNKNOWN:
             default: return "Unknown";
@@ -144,6 +166,12 @@ public enum MessageID {
             case YBA: return "YBA";
             case YIA: return "YIA";
             case HVE: return "HVE";
+
+            //ATTITUDE
+            case TAR: return "TAR";
+            case KMD: return "KMD";
+            case KAD: return "KAD";
+            case SGB: return "SGB";
             
             case UNKNOWN:
             default: return "Unknown";

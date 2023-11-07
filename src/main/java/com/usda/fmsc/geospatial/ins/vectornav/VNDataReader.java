@@ -83,11 +83,25 @@ public class VNDataReader extends BaseMsgByteDataReader {
                 } else if (data[i] == ASII_START_CHAR) {
                     int csIdx = Utils.getIndexOf(data, ASII_START_CHKSUM, i);
 
-                    if (csIdx > i && csIdx + 3 < data.length) {
+                    if (csIdx > -1 && csIdx + 3 < data.length) {
+                        int bsIdx = Utils.getIndexOf(data, BINARY_SYNC_BYTE, i);
+
+                        if (bsIdx > -1 && bsIdx < csIdx)
+                            continue;
+
                         byte[] nmeaData = Arrays.copyOfRange(data, i, csIdx + 3);
 
-                        if (VNNmeaTools.validateChecksum(new String(nmeaData))) {
-                            listener.onNmeaMsgBytesReceived(nmeaData);
+                        String nd = new String(nmeaData);
+
+                        if (VNNmeaTools.validateChecksum(nd)) {
+
+                            if (i > 0 && listener != null) {
+                                byte[] invalidData = Arrays.copyOfRange(data, 0, i);
+                                listener.onInvalidDataRecieved(invalidData);
+                            }
+
+                            if (listener != null)
+                                listener.onNmeaMsgBytesReceived(nmeaData);
                             dequeue(csIdx + 5); //3 for the Checksum and 2 for EOL
                             return nmeaData;
                         }

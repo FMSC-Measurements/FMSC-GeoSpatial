@@ -1,15 +1,22 @@
 package com.usda.fmsc.geospatial.ins;
 
-public class InertialVector implements IVectorData, IVelocityData, IRotationData {
-    private double timespan;
-    private double velocityX, velocityY, velocityZ;
-    private double yaw, pitch, roll;
+public class InertialVector implements IVectorData, IVelocityData, IOrientationData, IRotationData {
+    private final double timespan;
+    private final double rotationX, rotationY, rotationZ;
+    private final double velocityX, velocityY, velocityZ;
+    private final double yaw, pitch, roll;
 
-    public InertialVector(double timespan, double vX, double vY, double vZ, double yaw, double pitch, double roll) {
+    public InertialVector(double timespan,
+                          double rotX, double rotY, double rotZ,
+                          double velX, double velY, double velZ,
+                          double yaw, double pitch, double roll) {
         this.timespan = timespan;
-        this.velocityX = vX;
-        this.velocityY = vY;
-        this.velocityZ = vZ;
+        this.rotationX = rotX;
+        this.rotationY = rotY;
+        this.rotationZ = rotZ;
+        this.velocityX = velX;
+        this.velocityY = velY;
+        this.velocityZ = velZ;
         this.yaw = yaw;
         this.pitch = pitch;
         this.roll = roll;
@@ -17,23 +24,38 @@ public class InertialVector implements IVectorData, IVelocityData, IRotationData
 
     @Override
     public double getDistanceX() {
-        return getVelocityX() / getTimespan();
+        return getVelocityX() / getTimeSpan();
     }
 
     @Override
     public double getDistanceY() {
-        return getVelocityY() / getTimespan();
+        return getVelocityY() / getTimeSpan();
     }
 
     @Override
     public double getDistanceZ() {
-        return getVelocityZ() / getTimespan();
+        return getVelocityZ() / getTimeSpan();
     }
 
 
     @Override
-    public double getTimespan() {
+    public double getTimeSpan() {
         return timespan;
+    }
+
+    @Override
+    public double getRotationX() {
+        return rotationX;
+    }
+
+    @Override
+    public double getRotationY() {
+        return rotationY;
+    }
+
+    @Override
+    public double getRotationZ() {
+        return rotationZ;
     }
 
     @Override

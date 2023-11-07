@@ -31,21 +31,21 @@ public class VNInsData extends CommonBinMessage implements IINSData {
 
     @Override
     public double getDistanceX() {
-        return getVelocityX() / getTimespan();
+        return getVelocityX() / getTimeSpan();
     }
 
     @Override
     public double getDistanceY() {
-        return getVelocityY() / getTimespan();
+        return getVelocityY() / getTimeSpan();
     }
 
     @Override
     public double getDistanceZ() {
-        return getVelocityZ() / getTimespan();
+        return getVelocityZ() / getTimeSpan();
     }
 
     @Override
-    public double getTimespan() {
+    public double getTimeSpan() {
         return getDeltaTime();
     }
 
@@ -77,7 +77,22 @@ public class VNInsData extends CommonBinMessage implements IINSData {
     @Override
     public double getRoll() {
         return getYawPitchRoll().getRoll();
-    } 
+    }
+
+    @Override
+    public double getRotationX() {
+        return getDeltaTheta().getX();
+    }
+
+    @Override
+    public double getRotationY() {
+        return getDeltaTheta().getY();
+    }
+
+    @Override
+    public double getRotationZ() {
+        return getDeltaTheta().getZ();
+    }
 
     @Override
     public long getTimeSinceStart() {
@@ -93,6 +108,4 @@ public class VNInsData extends CommonBinMessage implements IINSData {
     public String toString() {
         return String.format("[INS]%s%s", super.toString(), isConsecutive ? "" : " [Not Consecutive]");
     }
-
-    
 }

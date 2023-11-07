@@ -53,9 +53,7 @@ public abstract class BaseBurstParser<
         //
     }
 
-    public boolean checkForDelimiter(PDT data) {
-        return false;
-    }
+    public abstract boolean checkForDelimiter(PDT data);
 
     protected PDT getBurstDelimiter() {
         return burstDelimiter;

@@ -14,6 +14,13 @@ public enum PauseResume {
         return this.value;
     }
 
+    public static PauseResume parse(int value) {
+        if (value == 0) return PauseResume.Pause;
+        else if (value == 1) return PauseResume.Resume;
+        
+        throw new RuntimeException("Invalid Pause/Resume value");
+    }
+
     public static PauseResume parse(String value) {
         if (value.length() == 1) {
             if (value.equals("0")) return PauseResume.Pause;

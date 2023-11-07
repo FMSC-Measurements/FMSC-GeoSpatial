@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import com.usda.fmsc.geospatial.base.IIDParser;
 import com.usda.fmsc.geospatial.nmea.sentences.NmeaSentence;
 
-public class NmeaBurstParser<
+public abstract class NmeaBurstParser<
     TalkerID extends Enum<TalkerID>,
     SentenceID extends Enum<SentenceID>,
     NmeaBurst extends INmeaBurst<NmeaSentence>,

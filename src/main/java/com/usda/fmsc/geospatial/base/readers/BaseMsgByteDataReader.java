@@ -22,27 +22,37 @@ public abstract class BaseMsgByteDataReader {
 
     public abstract byte[] readBytes() throws IOException;
 
+    public boolean available() throws IOException  {
+        return stream.available() > 0;
+    }
+
     protected byte[] fill() throws IOException {
         if (stream == null) {
             throw new RuntimeException("Stream not set");
         }
 
-        if (data == null) {
-            data = new byte[stream.available()];
-            stream.read(data);
-        } else {
-            byte[] buffer = new byte[stream.available()];
-            stream.read(buffer);
+        int available = stream.available();
 
-            byte[] dataNew = new byte[data.length + buffer.length];
+        if (available > 0) {
+            if (data == null) {
+                data = new byte[available];
+                stream.read(data);
+            } else {
+                byte[] buffer = new byte[available];
+                stream.read(buffer);
 
-            System.arraycopy(data, 0, dataNew, 0, data.length);
-            System.arraycopy(buffer, 0, dataNew, data.length, buffer.length);
+                byte[] dataNew = new byte[data.length + buffer.length];
 
-            data = dataNew;
+                System.arraycopy(data, 0, dataNew, 0, data.length);
+                System.arraycopy(buffer, 0, dataNew, data.length, buffer.length);
+
+                data = dataNew;
+            }
+
+            return data;
         }
-
-        return data;
+        
+        return new byte[0];
     }
 
     protected boolean dequeue(int length) {

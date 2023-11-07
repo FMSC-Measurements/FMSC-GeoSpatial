@@ -1,10 +1,11 @@
-package com.usda.fmsc.geospatial.ins.vectornav.commands;
+package com.usda.fmsc.geospatial.ins.vectornav.commands.system;
 
 import com.usda.fmsc.geospatial.ins.vectornav.codes.MessageID;
 import com.usda.fmsc.geospatial.ins.vectornav.codes.PauseResume;
+import com.usda.fmsc.geospatial.ins.vectornav.commands.VNCommand;
 import com.usda.fmsc.geospatial.nmea.NmeaTools;
 
-public class AsyncOutputPauseCommand extends VNBaseCommand {
+public class AsyncOutputPauseCommand extends VNCommand {
     private final PauseResume pauseResume; 
 
     public AsyncOutputPauseCommand(PauseResume pauseResume) {
@@ -14,7 +15,7 @@ public class AsyncOutputPauseCommand extends VNBaseCommand {
 
     @Override
     protected String getPayload() {
-        return pauseResume == PauseResume.Resume ? "1" : "0";
+        return Integer.toString(pauseResume.getValue());
     }
 
     @Override

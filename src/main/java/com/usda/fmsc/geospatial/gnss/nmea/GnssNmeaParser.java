@@ -28,5 +28,10 @@ public class GnssNmeaParser extends NmeaBurstParser<
     public GnssNmeaParser(EnumSet<TalkerID> talkerIDs, long longestPause) {
         super(GnssNmeaBurst::new, new GnssTalkerIDParser(), talkerIDs, longestPause);
     }
+
+    @Override
+    public boolean checkForDelimiter(String data) {
+        return data.contains(getBurstDelimiter());
+    }
 }
 
