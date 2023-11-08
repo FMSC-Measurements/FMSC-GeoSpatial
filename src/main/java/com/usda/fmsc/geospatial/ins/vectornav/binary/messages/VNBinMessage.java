@@ -27,6 +27,11 @@ public abstract class VNBinMessage implements IBinMessage {
         this(null, message);
     }
 
+    protected VNBinMessage(BinaryMsgConfig config) {
+        this._config = config;
+        this._isValid = true;
+    }
+
     public VNBinMessage(BinaryMsgConfig config, byte[] message) {
         ByteBuffer msgBuf = ByteBuffer.wrap(message).order(ByteOrder.LITTLE_ENDIAN);
         this._isValid = (message.length >= MIN_PACKET_SIZE) && validateChecksum(message) &&
@@ -73,33 +78,12 @@ public abstract class VNBinMessage implements IBinMessage {
         return getUsedGroups().getValue() == message.get(GROUPS_IDX);
     }
 
-
-
     protected boolean validate(ByteBuffer message) {
         return checkUsedGroupsMatch(message);
     }
 
-
+    
     public static boolean validateChecksum(byte[] message) {
         return Utils.validateChecksum16(message, 1, message.length - 1);
-
-        // if (message.length >= MIN_PACKET_SIZE) {
-        //     int crc = 0;                // initial value
-        //     int polynomial = 0x1021;    // 0001 0000 0010 0001  (0, 5, 12)
-
-        //     byte[] bytes = Arrays.copyOfRange(message, 1, message.length);
-
-        //     for (byte b : bytes) {
-        //         for (int i = 0; i < 8; i++) {
-        //             boolean bit = ((b   >> (7-i) & 1) == 1);
-        //             boolean c15 = ((crc >> 15    & 1) == 1);
-        //             crc <<= 1;
-        //             if (c15 ^ bit) crc ^= polynomial;
-        //         }
-        //     }
-
-        //      return (crc & 0xffff) == 0;
-        // }
-        // return false;
     }
 }

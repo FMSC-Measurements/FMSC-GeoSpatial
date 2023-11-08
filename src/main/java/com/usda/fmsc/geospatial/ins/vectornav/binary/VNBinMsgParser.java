@@ -1,9 +1,11 @@
 package com.usda.fmsc.geospatial.ins.vectornav.binary;
 
 import com.usda.fmsc.geospatial.base.parsers.BaseBinMsgParser;
+import com.usda.fmsc.geospatial.ins.vectornav.VNInsData;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.codes.OutputGroups;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.messages.AttitudeBinMessage;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.messages.CommonBinMessage;
+import com.usda.fmsc.geospatial.ins.vectornav.binary.messages.CustomBinMessage;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.messages.IMUBinMessage;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.messages.TimeBinMessage;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.messages.VNBinMessage;
@@ -25,7 +27,7 @@ public class VNBinMsgParser extends BaseBinMsgParser<VNBinMessage, IVNBinMsgList
     }
 
     @Override
-    protected VNBinMessage parseMessage(byte[] data) {
+    protected VNBinMessage parseMessage(byte[] data, Object args) {
         VNBinMessage message = null;
 
         if (data.length >= VNBinMessage.MIN_PACKET_SIZE && data[0] == VNBinMessage.SYNC_BYTE) {
@@ -45,6 +47,12 @@ public class VNBinMsgParser extends BaseBinMsgParser<VNBinMessage, IVNBinMsgList
                     case OutputGroups.Attitude: {
                         return new AttitudeBinMessage(config, data);
                     }
+                }
+            } else {
+                if (config.containsIINSDataFields()) {
+                    return new VNInsData(config, data, (args instanceof Boolean) ? (Boolean)args : false);
+                } else {
+                    return new CustomBinMessage(config, data);
                 }
             }
         }

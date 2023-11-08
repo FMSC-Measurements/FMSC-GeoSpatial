@@ -7,6 +7,7 @@ import com.usda.fmsc.geospatial.ins.vectornav.binary.BinaryMsgConfig;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.IVNBinMsgListener;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.VNBinMsgParser;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.messages.CommonBinMessage;
+import com.usda.fmsc.geospatial.ins.vectornav.binary.messages.CustomBinMessage;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.messages.VNBinMessage;
 import com.usda.fmsc.geospatial.ins.vectornav.commands.VNCommand;
 import com.usda.fmsc.geospatial.ins.vectornav.nmea.VNNmeaParser;
@@ -20,7 +21,7 @@ public class VNParser {
     private final VNNmeaParser nmeaParser;
     private final BinaryMsgConfig config;
 
-    private boolean isConsecutive = true;
+    private boolean isConsecutive = false;
     
 
     public VNParser() {
@@ -64,11 +65,11 @@ public class VNParser {
     }
 
     public VNBinMessage parseBinMessage(byte[] data) {
-        VNBinMessage message = binMsgParser.parse(data);
+        VNBinMessage message = binMsgParser.parse(data, isConsecutive);
         
         if (message != null) {
-            if (message instanceof CommonBinMessage) {
-                onInsData(new VNInsData((CommonBinMessage)message, isConsecutive));
+            if (message instanceof VNInsData) {
+                onInsData((VNInsData)message);
             }
 
             isConsecutive = true;

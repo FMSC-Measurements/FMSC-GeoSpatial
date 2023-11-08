@@ -8,8 +8,6 @@ import com.usda.fmsc.geospatial.ins.vectornav.binary.BinaryMsgConfig;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.codes.IMUGroup;
 
 public class IMUBinMessage extends VNBinMessage {
-    private IMUGroup imuGroup;
-    
     private int imuStatus;
     private Data3DF uncompMag;
     private Data3DF uncompAccel;
@@ -30,7 +28,6 @@ public class IMUBinMessage extends VNBinMessage {
 
     public IMUBinMessage(BinaryMsgConfig config, byte[] message) {
         super(config, message);
-        this.imuGroup = getBinaryMsgConfig().getImuGroup();
     }
 
 
@@ -39,6 +36,8 @@ public class IMUBinMessage extends VNBinMessage {
         message.order(ByteOrder.LITTLE_ENDIAN);
         message.position(getBinaryMsgConfig().getHeaderSize());
         
+        IMUGroup imuGroup = getBinaryMsgConfig().getImuGroup();
+
         if (imuGroup.hasImuStatus()) {
             imuStatus = message.getShort() & 0xFFFF;
         }
@@ -155,9 +154,5 @@ public class IMUBinMessage extends VNBinMessage {
 
     public Data3DF getAngularRate() {
         return angularRate;
-    }
-
-    public IMUGroup getImuGroup() {
-        return imuGroup;
     }
 }

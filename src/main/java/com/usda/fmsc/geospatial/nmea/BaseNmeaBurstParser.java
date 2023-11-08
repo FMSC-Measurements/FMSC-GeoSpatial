@@ -47,7 +47,7 @@ public abstract class BaseNmeaBurstParser<
     }
 
     @Override
-    protected NmeaSentence parseMessage(String data) {
+    protected NmeaSentence parseMessage(String data, Object args) {
         NmeaSentence sentence = null;
         String rawNmeaSentence = NmeaTools.sanitizeNmea(data);
 

@@ -16,14 +16,18 @@ public abstract class BaseParser<
     public BaseParser() {
         listeners = new ArrayList<>();
     }
-    
+
     public final Message parse(PDT data) {
+        return parse(data, null);
+    }
+    
+    public final Message parse(PDT data, Object args) {
         Message message = null;
 
-        if (shouldParse(data)) {
-            onPreParse(data);
+        if (shouldParse(data, args)) {
+            onPreParse(data, args);
 
-            message = parseMessage(data);
+            message = parseMessage(data, args);
 
             if (message != null) {
                 onMessageReceived(message);
@@ -37,14 +41,14 @@ public abstract class BaseParser<
         return message;
     }
     
-    protected abstract Message parseMessage(PDT data);
+    protected abstract Message parseMessage(PDT data, Object args);
 
 
-    protected boolean shouldParse(PDT data) {
+    protected boolean shouldParse(PDT data, Object args) {
         return true;
     }
 
-    protected void onPreParse(PDT data) {
+    protected void onPreParse(PDT data, Object args) {
 
     }
 

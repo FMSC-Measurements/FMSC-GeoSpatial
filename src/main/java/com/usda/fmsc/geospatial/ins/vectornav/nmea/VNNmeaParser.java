@@ -12,7 +12,7 @@ public class VNNmeaParser extends BaseNmeaParser<VNNmeaSentence, VNNmeaParserLis
 
 
     @Override
-    protected boolean shouldParse(String data) {
+    protected boolean shouldParse(String data, Object args) {
         if (data != null) {
             if (VNNmeaTools.isCommandMessage(data)) {
                 VNCommand command = VNNmeaTools.parseCommand(data);
@@ -27,7 +27,7 @@ public class VNNmeaParser extends BaseNmeaParser<VNNmeaSentence, VNNmeaParserLis
     }
 
     @Override
-    protected VNNmeaSentence parseMessage(String data) {
+    protected VNNmeaSentence parseMessage(String data, Object args) {
         return VNNmeaTools.parseSentence(data);
     }
 

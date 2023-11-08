@@ -13,8 +13,6 @@ import com.usda.fmsc.geospatial.ins.vectornav.binary.BinaryMsgConfig;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.codes.CommonGroup;
 
 public class CommonBinMessage extends VNBinMessage {
-    private CommonGroup commonGroup;
-
     private long timeStatup;            // uint64
     private long timeSyncIn;            // uint64
     private long timeGps;               // uint64
@@ -48,7 +46,6 @@ public class CommonBinMessage extends VNBinMessage {
     public CommonBinMessage(CommonBinMessage message) {
         super();
 
-        this.commonGroup = message.commonGroup;
         this.timeStatup = message.timeStatup;
         this.timeSyncIn = message.timeSyncIn;
         this.timeGps = message.timeGps;
@@ -77,7 +74,7 @@ public class CommonBinMessage extends VNBinMessage {
         message.order(ByteOrder.LITTLE_ENDIAN);
         message.position(getBinaryMsgConfig().getHeaderSize());
 
-        this.commonGroup = getBinaryMsgConfig().getCommonGroup();
+        CommonGroup commonGroup = getBinaryMsgConfig().getCommonGroup();
         
         if (commonGroup.hasTimestartup()) {
             timeStatup = message.getLong();
@@ -129,7 +126,7 @@ public class CommonBinMessage extends VNBinMessage {
                 message.getFloat());
         }
 
-        if (commonGroup.hasAccel()) {
+        if (commonGroup.hasAcceleration()) {
             acceleration = new Data3DF(
                 message.getFloat(),
                 message.getFloat(),
@@ -183,11 +180,6 @@ public class CommonBinMessage extends VNBinMessage {
         if (commonGroup.hasTimeGpsPps()) {
             timeGpsPps = message.getLong();
         }
-    }
-
-
-    public CommonGroup getCommonGroup() {
-        return commonGroup;
     }
 
 
@@ -278,12 +270,12 @@ public class CommonBinMessage extends VNBinMessage {
 
     @Override
     public String toString() {
-        Data3DF dt = getDeltaTheta();
+        Data3DF dv = getDeltaVelocity();
         Data3DF acc = getAcceleration();
         YawPitchRoll ypr = getYawPitchRoll();
 
-        return String.format("[CMN] Delta: T%f, (%f : %f : %f) | Accel: (%f : %f : %f) | YPR: (%f : %f : %f)",
-                getDeltaTime(), dt.getX(), dt.getY(), dt.getZ(),
+        return String.format("[CMN] Delta: T%f, Vel(%f : %f : %f) | Accel: (%f : %f : %f) | YPR: (%f : %f : %f)",
+                getDeltaTime(), dv.getX(), dv.getY(), dv.getZ(),
                 acc.getX(), acc.getY(), acc.getZ(),
                 ypr.getYaw(), ypr.getPitch(), ypr.getRoll());
     }

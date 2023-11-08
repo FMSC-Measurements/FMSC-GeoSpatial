@@ -13,8 +13,6 @@ import com.usda.fmsc.geospatial.ins.vectornav.binary.codes.AttitudeGroup;
 public class AttitudeBinMessage extends VNBinMessage {
     public static final int QUATERNION_SIZE = 4;
     public static final int DIRECT_COSINE_MATRIX_SIZE = 9;
-
-    private AttitudeGroup attitudeGroup;
     
     private short vpeStatus;
     private YawPitchRoll yawPitchRoll;
@@ -36,7 +34,6 @@ public class AttitudeBinMessage extends VNBinMessage {
 
     public AttitudeBinMessage(BinaryMsgConfig config, byte[] message) {
         super(config, message);
-        this.attitudeGroup = getBinaryMsgConfig().getAttitudeGroup();
     }
 
 
@@ -45,6 +42,8 @@ public class AttitudeBinMessage extends VNBinMessage {
         message.order(ByteOrder.LITTLE_ENDIAN);
         message.position(getBinaryMsgConfig().getHeaderSize());
         
+        AttitudeGroup attitudeGroup = getBinaryMsgConfig().getAttitudeGroup();
+
         if (attitudeGroup.hasVpeStatus()) {
             vpeStatus = message.getShort();
         }

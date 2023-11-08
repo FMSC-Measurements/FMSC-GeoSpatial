@@ -1,10 +1,12 @@
 package com.usda.fmsc.geospatial.ins.vectornav;
 
+import com.usda.fmsc.geospatial.ins.Data3DF;
 import com.usda.fmsc.geospatial.ins.IINSData;
+import com.usda.fmsc.geospatial.ins.YawPitchRoll;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.BinaryMsgConfig;
-import com.usda.fmsc.geospatial.ins.vectornav.binary.messages.CommonBinMessage;
+import com.usda.fmsc.geospatial.ins.vectornav.binary.messages.CustomBinMessage;
 
-public class VNInsData extends CommonBinMessage implements IINSData {
+public class VNInsData extends CustomBinMessage implements IINSData {
     final boolean isConsecutive;
 
     public VNInsData(byte[] message) {
@@ -24,30 +26,59 @@ public class VNInsData extends CommonBinMessage implements IINSData {
         this.isConsecutive = isConsecutive;
     }
 
-    public VNInsData(CommonBinMessage message, boolean isConsecutive) {
-        super(message);
-        this.isConsecutive = isConsecutive;
-    }
 
     @Override
     public double getDistanceX() {
-        return getVelocityX() / getTimeSpan();
+        return getLinearAccelBody().getX() * getTimeSpan();
     }
 
     @Override
     public double getDistanceY() {
-        return getVelocityY() / getTimeSpan();
+        return getLinearAccelBody().getY() * getTimeSpan();
     }
 
     @Override
     public double getDistanceZ() {
-        return getVelocityZ() / getTimeSpan();
+        return getLinearAccelBody().getZ() * getTimeSpan();
     }
 
     @Override
     public double getTimeSpan() {
         return getDeltaTime();
     }
+
+
+    @Override
+    public double getLinearAccelX() {
+        return getLinearAccelBody().getX();
+    }
+
+    @Override
+    public double getLinearAccelY() {
+        return getLinearAccelBody().getY();
+    }
+
+    @Override
+    public double getLinearAccelZ() {
+        return getLinearAccelBody().getZ();
+    }
+
+
+    @Override
+    public double getAccelX() {
+        return getAcceleration().getX();
+    }
+
+    @Override
+    public double getAccelY() {
+        return getAcceleration().getY();
+    }
+
+    @Override
+    public double getAccelZ() {
+        return getAcceleration().getZ();
+    }
+
 
     @Override
     public double getVelocityX() {
@@ -64,6 +95,7 @@ public class VNInsData extends CommonBinMessage implements IINSData {
         return getDeltaVelocity().getZ();
     }
 
+
     @Override
     public double getYaw() {
         return getYawPitchRoll().getYaw();
@@ -78,6 +110,7 @@ public class VNInsData extends CommonBinMessage implements IINSData {
     public double getRoll() {
         return getYawPitchRoll().getRoll();
     }
+
 
     @Override
     public double getRotationX() {
@@ -94,6 +127,7 @@ public class VNInsData extends CommonBinMessage implements IINSData {
         return getDeltaTheta().getZ();
     }
 
+
     @Override
     public long getTimeSinceStart() {
         return getTimeStatup();
@@ -106,6 +140,17 @@ public class VNInsData extends CommonBinMessage implements IINSData {
 
     @Override
     public String toString() {
-        return String.format("[INS]%s%s", super.toString(), isConsecutive ? "" : " [Not Consecutive]");
+        Data3DF ld = getLinearAccelBody();
+        Data3DF dv = getDeltaVelocity();
+        Data3DF dt = getDeltaTheta();
+        YawPitchRoll ypr = getYawPitchRoll();
+
+        return String.format("[INS] T%f | LD: (%f : %f : %f) | DV: (%f : %f : %f) |  DT: (%f : %f : %f) | YPR: (%f : %f : %f)%s",
+                getDeltaTime(),
+                getDistanceX(), getDistanceY(), getDistanceZ(),
+                dv.getX(), dv.getY(), dv.getZ(),
+                dt.getX(), dt.getY(), dt.getZ(),
+                ypr.getYaw(), ypr.getPitch(), ypr.getRoll(),
+                isConsecutive ? "" : " [Not Consecutive]");
     }
 }

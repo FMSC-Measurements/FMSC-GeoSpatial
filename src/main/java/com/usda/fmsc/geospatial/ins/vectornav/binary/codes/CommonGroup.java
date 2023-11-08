@@ -65,7 +65,7 @@ public class CommonGroup extends BaseGroup {
         return (value & Velocity) == Velocity;
     }
 
-    public boolean hasAccel() {
+    public boolean hasAcceleration() {
         return (value & Accel) == Accel;
     }
 

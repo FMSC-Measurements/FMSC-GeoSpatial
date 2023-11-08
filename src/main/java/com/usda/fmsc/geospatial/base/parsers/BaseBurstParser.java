@@ -33,12 +33,12 @@ public abstract class BaseBurstParser<
 
 
     @Override
-    protected boolean shouldParse(PDT data) {
+    protected boolean shouldParse(PDT data, Object args) {
         return parseMode != ParseMode.Time || synced;
     }
 
     @Override
-    protected void onPreParse(PDT data) {
+    protected void onPreParse(PDT data, Object args) {
         long now = System.currentTimeMillis();
 
         if ((parseMode == ParseMode.Time && now - lastMessageTime > longestPause) ||

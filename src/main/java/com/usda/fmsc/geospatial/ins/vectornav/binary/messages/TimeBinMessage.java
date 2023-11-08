@@ -10,8 +10,6 @@ import com.usda.fmsc.geospatial.ins.vectornav.binary.codes.TimeGroup;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.codes.TimeStatus;
 
 public class TimeBinMessage extends VNBinMessage {
-    private TimeGroup timeGroup;
-
     private long timeStatup;
     private long timeGps;
     private long gpsTow;
@@ -30,7 +28,6 @@ public class TimeBinMessage extends VNBinMessage {
 
     public TimeBinMessage(BinaryMsgConfig config, byte[] message) {
         super(config, message);
-        this.timeGroup = getBinaryMsgConfig().getTimeGroup();
     }
 
 
@@ -38,6 +35,8 @@ public class TimeBinMessage extends VNBinMessage {
     protected void parseMessage(ByteBuffer message) {
         message.order(ByteOrder.LITTLE_ENDIAN);
         message.position(getBinaryMsgConfig().getHeaderSize());
+
+        TimeGroup timeGroup = getBinaryMsgConfig().getTimeGroup();
 
         if (timeGroup.hasTimestartup()) {
             timeStatup = message.getLong();
@@ -127,10 +126,4 @@ public class TimeBinMessage extends VNBinMessage {
     public TimeStatus getTimeStatus() {
         return timeStatus;
     }
-
-    public TimeGroup getTimeGroup() {
-        return timeGroup;
-    }
-
-    
 }
