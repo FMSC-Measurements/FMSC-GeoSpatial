@@ -145,7 +145,6 @@ public class BinaryMsgConfig {
     public boolean containsIINSDataFields() {
         return attitudeGroup.hasLinearAccelBody() &&
             (commonGroup.hasDeltaTheta() || imuGroup.hasDeltaTheta()) &&
-            (commonGroup.hasAcceleration() || imuGroup.hasAcceleration()) &&
             (commonGroup.hasTimestartup() || timeGroup.hasTimestartup()) &&
             (commonGroup.hasYawPitchRoll() || attitudeGroup.hasYawPitchRoll());
     }

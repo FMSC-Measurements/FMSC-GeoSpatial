@@ -6,7 +6,6 @@ public class InsData implements IINSData {
     final long timeSinceStart;
     final double distX, distY, distZ;
     final double linAccelX, linAccelY, linAccelZ;
-    final double accelX, accelY, accelZ;
     final double velX, velY, velZ;
     final double rotX, rotY, rotZ;
     final double yaw, pitch, roll;
@@ -15,7 +14,6 @@ public class InsData implements IINSData {
     public InsData(boolean isConsecutive, double timeSpan, long timeSinceStart,
             double distX, double distY, double distZ,
             double linAccelX, double linAccelY, double linAccelZ,
-            double accelX, double accelY, double accelZ,
             double velX, double velY, double velZ,
             double rotX, double rotY, double rotZ,
             double yaw, double pitch, double roll) {
@@ -31,10 +29,6 @@ public class InsData implements IINSData {
         this.linAccelX = linAccelX;
         this.linAccelY = linAccelY;
         this.linAccelZ = linAccelZ;
-
-        this.accelX = accelX;
-        this.accelY = accelY;
-        this.accelZ = accelZ;
 
         this.velX = velX;
         this.velY = velY;
@@ -72,37 +66,19 @@ public class InsData implements IINSData {
 
     @Override
     public double getLinearAccelX() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getLinearAccelX'");
+        return linAccelX;
     }
 
 
     @Override
     public double getLinearAccelY() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getLinearAccelY'");
+        return linAccelY;
     }
 
 
     @Override
     public double getLinearAccelZ() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getLinearAccelZ'");
-    }
-
-    @Override
-    public double getAccelX() {
-        return accelX;
-    }
-
-    @Override
-    public double getAccelY() {
-        return accelY;
-    }
-
-    @Override
-    public double getAccelZ() {
-        return accelZ;
+        return linAccelZ;
     }
 
     @Override

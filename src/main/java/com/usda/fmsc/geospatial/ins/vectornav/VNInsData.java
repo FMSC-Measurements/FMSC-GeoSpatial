@@ -63,23 +63,6 @@ public class VNInsData extends CustomBinMessage implements IINSData {
         return getLinearAccelBody().getZ();
     }
 
-
-    @Override
-    public double getAccelX() {
-        return getAcceleration().getX();
-    }
-
-    @Override
-    public double getAccelY() {
-        return getAcceleration().getY();
-    }
-
-    @Override
-    public double getAccelZ() {
-        return getAcceleration().getZ();
-    }
-
-
     @Override
     public double getVelocityX() {
         return getDeltaVelocity().getX();
