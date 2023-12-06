@@ -38,6 +38,7 @@ public class MsgByteReader extends BaseMsgByteDataReader {
                 while (dIdx < delimiter.length && dsIdx < data.length) {
                     if (data[dsIdx++] == delimiter[dIdx]) {
                         if (dIdx == delimiter.length - 1) {
+                            dequeue(dsIdx);
                             return Arrays.copyOf(data, idx);
                         }
                         dIdx++;
