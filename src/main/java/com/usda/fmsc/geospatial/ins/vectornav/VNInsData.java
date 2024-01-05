@@ -123,14 +123,14 @@ public class VNInsData extends CustomBinMessage implements IINSData {
 
     @Override
     public String toString() {
-        Data3DF ld = getLinearAccelBody();
+        Data3DF la = getLinearAccelBody();
         Data3DF dv = getDeltaVelocity();
         Data3DF dt = getDeltaTheta();
         YawPitchRoll ypr = getYawPitchRoll();
 
-        return String.format("[INS] T%f | LD: (%f : %f : %f) | DV: (%f : %f : %f) |  DT: (%f : %f : %f) | YPR: (%f : %f : %f)%s",
+        return String.format("[INS] T%f | LA: (%f : %f : %f) | DV: (%f : %f : %f) |  DT: (%f : %f : %f) | YPR: (%f : %f : %f)%s",
                 getDeltaTime(),
-                getDistanceX(), getDistanceY(), getDistanceZ(),
+                la.getX(), la.getY(), la.getZ(),
                 dv.getX(), dv.getY(), dv.getZ(),
                 dt.getX(), dt.getY(), dt.getZ(),
                 ypr.getYaw(), ypr.getPitch(), ypr.getRoll(),

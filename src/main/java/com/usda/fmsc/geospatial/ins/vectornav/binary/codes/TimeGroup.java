@@ -29,7 +29,7 @@ public class TimeGroup extends BaseGroup {
     }
 
 
-    public boolean hasTimestartup() {
+    public boolean hasTimeStartup() {
         return (value & TimeStartup) == TimeStartup;
     }
 

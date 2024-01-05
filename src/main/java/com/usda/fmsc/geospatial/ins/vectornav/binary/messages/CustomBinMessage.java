@@ -41,7 +41,7 @@ public class CustomBinMessage extends VNBinMessage {
     private Float deltaTime;            // float
     private Data3DF deltaTheta;         // float[3]
     private Data3DF deltaVelocity;      // float[3]
-    private Short insStatus;               // uint16
+    private Short insStatus;            // uint16
     private Long syncInCnt;             // uint32
     private Long timeGpsPps;            // uint64
 
@@ -87,7 +87,7 @@ public class CustomBinMessage extends VNBinMessage {
 
         CommonGroup commonGroup = getBinaryMsgConfig().getCommonGroup();
         
-        if (commonGroup.hasTimestartup()) {
+        if (commonGroup.hasTimeStartup()) {
             timeStatup = message.getLong();
         }
         
@@ -195,7 +195,7 @@ public class CustomBinMessage extends VNBinMessage {
 
         TimeGroup timeGroup = getBinaryMsgConfig().getTimeGroup();
 
-        if (timeGroup.hasTimestartup()) {
+        if (timeGroup.hasTimeStartup()) {
             timeStatup = message.getLong();
         }
 
@@ -238,7 +238,7 @@ public class CustomBinMessage extends VNBinMessage {
             syncOutCnt = message.getInt() & 0xFFFFFFFFL;
         }
         
-        if (timeGroup.hasTimestartup()) {
+        if (timeGroup.hasTimeStartup()) {
             timeStatus = new TimeStatus(message.get());
         }
     
@@ -535,7 +535,7 @@ public class CustomBinMessage extends VNBinMessage {
     }
     //endregion
 
-    //Time Fields
+    //region Time Fields
     public boolean hasGpsTow() {
         return gpsTow != null;
     }

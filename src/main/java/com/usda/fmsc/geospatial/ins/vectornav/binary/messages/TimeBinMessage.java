@@ -38,7 +38,7 @@ public class TimeBinMessage extends VNBinMessage {
 
         TimeGroup timeGroup = getBinaryMsgConfig().getTimeGroup();
 
-        if (timeGroup.hasTimestartup()) {
+        if (timeGroup.hasTimeStartup()) {
             timeStatup = message.getLong();
         }
 
@@ -81,7 +81,7 @@ public class TimeBinMessage extends VNBinMessage {
             syncOutCnt = message.getInt() & 0xFFFFFFFFL;
         }
         
-        if (timeGroup.hasTimestartup()) {
+        if (timeGroup.hasTimeStartup()) {
             timeStatus = new TimeStatus(message.get());
         }
     }

@@ -6,8 +6,6 @@ import java.util.List;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.BinaryMsgConfig;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.IVNBinMsgListener;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.VNBinMsgParser;
-import com.usda.fmsc.geospatial.ins.vectornav.binary.messages.CommonBinMessage;
-import com.usda.fmsc.geospatial.ins.vectornav.binary.messages.CustomBinMessage;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.messages.VNBinMessage;
 import com.usda.fmsc.geospatial.ins.vectornav.commands.VNCommand;
 import com.usda.fmsc.geospatial.ins.vectornav.nmea.VNNmeaParser;

@@ -3,8 +3,11 @@ package com.usda.fmsc.geospatial.base.readers;
 import java.io.IOException;
 import java.io.InputStream;
 
-public abstract class BaseMsgByteDataReader {
+public abstract class BaseMsgByteDataReader implements IBaseMsgByteDataReader {
+    private static final int DEFAULT_FILL_SIZE = 256;
+
     private InputStream stream;
+    private int fillSize = DEFAULT_FILL_SIZE;
 
     private byte[] data;
 
@@ -14,6 +17,11 @@ public abstract class BaseMsgByteDataReader {
 
     public BaseMsgByteDataReader(InputStream stream) {
         this.stream = stream;
+    }
+
+    public BaseMsgByteDataReader(InputStream stream, int fillSize) {
+        this.stream = stream;
+        this.fillSize = fillSize;
     }
 
     public void setStream(InputStream stream) {
@@ -26,26 +34,26 @@ public abstract class BaseMsgByteDataReader {
         return stream.available() > 0;
     }
 
+    static int lastFill = 0;
+
     protected byte[] fill() throws IOException {
         if (stream == null) {
             throw new RuntimeException("Stream not set");
         }
+
+        if (data != null && data.length > fillSize)
+            return data;
 
         int available = stream.available();
 
         if (available > 0) {
             if (data == null) {
                 data = new byte[available];
-                stream.read(data);
+                stream.read(data, 0, available);
             } else {
-                byte[] buffer = new byte[available];
-                stream.read(buffer);
-
-                byte[] dataNew = new byte[data.length + buffer.length];
-
+                byte[] dataNew = new byte[data.length + available];
                 System.arraycopy(data, 0, dataNew, 0, data.length);
-                System.arraycopy(buffer, 0, dataNew, data.length, buffer.length);
-
+                stream.read(dataNew, data.length, available);
                 data = dataNew;
             }
 

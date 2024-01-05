@@ -76,7 +76,7 @@ public class CommonBinMessage extends VNBinMessage {
 
         CommonGroup commonGroup = getBinaryMsgConfig().getCommonGroup();
         
-        if (commonGroup.hasTimestartup()) {
+        if (commonGroup.hasTimeStartup()) {
             timeStatup = message.getLong();
         }
         

@@ -3,13 +3,11 @@ package com.usda.fmsc.geospatial.ins.vectornav.binary;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import com.usda.fmsc.geospatial.ins.vectornav.VNInsData;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.codes.AttitudeGroup;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.codes.CommonGroup;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.codes.IMUGroup;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.codes.OutputGroups;
 import com.usda.fmsc.geospatial.ins.vectornav.binary.codes.TimeGroup;
-import com.usda.fmsc.geospatial.ins.vectornav.binary.messages.CustomBinMessage;
 
 //todo update for all 7 groups
 public class BinaryMsgConfig {
@@ -145,10 +143,9 @@ public class BinaryMsgConfig {
     public boolean containsIINSDataFields() {
         return attitudeGroup.hasLinearAccelBody() &&
             (commonGroup.hasDeltaTheta() || imuGroup.hasDeltaTheta()) &&
-            (commonGroup.hasTimestartup() || timeGroup.hasTimestartup()) &&
+            (commonGroup.hasTimeStartup() || timeGroup.hasTimeStartup()) &&
             (commonGroup.hasYawPitchRoll() || attitudeGroup.hasYawPitchRoll());
     }
-
 
 
     public static BinaryMsgConfig fromBytes(byte[] data) {

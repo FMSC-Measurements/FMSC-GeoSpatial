@@ -33,7 +33,7 @@ public class CommonGroup extends BaseGroup {
         return FIELD_SIZES;
     }
 
-    public boolean hasTimestartup() {
+    public boolean hasTimeStartup() {
         return (value & TimeStartup) == TimeStartup;
     }
 
